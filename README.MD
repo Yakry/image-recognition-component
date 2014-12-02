@@ -1,7 +1,7 @@
 # Graduation Project
 
 ## Getting started
-First download and install [maven] and [git]
+First download and install [maven], ([how to install maven]) and [git] 
 
 On windows, navigate to an empty folder, right click and click "Git Bash Here" then write the following commands
 
@@ -24,3 +24,4 @@ To run the tests, use
     
 [maven]:http://maven.apache.org/download.cgi
 [git]:http://git-scm.com/downloads
+[how to install maven]:http://www.mkyong.com/maven/how-to-install-maven-in-windows/
