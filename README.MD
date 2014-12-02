@@ -12,7 +12,6 @@ The compile the project to make maven to download the libraries used, refer to t
 If you want to import the project in eclipse: File -> Import -> Maven -> Existing maven project
 
 ## Compiling
-=============
 To compile the project use, open the git bash in the project folder, write 
 
     mvn compile
