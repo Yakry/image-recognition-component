@@ -1,9 +1,10 @@
 package grad.proj.recognition.train;
 
 import java.io.Serializable;
+import java.util.List;
 
 interface Classifier extends Serializable {
-	double classify(double[] featureVector);
+	double classify(List<Double> featureVector);
 
-	void trainToClassify(double[]...featuresVectors);
+	void trainToClassify(List<List<Double> > featuresVectors);
 }
