@@ -24,7 +24,7 @@ public class SVMClassifier implements Classifier {
 	}
 
 	@Override
-	public void trainToClassify(List<List<Double>> featureVectors) {
+	public void train(List<List<Double>> featureVectors) {
 		// initializing training parameters
 		svm_parameter trainingPram = new svm_parameter();
 		trainingPram.svm_type = svm_parameter.ONE_CLASS;
