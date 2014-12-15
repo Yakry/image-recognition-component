@@ -15,12 +15,12 @@ class ImageImpl implements Image {
 
 	@Override
 	public int getWidth() {
-		return imageArr.length;
+		return imageArr[0].length;
 	}
 
 	@Override
 	public int getHeight() {
-		return imageArr[0].length;
+		return imageArr.length;
 	}
 
 }
