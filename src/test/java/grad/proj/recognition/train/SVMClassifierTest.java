@@ -1,7 +1,5 @@
 package grad.proj.recognition.train;
 
-import static org.junit.Assert.*;
-
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +7,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 import org.junit.Test;
+import org.opencv.core.Core;
 
+@SuppressWarnings("unused")
 public class SVMClassifierTest {
+	static{System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
 	
 	@Test
 	public void testRunTime() throws Exception {
@@ -28,7 +29,7 @@ public class SVMClassifierTest {
 			int classLabel = scanner.nextInt();
 			int idx=1;
 			featureVector = new ArrayList<Double>();
-			while(!scanner.hasNextInt()&&scanner.hasNext()&&(idx<featureNum)){
+			while(!scanner.hasNextInt()&&scanner.hasNext()&&(idx<=featureNum)){
 				String temp = scanner.next();
 				int colonIdx = temp.indexOf(':');
 				int tempIdx = Integer.valueOf(temp.substring(0,colonIdx));
@@ -39,8 +40,11 @@ public class SVMClassifierTest {
 				++idx;
 			}
 			
+			for(;idx<=featureNum;++idx)
+				featureVector.add(0.0);
 			featureVectors.add(featureVector);
 		}
+		scanner.close();
 		
 		rightFeatureVector = featureVectors.get(0);
 		wrongFeatureVector = new ArrayList<Double>();
@@ -49,8 +53,7 @@ public class SVMClassifierTest {
 		
 		SVMClassifier classifier = new SVMClassifier();
 		classifier.train(featureVectors);
-		//System.out.println(classifier.classify(rightFeatureVector));
-		//System.out.println(classifier.classify(wrongFeatureVector));
-		scanner.close();
+		System.out.println(classifier.classify(rightFeatureVector));
+		System.out.println(classifier.classify(wrongFeatureVector));
 	}
 }
