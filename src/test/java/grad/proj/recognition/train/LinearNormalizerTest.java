@@ -42,8 +42,8 @@ public class LinearNormalizerTest {
 				
 				for(int j=0;j<scaledfeatureVectors.get(i).size();++j)
 					assertTrue("Normalized data has wrong values",
-							scaledfeatureVectors.get(i).get(j) == 
-							myScaledfeatureVectors.get(i).get(j));
+							Math.abs( scaledfeatureVectors.get(i).get(j) - 
+							myScaledfeatureVectors.get(i).get(j)) <= 1e-12);
 			}
 		}
 	}
