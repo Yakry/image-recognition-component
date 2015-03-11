@@ -18,7 +18,8 @@ public class SVMClassifierTest {
 	@Test
 	public void testRunTime() throws Exception {
 		List<List<Double> > featureVectors = 
-				LinearNormalizerTest.loadFeatureVectors("splice_scale.txt");
+				LinearNormalizerTest.
+				loadFeatureVectors("splice_scale.txt").get(0);
 		List<Double> rightFeatureVector = null;
 		List<Double> wrongFeatureVector = null;
 		
@@ -29,8 +30,12 @@ public class SVMClassifierTest {
 		
 		SVMClassifier classifier = new SVMClassifier();
 		classifier.train(featureVectors);
-		System.out.println(classifier.classify(rightFeatureVector));
-		System.out.println(classifier.classify(wrongFeatureVector));
+		double rightFeatureVectorValue = classifier.classify(rightFeatureVector);
+		double wrongFeatureVectorValue = classifier.classify(wrongFeatureVector);
+		System.out.println(rightFeatureVectorValue);
+		System.out.println(wrongFeatureVectorValue);
+		assertTrue("Right feature vector is not recongized", rightFeatureVectorValue > 0.0);
+		assertTrue("Wrong feature vector is recongized", wrongFeatureVectorValue == 0.0);
 	}
 
 	@Test
