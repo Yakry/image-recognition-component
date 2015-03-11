@@ -1,5 +1,8 @@
 package grad.proj.recognition.train;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import grad.proj.Image;
 
 public class ObjectRecognizer {
@@ -16,11 +19,28 @@ public class ObjectRecognizer {
 	}
 
 	double recognize(Image image) {
-		throw new UnsupportedOperationException();
+		List<Double> vec = toDoubleList(objectFeatureVectorGenerator.generateFeatureVector(image));
+		double classify = objectClassifier.classify(vec);
+		return classify;
 	}
 
 	void trainToRecognize(Image... images) {
-		throw new UnsupportedOperationException();
+		objectFeatureVectorGenerator.prepareGenerator(images);
+		
+		List<List<Double>> trainingSet = new ArrayList<>(images.length);
+		for(Image image : images){
+			trainingSet.add(toDoubleList(objectFeatureVectorGenerator.generateFeatureVector(image)));
+		}
+		
+		objectClassifier.train(trainingSet);
 	}
 
+	private static List<Double> toDoubleList(float[] arr){
+		List<Double> res = new ArrayList<>(arr.length);
+		
+		for(float f : arr)
+			res.add((double) f);
+		
+		return res;
+	}
 }

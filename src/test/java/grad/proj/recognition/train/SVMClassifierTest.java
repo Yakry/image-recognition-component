@@ -1,7 +1,9 @@
 package grad.proj.recognition.train;
 
+import static org.junit.Assert.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -55,5 +57,22 @@ public class SVMClassifierTest {
 		classifier.train(featureVectors);
 		System.out.println(classifier.classify(rightFeatureVector));
 		System.out.println(classifier.classify(wrongFeatureVector));
+	}
+
+	@Test
+	public void testSimpleData() throws Exception {
+		List<Double> featureVector1 = Arrays.asList(0.5, 0.6);
+		List<Double> featureVector2 = Arrays.asList(0.4, 0.7);
+		
+		List<List<Double>> vecs = Arrays.asList(featureVector1, featureVector2);
+		
+		SVMClassifier s = new SVMClassifier();
+		
+		s.train(vecs);
+
+		double classified = s.classify(featureVector1);
+		
+		System.out.println("Classified Value: " + classified);
+		assertTrue("Feature vector is not recongized successfully", classified > 0.0);
 	}
 }

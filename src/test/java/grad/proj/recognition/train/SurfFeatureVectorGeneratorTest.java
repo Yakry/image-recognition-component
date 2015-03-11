@@ -4,17 +4,13 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import grad.proj.Image;
 import grad.proj.utils.ImageLoader;
 
 import org.junit.Test;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.highgui.Highgui;
 
 public class SurfFeatureVectorGeneratorTest {
 
@@ -34,9 +30,9 @@ public class SurfFeatureVectorGeneratorTest {
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
-		Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
+		//Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
+		generator.prepareGenerator(img1Big);
 
 		float[] generatedTry1 = generator.generateFeatureVector(img1Big);
 		
@@ -62,7 +58,7 @@ public class SurfFeatureVectorGeneratorTest {
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
+		generator.prepareGenerator(img1Big, img1Small);
 
 		float[] generated = generator.generateFeatureVector(img1Big);
 		
