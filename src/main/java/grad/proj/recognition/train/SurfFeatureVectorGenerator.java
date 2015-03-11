@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
@@ -32,6 +31,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	
 	private boolean prepared = false;
 	
+	@Override
 	public void prepareGenerator(List<Image> trainingSet){
 		
 		for(Image image : trainingSet){

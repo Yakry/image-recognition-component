@@ -8,7 +8,7 @@ import org.opencv.core.TermCriteria;
 import org.opencv.ml.CvSVM;
 import org.opencv.ml.CvSVMParams;
 
-public class SVMClassifier implements Classifier {
+class SVMClassifier implements Classifier {
 	private static final long serialVersionUID = 1L;
 	private CvSVM svm = null;
 	

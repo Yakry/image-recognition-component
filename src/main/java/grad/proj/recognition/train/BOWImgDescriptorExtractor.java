@@ -21,7 +21,7 @@ import org.opencv.features2d.KeyPoint;
  * port of BOWImgDescriptorExtractor of OpenCV
  * 
  */
-public class BOWImgDescriptorExtractor {
+class BOWImgDescriptorExtractor {
 	
 	private Mat vocabulary;
 	private DescriptorExtractor dextractor;

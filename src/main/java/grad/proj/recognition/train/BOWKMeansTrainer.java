@@ -10,7 +10,7 @@ import org.opencv.core.TermCriteria;
  * port of BOWKMeansTrainer of OpenCV
  *
  */
-public class BOWKMeansTrainer extends BOWTrainer{
+class BOWKMeansTrainer extends BOWTrainer{
 	protected int clusterCount;
 	protected TermCriteria termcrit;
 	protected int attempts;
