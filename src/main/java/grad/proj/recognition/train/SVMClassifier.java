@@ -46,7 +46,8 @@ class SVMClassifier implements Classifier {
 		// initializing the normalizer
 		normalizer = new LinearNormalizer();
 		// normalizing the featureVectors
-		List<List<Double>> normalizedFeatureVectors = normalizer.reset(featureVectors);
+		List<List<Double>> normalizedFeatureVectors =
+				normalizer.reset(featureVectors,0.0,1.0);
 		
 		// constructing a featureMatrix from the featureVectors
 		int vectorNum = normalizedFeatureVectors.size();

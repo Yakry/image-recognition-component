@@ -26,7 +26,8 @@ public class LinearNormalizerTest {
 			List<List<Double> > scaledfeatureVectors = scaledAllClassData.get(classLabel);
 			List<List<Double> > unscaledfeatureVectors = unscaledAllClassData.get(classLabel);
 			LinearNormalizer normalizer = new LinearNormalizer();
-			List<List<Double> > myScaledfeatureVectors = normalizer.reset(unscaledfeatureVectors);
+			List<List<Double> > myScaledfeatureVectors =
+					normalizer.reset(unscaledfeatureVectors,-1.0,1.0);
 			
 			assertTrue("Normalized data has wrong size",
 					scaledfeatureVectors.size() == 
