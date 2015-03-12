@@ -10,7 +10,8 @@ public class LinearNormalizer implements Normalizer {
 	public List<Double> Min;
 
 	@Override
-	public List<List<Double>> reset(List<List<Double>> featureVectors) {
+	public List<List<Double>> reset(List<List<Double>> featureVectors,
+			double rangeMin, double rangeMax) {
 		// TODO Auto-generated method stub
 		double largest = 0.0;
 		double smallest = 0.0;
