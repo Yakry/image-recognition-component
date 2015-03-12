@@ -17,36 +17,21 @@ public class LinearNormalizer implements Normalizer {
 		double smallest = 0.0;
 		double newnumber = 0.0;
 		int maxofelements = 0;
-		int counter = 0;
+		
 
-		for (int row = 0; row < featureVectors.size(); row++)// get max column
-																// if it is not
-																// square matrix
-		{
-			counter = 0;
-			for (int col = 0; col < featureVectors.get(row).size(); col++) {
-				counter++;
 
-				if (counter > maxofelements) {
-					maxofelements = counter;
-				}
-			}
 
-		}
-
-		Max = new ArrayList<Double>(counter);// array of maximum elements in
+		Max = new ArrayList<Double>(featureVectors.size());// array of maximum elements in
 												// each column in the matrix
-		Min = new ArrayList<Double>(counter);
+		Min = new ArrayList<Double>(featureVectors.size());
 
-		for (int col = 0; col < counter; col++) // get the max of each column
+		for (int col = 0; col < featureVectors.size(); col++) // get the max of each column
 		{
 			largest = Integer.MIN_VALUE;
 
 			for (int row = 0; row < featureVectors.size(); row++) {
 
-				if (col >= featureVectors.get(row).size()) {
-					continue;
-				}
+				
 
 				newnumber = featureVectors.get(row).get(col);
 
@@ -59,15 +44,12 @@ public class LinearNormalizer implements Normalizer {
 
 		}
 		// ///////////////////////////////////////////////////////////////////
-		for (int col = 0; col < counter; col++) // get the min of each column
+		for (int col = 0; col < featureVectors.size(); col++) // get the min of each column
 		{
 			smallest = Integer.MAX_VALUE;
 
 			for (int row = 0; row < featureVectors.size(); row++) {
 
-				if (col >= featureVectors.get(row).size()) {
-					continue;
-				}
 
 				newnumber = featureVectors.get(row).get(col);
 
