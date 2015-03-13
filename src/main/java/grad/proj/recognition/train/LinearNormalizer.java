@@ -16,22 +16,18 @@ public class LinearNormalizer implements Normalizer {
 		double largest = 0.0;
 		double smallest = 0.0;
 		double newnumber = 0.0;
-		int maxofelements = 0;
 		
 
 
 
-		Max = new ArrayList<Double>(featureVectors.size());// array of maximum elements in
-												// each column in the matrix
-		Min = new ArrayList<Double>(featureVectors.size());
+		Max = new ArrayList<Double>(featureVectors.size());// array of maximum elements in each column in the matrix
+		Min = new ArrayList<Double>(featureVectors.size());// array of minimum elements in each column in the matrix
 
 		for (int col = 0; col < featureVectors.size(); col++) // get the max of each column
 		{
 			largest = Integer.MIN_VALUE;
 
-			for (int row = 0; row < featureVectors.size(); row++) {
-
-				
+			for (int row = 0; row < featureVectors.size(); row++) {				
 
 				newnumber = featureVectors.get(row).get(col);
 
@@ -50,7 +46,6 @@ public class LinearNormalizer implements Normalizer {
 
 			for (int row = 0; row < featureVectors.size(); row++) {
 
-
 				newnumber = featureVectors.get(row).get(col);
 
 				if (newnumber < smallest) {
@@ -66,11 +61,7 @@ public class LinearNormalizer implements Normalizer {
 		for (int i = 0; i < featureVectors.size(); i++)
 			for (int j = 0; j < featureVectors.get(i).size(); j++) {
 
-				featureVectors.get(i).set(
-						j,
-						(featureVectors.get(i).get(j) - Min.get(j))
-								/ (Max.get(j) - Min.get(j)));
-
+			 featureVectors.get(i).set(j, (featureVectors.get(i).get(j)-Min.get(j))*((rangeMax-rangeMin)/(Max.get(j)-Min.get(j)))+rangeMin);
 			}
 
 		return featureVectors;
@@ -80,10 +71,7 @@ public class LinearNormalizer implements Normalizer {
 	public List<Double> normalize(List<Double> featureVector) {
 		for (int i = 0; i < featureVector.size(); i++) {
 
-			featureVector.set(
-					i,
-					(featureVector.get(i) - Min.get(i))
-							/ (Max.get(i) - Min.get(i)));
+			featureVector.set(i,(featureVector.get(i) - Min.get(i))/ (Max.get(i) - Min.get(i)));
 		}
 		return featureVector;
 	}
