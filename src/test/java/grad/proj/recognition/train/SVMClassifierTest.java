@@ -48,18 +48,31 @@ public class SVMClassifierTest {
 
 	@Test
 	public void testSimpleData() throws Exception {
-		List<Double> featureVector1 = Arrays.asList(0.5, 0.6);
-		List<Double> featureVector2 = Arrays.asList(0.4, 0.7);
-		
-		List<List<Double>> vecs = Arrays.asList(featureVector1, featureVector2);
+		List<List<Double>> featureVectors = new ArrayList<List<Double>>(5000);
+		for(int i=0;i<50000;++i)
+			featureVectors.add(Arrays.asList((double)i, (double)i));
 		
 		SVMClassifier s = new SVMClassifier();
-		
-		s.train(vecs);
+		s.train(featureVectors);
 
-		double classified = s.classify(featureVector1);
+		double classificationValue = s.classify(featureVectors.get(0));
+		System.out.println("classificationValue Value 1: " + classificationValue);
+		assertTrue("Right feature vector is not recongized successfully"
+				, classificationValue > 0.0);
 		
-		System.out.println("Classified Value: " + classified);
-		assertTrue("Feature vector is not recongized successfully", classified > 0.0);
+		classificationValue = s.classify(Arrays.asList(9999.0,9999.0));
+		System.out.println("classificationValue Value 2: " + classificationValue);
+		assertTrue("Right feature vector is not recongized successfully"
+				, classificationValue > 0.0);
+		
+		classificationValue = s.classify(Arrays.asList(9999.0,9990.0));
+		System.out.println("classificationValue Value 3: " + classificationValue);
+		assertTrue("Right feature vector is not recongized successfully"
+				, classificationValue > 0.0);
+		
+		classificationValue = s.classify(Arrays.asList(1.0,9990.0));
+		System.out.println("classificationValue Value 4: " + classificationValue);
+		assertTrue("Wrong feature vector is recongized"
+				, classificationValue == 0.0);
 	}
 }
