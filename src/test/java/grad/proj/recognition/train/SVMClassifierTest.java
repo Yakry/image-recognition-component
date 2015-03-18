@@ -1,6 +1,7 @@
 package grad.proj.recognition.train;
 
 import static org.junit.Assert.*;
+import grad.proj.utils.DataFileLoader;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -18,8 +19,9 @@ public class SVMClassifierTest {
 	
 	@Test
 	public void testRunTime() throws Exception {
-		List<List<List<Double> > > allClassData = LinearNormalizerTest.
-				loadFeatureVectors("src\\test\\java\\grad\\proj\\recognition\\train\\splice_scale.txt");
+		List<List<List<Double> > > allClassData = DataFileLoader.
+				loadIsolatedFeatureVectors("src\\test\\java\\grad\\"
+						+ "proj\\recognition\\train\\splice_scale.txt");
 		
 		for(int classLabel = 0;classLabel<allClassData.size();++classLabel){
 			List<List<Double> > featureVectors = allClassData.get(classLabel);
