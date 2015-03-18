@@ -31,27 +31,6 @@ public class MultiClassSVMClassifier {
 		trainingPram.set_term_crit(new TermCriteria(TermCriteria.COUNT, 
 											1000, TermCriteria.EPS));
 		
-		/*
-		// initializing the normalizer
-		normalizer = new LinearNormalizer();
-		// normalizing the featureVectors
-		List<List<Double>> normalizedFeatureVectors =
-				normalizer.reset(featureVectors,0.0,1.0);
-		*/
-		
-		/*
-		// constructing a featureMatrix from the featureVectors
-		int vectorNum = normalizedFeatureVectors.size();
-		int vectorSize = normalizedFeatureVectors.get(0).size();
-		Mat label = new Mat(1,vectorNum, CvType.CV_32FC1);
-		Mat trainingData = new Mat(vectorNum, vectorSize, CvType.CV_32FC1);
-		for(int i=0;i<vectorNum;++i){
-			label.put(0, i, 1.0);
-			for(int j=0;j<vectorSize;++j)
-				trainingData.put(i, j, normalizedFeatureVectors.get(i).get(j));
-		}
-		*/
-		
 		CvParamGrid cGrid = new CvParamGrid();
 		cGrid.set_min_val(1/16);
 		cGrid.set_max_val(16);
