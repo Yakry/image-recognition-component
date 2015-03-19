@@ -54,25 +54,25 @@ public class MultiClassSVMClassifierTest {
 		trainingData.put(6, 1, -1);
 		
 		MultiClassSVMClassifier classifier = new MultiClassSVMClassifier();
-		classifier.train(trainingData, classLabels);
+		//classifier.train(trainingData, classLabels);
 		
 		Mat inputVector = new Mat(1,2,CvType.CV_32FC1);
 		
 		inputVector.put(0, 0, 0.25);
 		inputVector.put(0, 1, 0.25);
-		double class1Value1 = classifier.classify(inputVector);
+		double class1Value1 = classifier.classify(inputVector, true);
 		
 		inputVector.put(0, 0, -0.25);
 		inputVector.put(0, 1, -0.25);
-		double class1Value2 = classifier.classify(inputVector);
+		double class1Value2 = classifier.classify(inputVector, true);
 		
 		inputVector.put(0, 0, -0.75);
 		inputVector.put(0, 1, 0.75);
-		double class2Value1 = classifier.classify(inputVector);
+		double class2Value1 = classifier.classify(inputVector, true);
 		
 		inputVector.put(0, 0, 0.75);
 		inputVector.put(0, 1, -0.75);
-		double class3Value1 = classifier.classify(inputVector);
+		double class3Value1 = classifier.classify(inputVector, true);
 		
 		assertTrue("class 1 vector 1 not recognized",
 				class1Value1 == 1.0);
@@ -107,7 +107,7 @@ public class MultiClassSVMClassifierTest {
 		}
 		
 		MultiClassSVMClassifier classifier = new MultiClassSVMClassifier();
-		classifier.train(trainingVectors, trainingClassLables);
+		//classifier.train(trainingVectors, trainingClassLables);
 		
 		Mat testVector = new Mat(1,testingData.get(0).size()-1,CvType.CV_32FC1);
 		double correctLabels = 0;
@@ -117,13 +117,13 @@ public class MultiClassSVMClassifierTest {
 				testVector.put(0, j-1, trainingData.get(i).get(j));
 			
 			double classLabel = testingData.get(i).get(0);
-			double predictedLabel = classifier.classify(testVector);
+			double predictedLabel = classifier.classify(testVector, true);
 			correctLabels += ((classLabel == predictedLabel)?1:0);
 		}
 		
 		System.out.println(correctLabels);
 		System.out.println((correctLabels*100)/testingData.size() + "%");
-		assertTrue("correct predicted labels percentage below 90%",
+		assertTrue("correct predicted labels percentage below 85%",
 				((correctLabels*100)/testingData.size()) >= 85.0);
 	}
 }
