@@ -9,17 +9,69 @@ import org.opencv.ml.CvParamGrid;
 import org.opencv.ml.CvSVM;
 import org.opencv.ml.CvSVMParams;
 
-@SuppressWarnings("unused")
 public class MultiClassSVMClassifier {
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
-	private CvSVM svm = null;
+	private CvSVM svmArray[] = null;
+	//private LinearNormalizer normalizer = null;
 	
-	public double classify(Mat featureVector, boolean flag) {
-		return svm.predict(featureVector, flag);
+	public int classify(Mat featureVector) {
+		int classLabel = 0;
+		double bestPredictionValue = Double.MIN_VALUE;
+		//featureVector = normalizer.normalize(featureVector);
+		
+		for(int i=0; i<svmArray.length; ++i){
+			double predictionValue = svmArray[i].predict(featureVector, true);
+			if(predictionValue > bestPredictionValue){
+				classLabel = i;
+				bestPredictionValue = predictionValue;
+			}
+		}
+		
+		return classLabel;
+	}
+	
+	public double predict(Mat featureVector, int classLabel){
+		if(classLabel >= svmArray.length)
+			throw new RuntimeException("invalid class label " + classLabel);
+		
+		//featureVector = normalizer.normalize(featureVector);
+		return svmArray[classLabel].predict(featureVector, true);
 	}
 	
 	// all class feature vectors
-	public void train(List<Mat> featureVectors, int classIndex) {
+	public void train(List<Mat> trainingData) {
+		if(trainingData.size() < 3)
+			throw new RuntimeException("number of classes below minimum " +
+					trainingData.size());
+		
+		int trainingDataRows = 0;
+		int trainingDataCols = trainingData.get(0).cols();
+		for(Mat classData : trainingData)
+			trainingDataRows += classData.rows();
+		
+		Mat trainingDataMat = new Mat(trainingDataRows,
+				trainingDataCols,CvType.CV_32FC1);
+		Mat labels = new Mat(trainingDataRows, 1, CvType.CV_32FC1);
+		int curRow = 0;
+		
+		for(int i=0; i<trainingData.size(); ++i){
+			for(int r=0; r<trainingData.get(i).rows(); ++r){
+				for(int c=0; c<trainingDataCols; ++c)
+					trainingDataMat.put(curRow, c, trainingData.get(i).get(r, c)[0]);
+				labels.put(curRow++, 1, i);
+			}
+		}
+		
+		//normalizer = new LinearNormalizer();
+		//normalizer.reset(trainingDataMat, -1, 1);
+		
+		svmArray = new CvSVM[trainingData.size()];
+		for(int i=0; i<trainingData.size(); ++i)
+			svmArray[i] = constructSVM(trainingDataMat, labels, i);
+	}
+	
+	private static CvSVM constructSVM(Mat trainingData, Mat Labels, int classLabel){
 		// setting the training parameters
 		CvSVMParams trainingPram = new CvSVMParams();
 		trainingPram.set_svm_type(CvSVM.C_SVC);
@@ -33,59 +85,31 @@ public class MultiClassSVMClassifier {
 		trainingPram.set_term_crit(new TermCriteria(TermCriteria.COUNT, 
 											1000, TermCriteria.EPS));
 		
-		CvParamGrid cGrid = new CvParamGrid();
-		cGrid.set_min_val(1/16);
-		cGrid.set_max_val(16);
-		cGrid.set_step(2);
+		CvParamGrid cGrid = constructParamGrid(1/16, 16, 2);
+		CvParamGrid gammaGrid = constructParamGrid(1/16, 16, 2);
+		CvParamGrid degreeGrid = constructParamGrid(0, 0, 1);
+		CvParamGrid coeffGrid = constructParamGrid(0, 0, 1);
+		CvParamGrid nuGrid = constructParamGrid(0.5, 0.5, 1);
+		CvParamGrid pGrid = constructParamGrid(0, 0, 1);
 		
-		CvParamGrid gammaGrid = new CvParamGrid();
-		cGrid.set_min_val(1/16);
-		cGrid.set_max_val(16);
-		cGrid.set_step(2);
+		Mat binaryLabels = new Mat(trainingData.rows(), 1, CvType.CV_32FC1);
+		for(int i=0; i<trainingData.rows(); ++i)
+			binaryLabels.put(i, 1, ((Labels.get(i, 0)[0] == classLabel)?1:0));
 		
-		CvParamGrid degreeGrid = new CvParamGrid();
-		cGrid.set_min_val(0);
-		cGrid.set_max_val(0);
-		cGrid.set_step(1);
-		
-		CvParamGrid coeffGrid = new CvParamGrid();
-		cGrid.set_min_val(0);
-		cGrid.set_max_val(0);
-		cGrid.set_step(1);
-		
-		CvParamGrid nuGrid = new CvParamGrid();
-		cGrid.set_min_val(0.5);
-		cGrid.set_max_val(0.5);
-		cGrid.set_step(1);
-		
-		CvParamGrid pGrid = new CvParamGrid();
-		cGrid.set_min_val(0);
-		cGrid.set_max_val(0);
-		cGrid.set_step(1);
-		
-		
-		int trainingDataRows = 0;
-		int trainingDataCols = featureVectors.get(0).cols();
-		for(Mat classData : featureVectors)
-			trainingDataRows += classData.rows();
-		
-		Mat trainingData = new Mat(trainingDataRows,
-				trainingDataCols,CvType.CV_32FC1);
-		Mat classLabels = new Mat(trainingDataRows, 1, CvType.CV_32FC1);
-		int curRow = 0;
-		
-		for(int i=0; i<featureVectors.size(); ++i){
-			for(int r=0; r<featureVectors.get(i).rows(); ++r){
-				for(int c=0; c<trainingDataCols; ++c)
-					trainingData.put(curRow, c, featureVectors.get(i).get(r, c));
-				classLabels.put(curRow++, 1, ((i==classIndex)?1:0));
-			}
-		}
-		
-		svm = new CvSVM();
-		//svm.train(featureVectors, classLabels, new Mat(), new Mat(), trainingPram);
-		svm.train_auto(trainingData, classLabels, new Mat(), new Mat(),
+		CvSVM svm = new CvSVM();
+		svm.train_auto(trainingData, binaryLabels, new Mat(), new Mat(),
 				trainingPram, 5, cGrid, gammaGrid, pGrid, nuGrid,
 				coeffGrid, degreeGrid, true);
+		
+		return svm;
+	}
+	
+	private static CvParamGrid constructParamGrid(double minVal,
+			double maxVal, double step){
+		CvParamGrid grid = new CvParamGrid();
+		grid.set_min_val(minVal);
+		grid.set_max_val(maxVal);
+		grid.set_step(step);
+		return grid;
 	}
 }

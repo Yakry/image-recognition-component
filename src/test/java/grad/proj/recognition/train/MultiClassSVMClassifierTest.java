@@ -60,19 +60,19 @@ public class MultiClassSVMClassifierTest {
 		
 		inputVector.put(0, 0, 0.25);
 		inputVector.put(0, 1, 0.25);
-		double class1Value1 = classifier.classify(inputVector, true);
+		double class1Value1 = classifier.classify(inputVector);
 		
 		inputVector.put(0, 0, -0.25);
 		inputVector.put(0, 1, -0.25);
-		double class1Value2 = classifier.classify(inputVector, true);
+		double class1Value2 = classifier.classify(inputVector);
 		
 		inputVector.put(0, 0, -0.75);
 		inputVector.put(0, 1, 0.75);
-		double class2Value1 = classifier.classify(inputVector, true);
+		double class2Value1 = classifier.classify(inputVector);
 		
 		inputVector.put(0, 0, 0.75);
 		inputVector.put(0, 1, -0.75);
-		double class3Value1 = classifier.classify(inputVector, true);
+		double class3Value1 = classifier.classify(inputVector);
 		
 		assertTrue("class 1 vector 1 not recognized",
 				class1Value1 == 1.0);
@@ -117,7 +117,7 @@ public class MultiClassSVMClassifierTest {
 				testVector.put(0, j-1, trainingData.get(i).get(j));
 			
 			double classLabel = testingData.get(i).get(0);
-			double predictedLabel = classifier.classify(testVector, true);
+			double predictedLabel = classifier.classify(testVector);
 			correctLabels += ((classLabel == predictedLabel)?1:0);
 		}
 		
