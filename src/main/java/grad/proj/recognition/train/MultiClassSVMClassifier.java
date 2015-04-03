@@ -17,21 +17,21 @@ public class MultiClassSVMClassifier {
 	
 	public int classify(Mat featureVector) {
 		int classLabel = 0;
-		double bestPredictionValue = Double.MIN_VALUE;
+		double bestError = Double.MIN_VALUE;
 		//featureVector = normalizer.normalize(featureVector);
 		
 		for(int i=0; i<svmArray.length; ++i){
-			double predictionValue = svmArray[i].predict(featureVector, true);
-			if(predictionValue > bestPredictionValue){
+			double error = svmArray[i].predict(featureVector, true);
+			if(error < bestError){
 				classLabel = i;
-				bestPredictionValue = predictionValue;
+				bestError = error;
 			}
 		}
 		
 		return classLabel;
 	}
 	
-	public double predict(Mat featureVector, int classLabel){
+	public double classify(Mat featureVector, int classLabel){
 		if(classLabel >= svmArray.length)
 			throw new RuntimeException("invalid class label " + classLabel);
 		
@@ -39,9 +39,9 @@ public class MultiClassSVMClassifier {
 		return svmArray[classLabel].predict(featureVector, true);
 	}
 	
-	// all class feature vectors
+	// all classes feature vectors
 	public void train(List<Mat> trainingData) {
-		if(trainingData.size() < 3)
+		if(trainingData.size() < 2)
 			throw new RuntimeException("number of classes below minimum " +
 					trainingData.size());
 		
@@ -59,7 +59,7 @@ public class MultiClassSVMClassifier {
 			for(int r=0; r<trainingData.get(i).rows(); ++r){
 				for(int c=0; c<trainingDataCols; ++c)
 					trainingDataMat.put(curRow, c, trainingData.get(i).get(r, c)[0]);
-				labels.put(curRow++, 1, i);
+				labels.put(curRow++, 0, i);
 			}
 		}
 		
@@ -80,27 +80,26 @@ public class MultiClassSVMClassifier {
 		trainingPram.set_gamma(1); // not needed with linear kernel
 		trainingPram.set_coef0(0); // not needed with linear kernel
 		trainingPram.set_C(1); // initial default value
-		trainingPram.set_nu(0.5); // not needed with C_SVC classification
+		trainingPram.set_nu(0); // not needed with C_SVC classification
 		trainingPram.set_p(0); // not needed with C_SVC classification
 		trainingPram.set_term_crit(new TermCriteria(TermCriteria.COUNT, 
 											1000, TermCriteria.EPS));
 		
-		CvParamGrid cGrid = constructParamGrid(1/16, 16, 2);
-		CvParamGrid gammaGrid = constructParamGrid(1/16, 16, 2);
-		CvParamGrid degreeGrid = constructParamGrid(0, 0, 1);
-		CvParamGrid coeffGrid = constructParamGrid(0, 0, 1);
-		CvParamGrid nuGrid = constructParamGrid(0.5, 0.5, 1);
-		CvParamGrid pGrid = constructParamGrid(0, 0, 1);
+		CvParamGrid cGrid = constructParamGrid(1.0/16.0, 16, 2);
+		CvParamGrid gammaGrid = constructParamGrid(1, 1, 0);
+		CvParamGrid degreeGrid = constructParamGrid(1, 1, 0);
+		CvParamGrid coeffGrid = constructParamGrid(1, 1, 0);
+		CvParamGrid nuGrid = constructParamGrid(1, 1, 0);
+		CvParamGrid pGrid = constructParamGrid(1, 1, 0);
 		
 		Mat binaryLabels = new Mat(trainingData.rows(), 1, CvType.CV_32FC1);
 		for(int i=0; i<trainingData.rows(); ++i)
-			binaryLabels.put(i, 1, ((Labels.get(i, 0)[0] == classLabel)?1:0));
+			binaryLabels.put(i, 0, ((Labels.get(i, 0)[0] == classLabel)?1.0:-1.0));
 		
 		CvSVM svm = new CvSVM();
 		svm.train_auto(trainingData, binaryLabels, new Mat(), new Mat(),
-				trainingPram, 5, cGrid, gammaGrid, pGrid, nuGrid,
+				trainingPram, 10, cGrid, gammaGrid, pGrid, nuGrid,
 				coeffGrid, degreeGrid, true);
-		
 		return svm;
 	}
 	
