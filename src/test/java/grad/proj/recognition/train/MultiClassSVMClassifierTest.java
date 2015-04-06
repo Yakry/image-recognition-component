@@ -78,6 +78,10 @@ public class MultiClassSVMClassifierTest {
 		List<List<List<Double>>> trainingDataList = DataFileLoader.
 				loadDataSeprated("src\\test\\java\\grad\\proj\\"
 						+ "recognition\\train\\satimage_scale_train.txt");
+		
+		List<List<Double>> testingDataList = DataFileLoader.
+				loadDataCombined("src\\test\\java\\grad\\proj\\"
+						+ "recognition\\train\\satimage_scale_test.txt");
 
 		List<Mat> trainingData = new ArrayList<Mat>(trainingDataList.size());
 		
@@ -94,21 +98,18 @@ public class MultiClassSVMClassifierTest {
 		classifier.train(trainingData);
 		
 
-		Mat testVector = new Mat(1,trainingDataList.get(0).get(0).size(),
+		Mat testVector = new Mat(1,testingDataList.get(0).size() - 1,
 				CvType.CV_32FC1);
 		double correctLabels = 0;
-		double numberOfRows = 0;
+		double numberOfRows = testingDataList.size();
 		
-		for(int i=0;i<trainingDataList.size();++i){
-			List<List<Double>> classData = trainingDataList.get(i);
-			for(int r=0;r<classData.size();++r){
-				for(int c=0;c<classData.get(r).size();++c)
-					testVector.put(0, c, classData.get(r).get(c));
+		for(List<Double> testingData : testingDataList){
+			int classLabel = testingData.get(0).intValue();
+			for(int c = 1; c<testingData.size(); ++c)
+				testVector.put(0, c - 1, testingData.get(c));
 				
-				double predictedLabel = classifier.classify(testVector);
-				correctLabels += ((i == predictedLabel)?1:0);
-				numberOfRows += 1;
-			}
+			double predictedLabel = classifier.classify(testVector);
+			correctLabels += ((classLabel == predictedLabel)?1:0);
 		}
 		
 		System.out.println("MultiClassSVMClassifierTest::testRealData:");
