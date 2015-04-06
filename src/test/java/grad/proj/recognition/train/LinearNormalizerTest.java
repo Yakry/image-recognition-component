@@ -14,10 +14,10 @@ public class LinearNormalizerTest {
 	@Test
 	public void testNormalizer() {
 		List<List<List<Double> > > scaledAllClassData = DataFileLoader.
-				loadIsolatedFeatureVectors("src\\test\\java\\grad\\proj\\"
+				loadDataSeprated("src\\test\\java\\grad\\proj\\"
 						+ "recognition\\train\\splice_scale.txt");
 		List<List<List<Double> > > unscaledAllClassData = DataFileLoader.
-				loadIsolatedFeatureVectors("src\\test\\java\\grad\\proj\\"
+				loadDataSeprated("src\\test\\java\\grad\\proj\\"
 						+ "recognition\\train\\splice.txt");
 		
 		for(int classLabel = 0; classLabel<scaledAllClassData.size();++classLabel){

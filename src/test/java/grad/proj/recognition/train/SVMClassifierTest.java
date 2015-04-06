@@ -20,7 +20,7 @@ public class SVMClassifierTest {
 	@Test
 	public void testRunTime() throws Exception {
 		List<List<List<Double> > > allClassData = DataFileLoader.
-				loadIsolatedFeatureVectors("src\\test\\java\\grad\\"
+				loadDataSeprated("src\\test\\java\\grad\\"
 						+ "proj\\recognition\\train\\splice_scale.txt");
 		
 		for(int classLabel = 0;classLabel<allClassData.size();++classLabel){

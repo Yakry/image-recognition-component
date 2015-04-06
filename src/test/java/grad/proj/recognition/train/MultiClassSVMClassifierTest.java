@@ -76,7 +76,7 @@ public class MultiClassSVMClassifierTest {
 	public void testRealData() {
 		// training and testing data already scaled
 		List<List<List<Double>>> trainingDataList = DataFileLoader.
-				loadIsolatedFeatureVectors("src\\test\\java\\grad\\proj\\"
+				loadDataSeprated("src\\test\\java\\grad\\proj\\"
 						+ "recognition\\train\\satimage_scale_train.txt");
 
 		List<Mat> trainingData = new ArrayList<Mat>(trainingDataList.size());
