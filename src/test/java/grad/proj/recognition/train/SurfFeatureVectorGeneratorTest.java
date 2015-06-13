@@ -84,7 +84,7 @@ public class SurfFeatureVectorGeneratorTest {
 
 		String subDirectoriesNames[] = dataSetDirectory.list();
 		for(String subDirectoryName : subDirectoriesNames){
-			File objectDirectory = new File(DATA_FILES_PATH + '\\' + subDirectoryName);
+			File objectDirectory = new File(DATA_FILES_PATH + "\\train\\" + subDirectoryName);
 			if(!objectDirectory.isDirectory())
 				continue; // for safety
 			File imageFiles[] = objectDirectory.listFiles();
