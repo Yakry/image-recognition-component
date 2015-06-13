@@ -1,11 +1,11 @@
 package grad.proj.recognition.train;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import grad.proj.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -21,7 +21,7 @@ public class ObjectRecognizerTest {
 	
 	@Test
 	public void testTrainingOnOneImageAndRecognizeIt() throws Exception {
-		ObjectRecognizer recognizer = new ObjectRecognizer(new SVMClassifier(),
+	ObjectRecognizer recognizer = new ObjectRecognizer(new MultiClassSVMClassifier(),
 														new SurfFeatureVectorGenerator());
 		
 		final URL IMG1_BIG_URL = getClass().getResource(IMG1_BIG);

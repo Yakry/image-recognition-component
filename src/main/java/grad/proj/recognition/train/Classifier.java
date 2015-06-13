@@ -3,8 +3,10 @@ package grad.proj.recognition.train;
 import java.io.Serializable;
 import java.util.List;
 
-public interface Classifier extends Serializable {
-	double classify(List<Double> featureVector);
+import org.opencv.core.Mat;
 
-	void train(List<List<Double> > featureVectors);
+public interface Classifier extends Serializable {
+	public int classify(Mat featureVector);
+	public double classify(Mat featureVector, int classLabel);
+	public void train(List<Mat> trainingData);
 }
