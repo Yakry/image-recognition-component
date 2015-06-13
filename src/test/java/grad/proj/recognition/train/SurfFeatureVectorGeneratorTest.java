@@ -1,18 +1,18 @@
 package grad.proj.recognition.train;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import grad.proj.Image;
+import grad.proj.utils.FilesImageList;
+import grad.proj.utils.ImageLoader;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-
-import grad.proj.Image;
-import grad.proj.utils.FilesImageList;
-import grad.proj.utils.ImageLoader;
 
 import org.junit.Test;
 import org.opencv.core.Core;
@@ -22,7 +22,7 @@ public class SurfFeatureVectorGeneratorTest {
 	private static final String IMG1_BIG = "SURF_IMG_1_BIG.jpg";
 	private static final String IMG1_SMALL = "SURF_IMG_1_SMALL.jpg";
 	// path relative to local machine
-	private static final String DATA_FILES_PATH = "E:\\Education\\University\\Lectures and Materials\\4th Year - 2nd Term\\GP\\ImagesDataSet";
+	private static final String DATA_FILES_PATH = "E:\\dataset";
 
 	static{System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
 
@@ -75,7 +75,7 @@ public class SurfFeatureVectorGeneratorTest {
 	}
 	
 	@Test
-	public void generateDataFile() throws Exception{
+	public void generateTestDataFile() throws Exception{
 		File dataSetDirectory = new File(DATA_FILES_PATH + "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
@@ -85,15 +85,11 @@ public class SurfFeatureVectorGeneratorTest {
 		Integer vectorsNum = 0;
 		Integer featuresNum = 0;
 
-		File[] subDirectoriesNames = dataSetDirectory.listFiles();
-		 
-		for(File objectDirectory : subDirectoriesNames){
-
-			if(!objectDirectory.isDirectory())
+		File[] classesDirectories = dataSetDirectory.listFiles();
+		for(File classDirectory : classesDirectories){
+			if(!classDirectory.isDirectory())
 				continue; // for safety
-			
-			File imageFiles[] = objectDirectory.listFiles();
-			
+			File imageFiles[] = classDirectory.listFiles();
 			for(File imageFile : imageFiles){
 				inputImagesFiles.add(imageFile);
 				labels.add(currentLabel);
@@ -104,14 +100,14 @@ public class SurfFeatureVectorGeneratorTest {
 		List<Image> inputImages = new FilesImageList(inputImagesFiles);
 		
 		generator.prepareGenerator(inputImages);
-		classesNum = subDirectoriesNames.length;
+		classesNum = classesDirectories.length;
 		vectorsNum = inputImages.size();
 		// should be replaced by a method in generator
 		featuresNum = generator.generateFeatureVector(
 				inputImages.get(0)).length;
 		
 		FileWriter dataFile = new FileWriter("src\\test\\java\\grad"
-				+ "\\proj\\recognition\\train\\dataFile1.txt");
+				+ "\\proj\\recognition\\train\\dataFile1_train.txt");
 		dataFile.write(classesNum.toString() + ' ');
 		dataFile.write(vectorsNum.toString() + ' ');
 		dataFile.write(featuresNum.toString() + '\n');
