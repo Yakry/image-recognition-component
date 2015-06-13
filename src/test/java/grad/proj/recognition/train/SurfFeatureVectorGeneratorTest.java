@@ -44,8 +44,8 @@ public class SurfFeatureVectorGeneratorTest {
 		
 		Mat generatedTry2 = generator.generateFeatureVector(img1Big);
 		
-		for(int i=0; i<generatedTry1.rows(); i++)
-			assertEquals(generatedTry1.get(i, 0)[0], generatedTry2.get(i, 0)[0], 0.01);
+		for(int i=0; i<generatedTry1.cols(); i++)
+			assertEquals(generatedTry1.get(0, i)[0], generatedTry2.get(0, i)[0], 0.01);
 		
 		//assertArrayEquals(generatedTry1, generatedTry2, 0.0001f);
 
@@ -72,9 +72,11 @@ public class SurfFeatureVectorGeneratorTest {
 		Mat generated = generator.generateFeatureVector(img1Big);
 		
 		Mat generatedFromDifferentImage = generator.generateFeatureVector(img1Small);
-
-		for(int i=0; i<generated.rows(); i++)
-			assertEquals(generated.get(i, 0)[0], generatedFromDifferentImage.get(i, 0)[0], 0.01);
+		
+		System.out.println(generatedFromDifferentImage.cols() + " " + generatedFromDifferentImage.rows());
+		
+		for(int i=0; i<generated.cols(); i++)
+			assertNotEquals(generated.get(0, i)[0], generatedFromDifferentImage.get(0, i)[0]);
 		
 		//assertFalse(Arrays.equals(generated, generatedFromDifferentImage));
 	}
