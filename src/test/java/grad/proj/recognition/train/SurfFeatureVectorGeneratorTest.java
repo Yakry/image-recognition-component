@@ -106,7 +106,9 @@ public class SurfFeatureVectorGeneratorTest {
 		generator.prepareGenerator(inputImages);
 		classesNum = subDirectoriesNames.length;
 		vectorsNum = inputImages.size();
-		featuresNum = 64;
+		// should be replaced by a method in generator
+		featuresNum = generator.generateFeatureVector(
+				inputImages.get(0)).length;
 		
 		FileWriter dataFile = new FileWriter("src\\test\\java\\grad"
 				+ "\\proj\\recognition\\train\\dataFile1.txt");
@@ -116,11 +118,6 @@ public class SurfFeatureVectorGeneratorTest {
 		for(int index=0;index<inputImages.size();++index){
 			float featureVector[] = generator.generateFeatureVector(
 					inputImages.get(index));
-			
-			// not the right way of testing it
-			//assertEquals("featureVector length not equal 64", 
-			//		64, featureVector.length);
-			
 			dataFile.write(labels.get(index).toString() + ' ');
 			for(Float val : featureVector)
 				dataFile.write(val.toString() + ' ');

@@ -13,12 +13,12 @@ public class MultiClassSVMClassifier {
 	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	private CvSVM svmArray[] = null;
-	//private LinearNormalizer normalizer = null;
+	private LinearNormalizer normalizer = null;
 	
 	public int classify(Mat featureVector) {
 		int classLabel = 0;
 		double bestError = Double.MIN_VALUE;
-		//featureVector = normalizer.normalize(featureVector);
+		featureVector = normalizer.normalize(featureVector);
 		
 		for(int i=0; i<svmArray.length; ++i){
 			double error = svmArray[i].predict(featureVector, true);
@@ -35,7 +35,7 @@ public class MultiClassSVMClassifier {
 		if(classLabel >= svmArray.length)
 			throw new RuntimeException("invalid class label " + classLabel);
 		
-		//featureVector = normalizer.normalize(featureVector);
+		featureVector = normalizer.normalize(featureVector);
 		return svmArray[classLabel].predict(featureVector, true);
 	}
 	
@@ -63,8 +63,8 @@ public class MultiClassSVMClassifier {
 			}
 		}
 		
-		//normalizer = new LinearNormalizer();
-		//normalizer.reset(trainingDataMat, -1, 1);
+		normalizer = new LinearNormalizer();
+		normalizer.reset(trainingDataMat, -1, 1);
 		
 		svmArray = new CvSVM[trainingData.size()];
 		for(int i=0; i<trainingData.size(); ++i)

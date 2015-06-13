@@ -3,53 +3,64 @@ package grad.proj.recognition.train;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+
 public class LinearNormalizer implements Normalizer {
 	private List<Double> max;
 	private List<Double> min;
 	private double rangeMin;
 	private double rangeMax;
 
-	@Override
-	public List<List<Double>> reset(List<List<Double>> featureVectors,
-			double rangeMin, double rangeMax) {
-		List<List<Double>> scaledFeatureVectors =
-				new ArrayList<List<Double>>(featureVectors.size());
+	public Mat reset(Mat featureVectors, double rangeMin, double rangeMax) {
+		Mat scaledFeatureVectors = new Mat(featureVectors.rows(),
+				featureVectors.cols(), CvType.CV_32FC1);
 		// array of maximum elements in each column in the matrix
-		max = new ArrayList<Double>(featureVectors.get(0).size());
+		max = new ArrayList<Double>(featureVectors.cols());
 		// array of minimum elements in each column in the matrix
-		min = new ArrayList<Double>(featureVectors.get(0).size());
+		min = new ArrayList<Double>(featureVectors.cols());
 		this.rangeMin = rangeMin;
 		this.rangeMax = rangeMax;
-
 		// get the max and min of each column
-		for (int col = 0; col < featureVectors.get(0).size(); col++){
-			double largest = Integer.MIN_VALUE;
-			double smallest = Integer.MAX_VALUE;
-			for (int row = 0; row < featureVectors.size(); row++){
-				double newnumber = featureVectors.get(row).get(col);
-				if (newnumber > largest)
-					largest = newnumber;
-				if (newnumber < smallest)
-					smallest = newnumber;
+		for (int col = 0; col < featureVectors.cols(); ++col){
+			double columnMax = Integer.MIN_VALUE;
+			double columnMin = Integer.MAX_VALUE;
+			for (int row = 0; row < featureVectors.rows(); ++row){
+				double newnumber = featureVectors.get(row, col)[0];
+				if (newnumber > columnMax)
+					columnMax = newnumber;
+				if (newnumber < columnMin)
+					columnMin = newnumber;
 			}
-			max.add(largest);
-			min.add(smallest);
+			max.add(columnMax);
+			min.add(columnMin);
 		}
 		
-		for (int i = 0; i < featureVectors.size(); i++)
-			scaledFeatureVectors.add(this.normalize(featureVectors.get(i)));
+		double range = rangeMax-rangeMin;
+		for(int row = 0; row < featureVectors.rows(); ++row){
+			for (int col = 0; col < featureVectors.cols(); ++col){
+				double newVal = (((featureVectors.get(row, col)[0] - min.get(col))*range)
+					/(max.get(col) - min.get(col))) + rangeMin;
+				scaledFeatureVectors.put(row, col, newVal);
+			}
+		}
 		
 		return scaledFeatureVectors;
 	}
-
+	
 	@Override
-	public List<Double> normalize(List<Double> featureVector) {
-		List<Double> scaledFeatureVector = 
-				new ArrayList<Double>(featureVector.size());
+	public Mat normalize(Mat featureVector) {
+		if(featureVector.rows()!=1)
+			throw new RuntimeException("the passed argument is not a 1D vector");
+		
+		Mat scaledFeatureVector = new Mat(1,featureVector.cols(),CvType.CV_32FC1);
 		double range = rangeMax-rangeMin;
-		for (int i = 0; i < featureVector.size(); i++)
-			scaledFeatureVector.add((((featureVector.get(i) - min.get(i))*range)
-					/(max.get(i) - min.get(i))) + rangeMin);
+		for (int i = 0; i < featureVector.cols(); ++i){
+			double newVal = (((featureVector.get(0, i)[0] - min.get(i))*range)
+				/(max.get(i) - min.get(i))) + rangeMin;
+			scaledFeatureVector.put(0, i, newVal);
+		}
+		
 		return scaledFeatureVector;
 	}
 }

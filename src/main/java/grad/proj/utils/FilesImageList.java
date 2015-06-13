@@ -4,7 +4,6 @@ import grad.proj.Image;
 
 import java.io.File;
 import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilesImageList extends AbstractList<Image>{

@@ -1,9 +1,8 @@
 package grad.proj.recognition.train;
 
-import java.util.List;
+import org.opencv.core.Mat;
 
 public interface Normalizer {
-	public List<List<Double>> reset(List<List<Double>> featureVectors,
-			double rangeMin, double rangeMax);
-	public List<Double> normalize(List<Double> featureVector);
+	public Mat reset(Mat featureVectors, double rangeMin, double rangeMax);
+	public Mat normalize(Mat featureVector);
 }
