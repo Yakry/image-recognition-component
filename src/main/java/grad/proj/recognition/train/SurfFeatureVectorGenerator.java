@@ -22,14 +22,24 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	 * http://docs.opencv.org/doc/tutorials/features2d/feature_description/feature_description.html
 	 */
 	
-	private final static int CLUSTER_COUNT = 64;
-	private final static DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
-	private final static DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+	private int clusterCount;
+	private DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+	private DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
-	private BOWKMeansTrainer trainer = new BOWKMeansTrainer(CLUSTER_COUNT);
+	private BOWKMeansTrainer trainer;
 	private BOWImgDescriptorExtractor imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
 	
 	private boolean prepared = false;
+	
+	public SurfFeatureVectorGenerator(){
+		this(64);
+	}
+	
+	public SurfFeatureVectorGenerator(int size) {
+		this.clusterCount = size;
+		
+		trainer = new BOWKMeansTrainer(clusterCount);
+	}
 	
 	@Override
 	public void prepareGenerator(List<Image> trainingSet){
@@ -110,6 +120,11 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 			}
 		}
 		return imageMat;
+	}
+
+	@Override
+	public int getSize() {
+		return clusterCount;
 	}
 
 }
