@@ -57,7 +57,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 
 	@Override
-	public float[] generateFeatureVector(Image image) {
+	public Mat generateFeatureVector(Image image) {
 		if(!prepared){
 			throw new RuntimeException("Generator not prepared, use SurfFeatureVectorGenerator.generateFeatureVector");
 		}
@@ -73,10 +73,10 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		Mat descriptors = new Mat();
 		imgDescriptor.compute(imageMat, keypoints, myImgDescriptor, pointIdxsOfClusters, descriptors);
 		
-		float[] featureVector = new float[(int) (myImgDescriptor.total() * myImgDescriptor.channels())];
-		myImgDescriptor.get(0, 0, featureVector);
+//		float[] featureVector = new float[(int) (myImgDescriptor.total() * myImgDescriptor.channels())];
+//		myImgDescriptor.get(0, 0, featureVector);
 		
-		return featureVector;
+		return myImgDescriptor;
 	}
 
 	/**

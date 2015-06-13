@@ -1,8 +1,6 @@
 package grad.proj.recognition.train;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import grad.proj.Image;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.ImageLoader;
@@ -16,6 +14,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
 
 public class SurfFeatureVectorGeneratorTest {
 
@@ -41,11 +40,14 @@ public class SurfFeatureVectorGeneratorTest {
 		
 		generator.prepareGenerator(Arrays.asList(img1Big));
 
-		float[] generatedTry1 = generator.generateFeatureVector(img1Big);
+		Mat generatedTry1 = generator.generateFeatureVector(img1Big);
 		
-		float[] generatedTry2 = generator.generateFeatureVector(img1Big);
+		Mat generatedTry2 = generator.generateFeatureVector(img1Big);
 		
-		assertArrayEquals(generatedTry1, generatedTry2, 0.0001f);
+		for(int i=0; i<generatedTry1.rows(); i++)
+			assertEquals(generatedTry1.get(i, 0)[0], generatedTry2.get(i, 0)[0], 0.01);
+		
+		//assertArrayEquals(generatedTry1, generatedTry2, 0.0001f);
 
 //		System.out.println(generatedTry1.length + " " + Arrays.toString(generatedTry1));
 //		System.out.println(generatedTry2.length + " " + Arrays.toString(generatedTry2));
@@ -67,11 +69,14 @@ public class SurfFeatureVectorGeneratorTest {
 		
 		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
 
-		float[] generated = generator.generateFeatureVector(img1Big);
+		Mat generated = generator.generateFeatureVector(img1Big);
 		
-		float[] generatedFromDifferentImage = generator.generateFeatureVector(img1Small);
+		Mat generatedFromDifferentImage = generator.generateFeatureVector(img1Small);
+
+		for(int i=0; i<generated.rows(); i++)
+			assertEquals(generated.get(i, 0)[0], generatedFromDifferentImage.get(i, 0)[0], 0.01);
 		
-		assertFalse(Arrays.equals(generated, generatedFromDifferentImage));
+		//assertFalse(Arrays.equals(generated, generatedFromDifferentImage));
 	}
 	
 	@Test
@@ -104,7 +109,7 @@ public class SurfFeatureVectorGeneratorTest {
 		vectorsNum = inputImages.size();
 		// should be replaced by a method in generator
 		featuresNum = generator.generateFeatureVector(
-				inputImages.get(0)).length;
+				inputImages.get(0)).rows();
 		
 		FileWriter dataFile = new FileWriter("src\\test\\java\\grad"
 				+ "\\proj\\recognition\\train\\dataFile1_train.txt");
@@ -112,11 +117,11 @@ public class SurfFeatureVectorGeneratorTest {
 		dataFile.write(vectorsNum.toString() + ' ');
 		dataFile.write(featuresNum.toString() + '\n');
 		for(int index=0;index<inputImages.size();++index){
-			float featureVector[] = generator.generateFeatureVector(
+			Mat featureVector = generator.generateFeatureVector(
 					inputImages.get(index));
 			dataFile.write(labels.get(index).toString() + ' ');
-			for(Float val : featureVector)
-				dataFile.write(val.toString() + ' ');
+			for(int i=0; i<featureVector.rows(); i++)
+				dataFile.write(featureVector.get(i, 0)[0] + " ");
 			dataFile.write('\n');
 		}
 		
