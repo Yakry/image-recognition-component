@@ -24,10 +24,10 @@ public class ObjectRecognizer {
 		return classify;
 	}
 
-	void trainToRecognize(Image... images) {
+	void trainToRecognize(List<Image> images) {
 		objectFeatureVectorGenerator.prepareGenerator(images);
 		
-		List<List<Double>> trainingSet = new ArrayList<>(images.length);
+		List<List<Double>> trainingSet = new ArrayList<>(images.size());
 		for(Image image : images){
 			trainingSet.add(toDoubleList(objectFeatureVectorGenerator.generateFeatureVector(image)));
 		}

@@ -32,7 +32,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	private boolean prepared = false;
 	
 	@Override
-	public void prepareGenerator(Image... trainingSet){
+	public void prepareGenerator(List<Image> trainingSet){
 		
 		for(Image image : trainingSet){
 			Mat imageMat = generateMatFromImage(image);

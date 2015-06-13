@@ -7,8 +7,11 @@ import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import grad.proj.Image;
+import grad.proj.utils.FilesImageList;
 import grad.proj.utils.ImageLoader;
 
 import org.junit.Test;
@@ -36,7 +39,7 @@ public class SurfFeatureVectorGeneratorTest {
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		//Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(img1Big);
+		generator.prepareGenerator(Arrays.asList(img1Big));
 
 		float[] generatedTry1 = generator.generateFeatureVector(img1Big);
 		
@@ -62,7 +65,7 @@ public class SurfFeatureVectorGeneratorTest {
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(img1Big, img1Small);
+		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
 
 		float[] generated = generator.generateFeatureVector(img1Big);
 		
@@ -74,7 +77,7 @@ public class SurfFeatureVectorGeneratorTest {
 	@Test
 	public void generateDataFile() throws Exception{
 		File dataSetDirectory = new File(DATA_FILES_PATH + "\\train");
-		ArrayList<Image> inputImages = new ArrayList<Image>();
+		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 		Integer currentLabel = 0;
@@ -82,24 +85,25 @@ public class SurfFeatureVectorGeneratorTest {
 		Integer vectorsNum = 0;
 		Integer featuresNum = 0;
 
-		String subDirectoriesNames[] = dataSetDirectory.list();
-		for(String subDirectoryName : subDirectoriesNames){
-			File objectDirectory = new File(DATA_FILES_PATH + "\\train\\" + subDirectoryName);
+		File subDirectoriesNames[] = dataSetDirectory.listFiles();
+		 
+		for(File objectDirectory : subDirectoriesNames){
+
 			if(!objectDirectory.isDirectory())
 				continue; // for safety
+			
 			File imageFiles[] = objectDirectory.listFiles();
+			
 			for(File imageFile : imageFiles){
-				inputImages.add(ImageLoader.loadImage(imageFile));
+				inputImagesFiles.add(imageFile);
 				labels.add(currentLabel);
 			}
 			++currentLabel;
 		}
 		
-		Image inputImageArray[] = new Image[inputImages.size()];
-		for(int index=0;index<inputImages.size();++index)
-			inputImageArray[index] = inputImages.get(index);
+		List<Image> inputImages = new FilesImageList(inputImagesFiles);
 		
-		generator.prepareGenerator(inputImageArray);
+		generator.prepareGenerator(inputImages);
 		classesNum = subDirectoriesNames.length;
 		vectorsNum = inputImages.size();
 		featuresNum = 64;

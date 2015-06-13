@@ -7,6 +7,7 @@ import grad.proj.utils.ImageLoader;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.opencv.core.Core;
@@ -29,7 +30,7 @@ public class ObjectRecognizerTest {
 
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		
-		recognizer.trainToRecognize(img1Big);
+		recognizer.trainToRecognize(Arrays.asList(img1Big));
 		
 		System.out.println(recognizer.recognize(img1Big));
 		assertTrue(recognizer.recognize(img1Big) > 0.99);
