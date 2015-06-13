@@ -109,9 +109,7 @@ public class SurfFeatureVectorGeneratorTest {
 		generator.prepareGenerator(inputImages);
 		classesNum = classesDirectories.length;
 		vectorsNum = inputImages.size();
-		// should be replaced by a method in generator
-		featuresNum = generator.generateFeatureVector(
-				inputImages.get(0)).rows();
+		featuresNum = generator.getFeatureVectorSize();
 		
 		FileWriter dataFile = new FileWriter("src\\test\\java\\grad"
 				+ "\\proj\\recognition\\train\\dataFile1_train.txt");
@@ -122,8 +120,8 @@ public class SurfFeatureVectorGeneratorTest {
 			Mat featureVector = generator.generateFeatureVector(
 					inputImages.get(index));
 			dataFile.write(labels.get(index).toString() + ' ');
-			for(int i=0; i<featureVector.rows(); i++)
-				dataFile.write(featureVector.get(i, 0)[0] + " ");
+			for(int i=0; i<featuresNum; i++)
+				dataFile.write(featureVector.get(0, i)[0] + " ");
 			dataFile.write('\n');
 		}
 		
