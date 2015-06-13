@@ -157,9 +157,7 @@ public class SVMClassifierTest {
 		generator.prepareGenerator(inputImages);
 		
 		classesNum = classesDirectories.length;
-		// should be replaced by a method in generator
-		featuresNum = generator.generateFeatureVector(
-				inputImages.get(0)).length;
+		featuresNum = generator.getFeatureVectorSize();
 		
 		List<Mat> trainingData = new ArrayList<Mat>(classesNum);
 		int index = 0;
@@ -171,10 +169,10 @@ public class SVMClassifierTest {
 			File imageFiles[] = classDirectory.listFiles();
 			int row = 0;
 			for(File imageFile : imageFiles){
-				float featureVector[] = generator.generateFeatureVector(
+				Mat featureVector = generator.generateFeatureVector(
 						ImageLoader.loadImage(imageFile));
 				for(int col = 0;col<featuresNum;++col)
-					classTrainingData.put(row, col, featureVector[col]);
+					classTrainingData.put(row, col, featureVector.get(0, col)[0]);
 				++row;
 			}
 			trainingData.add(classTrainingData);
@@ -195,12 +193,8 @@ public class SVMClassifierTest {
 			File imageFiles[] = classDirectory.listFiles();
 			numberOfRows += imageFiles.length;
 			for(File imageFile : imageFiles){
-				float testVectorTemp[] = generator.generateFeatureVector(
+				Mat testVector = generator.generateFeatureVector(
 						ImageLoader.loadImage(imageFile));
-				Mat testVector = new Mat(1, featuresNum, CvType.CV_32FC1);
-				for(int col = 0;col<featuresNum;++col)
-					testVector.put(0, col, testVectorTemp[col]);
-				
 				double predictedLabel = classifier.classify(testVector);
 				correctLabels += ((classLabel == predictedLabel)?1:0);
 			}

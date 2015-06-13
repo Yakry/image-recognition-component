@@ -10,5 +10,5 @@ public interface FeatureVectorGenerator {
 	Mat generateFeatureVector(Image image);
 	void prepareGenerator(List<Image> trainingSet);
 	
-	int getSize();
+	int getFeatureVectorSize();
 }

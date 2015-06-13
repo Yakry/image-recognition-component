@@ -123,8 +123,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 
 	@Override
-	public int getSize() {
+	public int getFeatureVectorSize() {
 		return clusterCount;
 	}
-
 }
