@@ -22,7 +22,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	 * http://docs.opencv.org/doc/tutorials/features2d/feature_description/feature_description.html
 	 */
 	
-	private final static int CLUSTER_COUNT = 180;
+	private final static int CLUSTER_COUNT = 64;
 	private final static DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
 	private final static DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
