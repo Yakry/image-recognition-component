@@ -9,7 +9,7 @@ import org.opencv.ml.CvParamGrid;
 import org.opencv.ml.CvSVM;
 import org.opencv.ml.CvSVMParams;
 
-public class MultiClassSVMClassifier implements Classifier {
+public class SVMClassifier implements Classifier {
 	private static final long serialVersionUID = 1L;
 	private CvSVM svmArray[] = null;
 	private LinearNormalizer normalizer = null;

@@ -42,7 +42,7 @@ public class MultiClassSVMClassifierTest {
 		trainingData.get(1).put(4, 0, -0.5);
 		trainingData.get(1).put(4, 1, 1);
 		
-		MultiClassSVMClassifier classifier = new MultiClassSVMClassifier();
+		SVMClassifier classifier = new SVMClassifier();
 		classifier.train(trainingData);
 		
 		Mat inputVector = new Mat(1,2,CvType.CV_32FC1);
@@ -94,7 +94,7 @@ public class MultiClassSVMClassifierTest {
 			trainingData.add(mat);
 		}
 		
-		MultiClassSVMClassifier classifier = new MultiClassSVMClassifier();
+		SVMClassifier classifier = new SVMClassifier();
 		classifier.train(trainingData);
 		
 

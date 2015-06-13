@@ -21,7 +21,7 @@ public class ObjectRecognizerTest {
 	
 	@Test
 	public void testTrainingOnOneImageAndRecognizeIt() throws Exception {
-	ObjectRecognizer recognizer = new ObjectRecognizer(new MultiClassSVMClassifier(),
+	ObjectRecognizer recognizer = new ObjectRecognizer(new SVMClassifier(),
 														new SurfFeatureVectorGenerator());
 		
 		final URL IMG1_BIG_URL = getClass().getResource(IMG1_BIG);
