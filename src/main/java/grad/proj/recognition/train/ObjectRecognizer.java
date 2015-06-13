@@ -19,20 +19,11 @@ public class ObjectRecognizer {
 	}
 
 	double recognize(Image image) {
-		List<Double> vec = toDoubleList(objectFeatureVectorGenerator.generateFeatureVector(image));
-		double classify = objectClassifier.classify(vec);
-		return classify;
+		return 0.0;
 	}
 
 	void trainToRecognize(List<Image> images) {
-		objectFeatureVectorGenerator.prepareGenerator(images);
 		
-		List<List<Double>> trainingSet = new ArrayList<>(images.size());
-		for(Image image : images){
-			trainingSet.add(toDoubleList(objectFeatureVectorGenerator.generateFeatureVector(image)));
-		}
-		
-		objectClassifier.train(trainingSet);
 	}
 
 	private static List<Double> toDoubleList(float[] arr){
