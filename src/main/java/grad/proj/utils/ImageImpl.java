@@ -1,6 +1,5 @@
 package grad.proj.utils;
 
-import grad.proj.Image;
 
 class ImageImpl implements Image {
 	int[][] imageArr;

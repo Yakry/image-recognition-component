@@ -2,7 +2,7 @@ package grad.proj.recognition.train;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import grad.proj.Image;
+import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.io.File;

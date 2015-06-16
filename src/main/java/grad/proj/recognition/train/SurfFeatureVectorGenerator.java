@@ -11,7 +11,7 @@ import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 
-import grad.proj.Image;
+import grad.proj.utils.Image;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	

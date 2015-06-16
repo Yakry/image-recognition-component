@@ -1,9 +1,9 @@
 package grad.proj.recognition.train;
 
 import static org.junit.Assert.assertTrue;
-import grad.proj.Image;
 import grad.proj.utils.DataFileLoader;
 import grad.proj.utils.FilesImageList;
+import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.io.File;

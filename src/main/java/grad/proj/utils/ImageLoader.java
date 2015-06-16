@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import grad.proj.Image;
-
 public class ImageLoader {
 
 	public static Image loadImage(String imagePath) {

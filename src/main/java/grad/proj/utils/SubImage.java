@@ -1,6 +1,5 @@
 package grad.proj.utils;
 
-import grad.proj.Image;
 
 public class SubImage implements Image {
 	

@@ -3,7 +3,7 @@ package grad.proj.recognition.train;
 import java.util.ArrayList;
 import java.util.List;
 
-import grad.proj.Image;
+import grad.proj.utils.Image;
 
 public class ObjectRecognizer {
 	

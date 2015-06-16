@@ -1,7 +1,5 @@
 package grad.proj.utils;
 
-import grad.proj.Image;
-
 import java.io.File;
 import java.util.AbstractList;
 import java.util.List;
