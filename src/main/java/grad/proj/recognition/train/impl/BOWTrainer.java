@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.opencv.core.Mat;
 
-public class BOWTrainer {
+class BOWTrainer {
 	protected ArrayList<Mat> descriptors = new ArrayList<Mat>();
 	protected int size;
 	
