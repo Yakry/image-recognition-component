@@ -1,6 +1,7 @@
 package grad.proj.recognition.train;
 
 import static org.junit.Assert.*;
+import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;

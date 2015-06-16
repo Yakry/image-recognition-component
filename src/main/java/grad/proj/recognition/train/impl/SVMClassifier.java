@@ -1,4 +1,6 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
+
+import grad.proj.recognition.train.Classifier;
 
 import java.util.List;
 

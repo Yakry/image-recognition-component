@@ -1,4 +1,4 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 
+import grad.proj.recognition.train.FeatureVectorGenerator;
 import grad.proj.utils.Image;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {

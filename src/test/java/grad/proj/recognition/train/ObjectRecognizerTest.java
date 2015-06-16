@@ -2,6 +2,8 @@ package grad.proj.recognition.train;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import grad.proj.recognition.train.impl.SVMClassifier;
+import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 

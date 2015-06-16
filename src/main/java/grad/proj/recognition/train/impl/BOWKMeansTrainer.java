@@ -1,4 +1,4 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;

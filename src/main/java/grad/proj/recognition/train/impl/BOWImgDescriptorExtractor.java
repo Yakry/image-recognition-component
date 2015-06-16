@@ -1,4 +1,4 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
