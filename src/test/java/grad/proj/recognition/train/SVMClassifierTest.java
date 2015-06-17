@@ -9,6 +9,8 @@ import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +20,12 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 public class SVMClassifierTest {
-	static{System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+	
+	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
+	
 	// path relative to local machine
 	private static final String DATA_FILES_PATH = "E:\\dataset";
-	
+
 	@Test
 	public void testSimpleData() {
 		List<Mat> trainingData = new ArrayList<Mat>(2);

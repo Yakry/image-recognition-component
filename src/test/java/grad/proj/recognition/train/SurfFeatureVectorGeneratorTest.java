@@ -9,6 +9,7 @@ import grad.proj.utils.ImageLoader;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ public class SurfFeatureVectorGeneratorTest {
 	// path relative to local machine
 	private static final String DATA_FILES_PATH = "E:\\dataset";
 
-	static{System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
 
 	@Test
 	public void testFeatureVectorForSameImageDoesnotChange() throws Exception {

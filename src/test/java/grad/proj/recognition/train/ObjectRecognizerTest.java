@@ -9,6 +9,7 @@ import grad.proj.utils.ImageLoader;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class ObjectRecognizerTest {
 	private static final String IMG1_BIG = "SURF_IMG_1_BIG.jpg";
 	private static final String IMG1_SMALL = "SURF_IMG_1_SMALL.jpg";
 
-	static{System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
 	
 	@Test
 	public void testTrainingOnOneImageAndRecognizeIt() throws Exception {
