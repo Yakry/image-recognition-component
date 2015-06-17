@@ -1,4 +1,4 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
 
 import static org.junit.Assert.*;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;

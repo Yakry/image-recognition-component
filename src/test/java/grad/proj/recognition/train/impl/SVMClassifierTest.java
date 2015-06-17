@@ -1,4 +1,4 @@
-package grad.proj.recognition.train;
+package grad.proj.recognition.train.impl;
 
 import static org.junit.Assert.assertTrue;
 import grad.proj.recognition.train.impl.SVMClassifier;
