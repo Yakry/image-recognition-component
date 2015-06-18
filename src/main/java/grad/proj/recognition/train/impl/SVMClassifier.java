@@ -11,7 +11,7 @@ import org.opencv.ml.SVM;
 
 public class SVMClassifier implements Classifier {
 	private static final long serialVersionUID = 1L;
-	private SVM svmArray[] = null;
+	public SVM svmArray[] = null;
 	private LinearNormalizer normalizer = null;
 	
 //	extracted from opencv c++ code
@@ -127,6 +127,14 @@ public class SVMClassifier implements Classifier {
 //				coeffGrid, degreeGrid, true);
 		
 		return svm;
+	}
+	
+	public double getC(int classLabel){
+		return svmArray[classLabel].getC();
+	}
+	
+	public Mat getSupportVector(int classLabel){
+		return svmArray[classLabel].getSupportVectors();
 	}
 	
 //	private static CvParamGrid constructParamGrid(double minVal,

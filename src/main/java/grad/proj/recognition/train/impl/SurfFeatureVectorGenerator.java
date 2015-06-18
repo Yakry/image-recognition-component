@@ -30,6 +30,12 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	private BOWKMeansTrainer trainer;
 	private BOWImgDescriptorExtractor imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
 	
+	private MatOfKeyPoint keypoints;
+	private List<List<Integer>> pointIdxsOfClusters;
+	private Mat myImgDescriptor;
+	private Mat descriptors;
+	
+	
 	private boolean prepared = false;
 	
 	public SurfFeatureVectorGenerator(){
@@ -56,7 +62,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		
 		prepared = true;
 	}
-
+	
 	@Override
 	public Mat generateFeatureVector(Image image) {
 		if(!prepared){
@@ -65,13 +71,13 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		
 		Mat imageMat = generateMatFromImage(image);
 		
-		MatOfKeyPoint keypoints = new MatOfKeyPoint();
-		List<List<Integer>> pointIdxsOfClusters = new ArrayList<>();
+		keypoints = new MatOfKeyPoint();
+		pointIdxsOfClusters = new ArrayList<>();
 
 		FeatureDetector.create(FeatureDetector.SURF).detect(imageMat, keypoints);
 
-		Mat myImgDescriptor = new Mat();
-		Mat descriptors = new Mat();
+		myImgDescriptor = new Mat();
+		descriptors = new Mat();
 		imgDescriptor.compute(imageMat, keypoints, myImgDescriptor, pointIdxsOfClusters, descriptors);
 		
 //		float[] featureVector = new float[(int) (myImgDescriptor.total() * myImgDescriptor.channels())];
@@ -127,4 +133,13 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	public int getFeatureVectorSize() {
 		return clusterCount;
 	}
+
+	public MatOfKeyPoint getKeypoints() {
+		return keypoints;
+	}
+
+	public List<List<Integer>> getPointIdxsOfClusters() {
+		return pointIdxsOfClusters;
+	}
+	
 }

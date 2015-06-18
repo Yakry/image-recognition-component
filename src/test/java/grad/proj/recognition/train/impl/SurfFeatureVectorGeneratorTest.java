@@ -24,7 +24,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 	private static final String IMG1_BIG = "SURF_IMG_1_BIG.jpg";
 	private static final String IMG1_SMALL = "SURF_IMG_1_SMALL.jpg";
 	// path relative to local machine
-	private static final String DATA_FILES_PATH = "E:\\dataset";
+	public static final String DATA_FILES_PATH = "E:\\dataset";
 
 	@Test
 	public void testFeatureVectorForSameImageDoesnotChange() throws Exception {
