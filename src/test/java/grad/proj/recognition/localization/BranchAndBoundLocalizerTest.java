@@ -1,17 +1,15 @@
 package grad.proj.recognition.localization;
 
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
-import grad.proj.recognition.train.FeatureVectorGenerator;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGeneratorTest;
+import grad.proj.utils.DataFilesPathWrapper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,14 +17,13 @@ import java.util.List;
 import org.junit.Test;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.ml.SVM;
 
 public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
 	public void testBranchAndBound(){
-		File trainFolder = new File(SurfFeatureVectorGeneratorTest.DATA_FILES_PATH + "\\train\\apple");
-//		File testFolder = new File(SurfFeatureVectorGeneratorTest.DATA_FILES_PATH + "\\test\\apple");
+		File trainFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\train\\apple");
+//		File testFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple");
 		
 		ArrayList<File> trainImagesFiles = new ArrayList<File>();
 		for(File file : trainFolder.listFiles()){
@@ -49,7 +46,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 		svm.train(Arrays.asList(trainImagesMat, Mat.eye(1, 64, CvType.CV_32SC1)));
 		
-		Image testImage = ImageLoader.loadImage(new File(SurfFeatureVectorGeneratorTest.DATA_FILES_PATH + "\\test\\apple\\test05.jpg"));
+		Image testImage = ImageLoader.loadImage(new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple\\test05.jpg"));
 		
 		Rectangle objectBounds = new BranchAndBoundLocalizer().getObjectBounds(testImage, svm.svmArray[0], featureVectorGenerator);
 		
@@ -59,6 +56,5 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		System.out.println("errorTop = " + Math.abs(real.y - objectBounds.y));
 		System.out.println("errorRight = " + Math.abs((real.x+real.width) - (objectBounds.x + objectBounds.width)));
 		System.out.println("errorBottom = " + Math.abs((real.y+real.height) - (objectBounds.y + objectBounds.height)));
-		
 	}
 }

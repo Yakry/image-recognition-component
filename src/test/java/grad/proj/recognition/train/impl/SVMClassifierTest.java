@@ -2,15 +2,13 @@ package grad.proj.recognition.train.impl;
 
 import static org.junit.Assert.assertTrue;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
-import grad.proj.recognition.train.impl.SVMClassifier;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataFileLoader;
+import grad.proj.utils.DataFilesPathWrapper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +21,6 @@ import org.opencv.core.Mat;
 public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	
 	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
-	
-	// path relative to local machine
-	private static final String DATA_FILES_PATH = "E:\\dataset";
 
 	@Test
 	public void testSimpleData() {
@@ -137,7 +132,8 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	
 	@Test
 	public void testRealImages(){
-		File trainDataSetDirectory = new File(DATA_FILES_PATH + "\\train");
+		File trainDataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+												+ "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
@@ -187,7 +183,8 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 		
 		classifier.train(trainingData);
 		
-		File testDataSetDirectory = new File(DATA_FILES_PATH + "\\test");
+		File testDataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+												+ "\\test");
 		double correctLabels = 0;
 		double numberOfRows = 0;
 		int classLabel = 0;

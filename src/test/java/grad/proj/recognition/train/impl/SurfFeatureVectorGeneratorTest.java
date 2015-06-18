@@ -3,6 +3,7 @@ package grad.proj.recognition.train.impl;
 import static org.junit.Assert.*;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+import grad.proj.utils.DataFilesPathWrapper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
@@ -23,8 +24,6 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	private static final String IMG1_BIG = "SURF_IMG_1_BIG.jpg";
 	private static final String IMG1_SMALL = "SURF_IMG_1_SMALL.jpg";
-	// path relative to local machine
-	public static final String DATA_FILES_PATH = "E:\\dataset";
 
 	@Test
 	public void testFeatureVectorForSameImageDoesnotChange() throws Exception {
@@ -84,7 +83,8 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 	
 	@Test
 	public void generateTestDataFile() throws Exception{
-		File dataSetDirectory = new File(DATA_FILES_PATH + "\\train");
+		File dataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+											+ "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
