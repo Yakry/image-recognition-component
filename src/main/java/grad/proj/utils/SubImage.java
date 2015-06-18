@@ -20,7 +20,7 @@ public class SubImage implements Image {
 
 	@Override
 	public int getPixelAt(int row, int col) {
-		if(row >= width  || col >= height ){
+		if(row >= height  || col >= width ){
 			throw new RuntimeException("Access out of sub image bounds");
 		}
 		
