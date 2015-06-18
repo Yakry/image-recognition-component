@@ -1,6 +1,7 @@
 package grad.proj.recognition.train;
 
 import static org.junit.Assert.*;
+import grad.proj.recognition.RequiresLoadingTestBaseClass;
 
 import java.nio.file.Paths;
 
@@ -9,10 +10,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
-public class OpenCVLoadingTest {
-
-	// Loads the native library of OpenCV, this code should be in the main class if exists
-	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
+public class OpenCVLoadingTest extends RequiresLoadingTestBaseClass{
 
 	@Test
 	public void testLoaded() {

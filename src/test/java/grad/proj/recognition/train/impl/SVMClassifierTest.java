@@ -1,6 +1,7 @@
 package grad.proj.recognition.train.impl;
 
 import static org.junit.Assert.assertTrue;
+import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataFileLoader;
@@ -19,7 +20,7 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
-public class SVMClassifierTest {
+public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	
 	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
 	

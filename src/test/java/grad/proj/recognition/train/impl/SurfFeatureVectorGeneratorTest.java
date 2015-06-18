@@ -1,6 +1,7 @@
 package grad.proj.recognition.train.impl;
 
 import static org.junit.Assert.*;
+import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
@@ -18,14 +19,12 @@ import org.junit.Test;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
-public class SurfFeatureVectorGeneratorTest {
+public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass {
 
 	private static final String IMG1_BIG = "SURF_IMG_1_BIG.jpg";
 	private static final String IMG1_SMALL = "SURF_IMG_1_SMALL.jpg";
 	// path relative to local machine
 	private static final String DATA_FILES_PATH = "E:\\dataset";
-
-	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
 
 	@Test
 	public void testFeatureVectorForSameImageDoesnotChange() throws Exception {
