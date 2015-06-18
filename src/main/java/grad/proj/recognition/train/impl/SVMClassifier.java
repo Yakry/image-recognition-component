@@ -29,8 +29,8 @@ public class SVMClassifier implements Classifier {
 			
 			double distanceFromMargin = predictRes.get(0, 0)[0];
 			boolean belongToClass = distanceFromMargin < 0;
-			//System.out.println(predict + " " + svmArray[i].predict(featureVector));
-//			 System.out.println(distanceFromMargin);
+//			System.out.println(predict + " " + svmArray[i].predict(featureVector));
+//			System.out.println(distanceFromMargin);
 			
 			if(belongToClass){
 				distanceFromMargin = Math.abs(distanceFromMargin); 
@@ -42,7 +42,6 @@ public class SVMClassifier implements Classifier {
 		}
 		
 		//System.out.println(bestError);
-		
 		return classLabel;
 	}
 	
@@ -50,8 +49,10 @@ public class SVMClassifier implements Classifier {
 		if(classLabel >= svmArray.length)
 			throw new RuntimeException("invalid class label " + classLabel);
 		
+		Mat predictRes = new Mat();
 		featureVector = normalizer.normalize(featureVector);
-		return svmArray[classLabel].predict(featureVector);
+		svmArray[classLabel].predict(featureVector, predictRes, RAW_OUTPUT);
+		return predictRes.get(0, 0)[0];
 	}
 	
 	// all classes feature vectors
@@ -118,7 +119,6 @@ public class SVMClassifier implements Classifier {
 		
 		svm.setTermCriteria(new TermCriteria(TermCriteria.COUNT, 
 				2000, TermCriteria.EPS));
-		
 		
 		svm.train(trainingData, ROW_SAMPLE, binaryLabels);
 		
