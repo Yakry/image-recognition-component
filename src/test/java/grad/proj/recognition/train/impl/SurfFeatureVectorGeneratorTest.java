@@ -111,8 +111,9 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		vectorsNum = inputImages.size();
 		featuresNum = generator.getFeatureVectorSize();
 		
-		FileWriter dataFile = new FileWriter("src\\test\\java\\grad"
-				+ "\\proj\\recognition\\train\\dataFile1_train.txt");
+		FileWriter dataFile = new FileWriter("D:\\Dropbox\\Graduation project"
+				+ "\\grad-project\\src\\test\\java\\grad\\proj\\recognition\\train"
+				+ "\\impl\\dataFile1_train.txt");
 		dataFile.write(classesNum.toString() + ' ');
 		dataFile.write(vectorsNum.toString() + ' ');
 		dataFile.write(featuresNum.toString() + '\n');
