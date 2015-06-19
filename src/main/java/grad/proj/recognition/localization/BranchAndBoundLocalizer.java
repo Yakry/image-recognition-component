@@ -29,6 +29,7 @@ public class BranchAndBoundLocalizer {
 			}
 		}
 		
+		System.out.println("starting search");
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
 		searchQueue.add(new SearchState(image));
 		while(searchQueue.peek().hasSubStates()){
