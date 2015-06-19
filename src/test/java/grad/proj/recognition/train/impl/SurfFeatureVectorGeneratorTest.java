@@ -1,8 +1,9 @@
 package grad.proj.recognition.train.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataFilesPathWrapper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
@@ -11,13 +12,11 @@ import grad.proj.utils.ImageLoader;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass {

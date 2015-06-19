@@ -131,7 +131,7 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	}
 	
 	@Test
-	public void testRealImages(){
+	public void testRealImages() throws Exception{
 		File trainDataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
 												+ "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
@@ -146,7 +146,7 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 		File[] classesDirectories = trainDataSetDirectory.listFiles();
 		for(File classDirectory : classesDirectories){
 			if(!classDirectory.isDirectory())
-				continue; // for safety
+				continue;
 			File imageFiles[] = classDirectory.listFiles();
 			classVectorsNum.add(imageFiles.length);
 			for(File imageFile : imageFiles){
