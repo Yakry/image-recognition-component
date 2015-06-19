@@ -79,12 +79,9 @@ public class SearchState implements Comparable<SearchState> {
 	}
 
 	public Rectangle getRectangle(){
-		if(this.hasSubStates())
-			throw new RuntimeException("the current state is not a single rectangle");
-		
-		return new Rectangle(minCoordinate[LEFT], minCoordinate[TOP],
-				minCoordinate[RIGHT] - minCoordinate[LEFT],
-				minCoordinate[BOTTOM] - minCoordinate[TOP]);
+		return new Rectangle(maxCoordinate[LEFT], maxCoordinate[TOP],
+				maxCoordinate[RIGHT] - maxCoordinate[LEFT],
+				maxCoordinate[BOTTOM] - maxCoordinate[TOP]);
 	}
 	
 	@Override
@@ -92,6 +89,6 @@ public class SearchState implements Comparable<SearchState> {
 		// the priority queue sort from smallest to largest
 		// but we need states from largest to smallest score
 		// thus reverse the comparison
-		return o.quality.compareTo(this.quality);
+		return this.quality.compareTo(o.quality);
 	}
 }

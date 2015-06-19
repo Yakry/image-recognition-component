@@ -79,9 +79,14 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 
 		classifier.train(trainingData);
 		Image image = ImageLoader.loadImage(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg");
-		SVM bikesSVM = classifier.svmArray[1];
+		Mat featureVector = generator.generateFeatureVector(image);
+		int classLabel = classifier.classify(featureVector);
+		SVM classSVM = classifier.svmArray[classLabel];
 		BranchAndBoundLocalizer localizer = new BranchAndBoundLocalizer();
-		Rectangle objectBounds = localizer.getObjectBounds(image, bikesSVM, generator);
+		
+		System.out.println("starting search");
+		System.out.println("####################");
+		Rectangle objectBounds = localizer.getObjectBounds(image, classSVM, generator);
 		
 		BufferedImage drawableImage = ImageIO.read(
 				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg"));
@@ -105,6 +110,21 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		
 		ImageIO.write(drawableImage, "jpg",
 				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\out.jpg"));
+		
+		System.out.println("class lable: " + classLabel);
+		System.out.println("####################");
+		System.out.println("object bounds: ");
+		System.out.println("x: " + objectBounds.getX());
+		System.out.println("y: " + objectBounds.getY());
+		System.out.println("width: " + objectBounds.getWidth());
+		System.out.println("height: " + objectBounds.getHeight());
+		System.out.println("####################");
+//		Mat supportVector = classSVM.getSupportVectors();
+//		System.out.println("number of support vector " + classSVM.getSupportVectors().rows());
+//		System.out.println("support vector 0:");
+//		for(int i=0;i<supportVector.cols();++i)
+//			System.out.println(i + "  " + supportVector.get(0, i)[0]);
+//		System.out.println("####################");
 	}
 	
 	@Test

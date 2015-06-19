@@ -15,6 +15,7 @@ import org.opencv.ml.SVM;
 public class BranchAndBoundLocalizer {
 
 	public Rectangle getObjectBounds(Image image, SVM svm, SurfFeatureVectorGenerator featureVectorGenerator) {
+		featureVectorGenerator.generateFeatureVector(image);
 		Mat supportVector = svm.getSupportVectors();
 		MatOfKeyPoint coordinates = featureVectorGenerator.getKeypoints();
 		List<List<Integer>> clusterPoints = featureVectorGenerator.getPointIdxsOfClusters();
@@ -29,10 +30,10 @@ public class BranchAndBoundLocalizer {
 			}
 		}
 		
-		System.out.println("starting search");
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
+		int terminationLimit = 300000;
 		searchQueue.add(new SearchState(image));
-		while(searchQueue.peek().hasSubStates()){
+		while(searchQueue.peek().hasSubStates() && (terminationLimit > 0)){
 			SearchState subState1 = new SearchState();
 			SearchState subState2 = new SearchState();
 			searchQueue.poll().split(subState1, subState2);
@@ -40,6 +41,7 @@ public class BranchAndBoundLocalizer {
 			subState2.quality = this.evaluateState(subState2, supportVector, keyPoints);
 			searchQueue.add(subState1);
 			searchQueue.add(subState2);
+			--terminationLimit;
 		}
 		
 		SearchState target = searchQueue.peek();
@@ -85,7 +87,7 @@ public class BranchAndBoundLocalizer {
 			else if(maxRectangle.contains(keyPoints.get(i, 0)[0], keyPoints.get(i, 1)[0])){
 				int clusterIndex = (int)keyPoints.get(i, 2)[0];
 				double coefficient = supportVector.get(0, clusterIndex)[0];
-				if(coefficient > 0.0)
+				if(coefficient < 0.0)
 					stateQuality += coefficient;
 			}
 		}
