@@ -1,6 +1,6 @@
 package grad.proj.recognition.localization;
 
-import grad.proj.recognition.train.Classifier;
+import grad.proj.recognition.train.FeatureVectorClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.Image;
 import grad.proj.utils.MatConverters;
@@ -18,7 +18,7 @@ public class SlidingWindowLocalizer {
 	private static final int IMAGE_DIM = 500;
 	private static final int WINDOW_DIM = 100;
 
-	public Rectangle getObjectBounds(Image image, Classifier classifier,
+	public Rectangle getObjectBounds(Image image, FeatureVectorClassifier classifier,
 			SurfFeatureVectorGenerator featureVectorGenerator, int classLabel) {
 		int bestX = 0, bestY = 0;
 		double bestDistance = Double.MAX_VALUE;

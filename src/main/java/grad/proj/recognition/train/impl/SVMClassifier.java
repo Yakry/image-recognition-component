@@ -1,6 +1,6 @@
 package grad.proj.recognition.train.impl;
 
-import grad.proj.recognition.train.Classifier;
+import grad.proj.recognition.train.FeatureVectorClassifier;
 import grad.proj.recognition.train.Normalizer;
 import grad.proj.utils.MatConverters;
 
@@ -11,7 +11,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
 import org.opencv.ml.SVM;
 
-public class SVMClassifier implements Classifier {
+public class SVMClassifier implements FeatureVectorClassifier {
 	private static final long serialVersionUID = 1L;
 	public SVM svmArray[] = null;
 	private Normalizer normalizer = null;
@@ -145,6 +145,11 @@ public class SVMClassifier implements Classifier {
 	
 	public Mat getSupportVector(int classLabel){
 		return svmArray[classLabel].getSupportVectors();
+	}
+
+	@Override
+	public int getClassesNo() {
+		return svmArray.length;
 	}
 	
 //	private static CvParamGrid constructParamGrid(double minVal,
