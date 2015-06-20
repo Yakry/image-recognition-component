@@ -12,14 +12,15 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.ml.SVM;
 
-public class BranchAndBoundLocalizer {
+public class BranchAndBoundLocalizer implements ObjectLocalizer {
 
-	public Rectangle getObjectBounds(Image image, SVM svm, SurfFeatureVectorGenerator featureVectorGenerator) {
+	public Rectangle getObjectBounds(Image image, SVM svm,
+			SurfFeatureVectorGenerator featureVectorGenerator) {
 		featureVectorGenerator.generateFeatureVector(image);
 		Mat supportVector = svm.getSupportVectors();
 		MatOfKeyPoint coordinates = featureVectorGenerator.getKeypoints();
 		List<List<Integer>> clusterPoints = featureVectorGenerator.getPointIdxsOfClusters();
-		
+
 		// combining key points with cluster index
 		Mat keyPoints = new Mat(coordinates.rows(), 3, CvType.CV_32FC1);
 		for(int clusterIndex = 0;clusterIndex < clusterPoints.size();++clusterIndex){
@@ -30,10 +31,12 @@ public class BranchAndBoundLocalizer {
 			}
 		}
 		
+		int counter = 50000;
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
-		int terminationLimit = 300000;
-		searchQueue.add(new SearchState(image));
-		while(searchQueue.peek().hasSubStates() && (terminationLimit > 0)){
+		SearchState startState = new SearchState(image);
+		startState.quality = this.evaluateState(startState, supportVector, keyPoints);
+		searchQueue.add(startState);
+		while(searchQueue.peek().hasSubStates() && (counter > 0)){
 			SearchState subState1 = new SearchState();
 			SearchState subState2 = new SearchState();
 			searchQueue.poll().split(subState1, subState2);
@@ -41,7 +44,7 @@ public class BranchAndBoundLocalizer {
 			subState2.quality = this.evaluateState(subState2, supportVector, keyPoints);
 			searchQueue.add(subState1);
 			searchQueue.add(subState2);
-			--terminationLimit;
+			--counter;
 		}
 		
 		SearchState target = searchQueue.peek();

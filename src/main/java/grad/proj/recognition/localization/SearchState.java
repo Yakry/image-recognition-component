@@ -86,9 +86,6 @@ public class SearchState implements Comparable<SearchState> {
 	
 	@Override
 	public int compareTo(SearchState o) {
-		// the priority queue sort from smallest to largest
-		// but we need states from largest to smallest score
-		// thus reverse the comparison
 		return this.quality.compareTo(o.quality);
 	}
 }

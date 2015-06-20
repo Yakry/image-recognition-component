@@ -28,6 +28,15 @@ public class SubImage implements Image {
 	}
 
 	@Override
+	public void setPixelAt(int row, int col, int rgb) {
+		if(row >= height  || col >= width ){
+			throw new RuntimeException("Access out of sub image bounds");
+		}
+
+		originalImage.setPixelAt(x + row, y + col, rgb);
+	}
+
+	@Override
 	public int getWidth() {
 		return width;
 	}

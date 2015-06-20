@@ -13,7 +13,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -21,12 +20,11 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.ml.SVM;
 
-public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
+public class SlidingWindowLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
-	public void testBranchAndBound() throws Exception {
+	public void testSlidingWindow() throws Exception {
 		File trainDataSetDirectory = new File(
 				DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
@@ -81,13 +79,13 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		Image image = ImageLoader.loadImage(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg");
 		Mat featureVector = generator.generateFeatureVector(image);
 		int classLabel = classifier.classify(featureVector);
-		SVM classSVM = classifier.svmArray[classLabel];
-		BranchAndBoundLocalizer localizer = new BranchAndBoundLocalizer();
-		
+		SlidingWindowLocalizer localizer = new SlidingWindowLocalizer();
+
 		System.out.println("starting search");
 		System.out.println("####################");
-		Rectangle objectBounds = localizer.getObjectBounds(image, classSVM, generator);
-		
+		Rectangle objectBounds = localizer.getObjectBounds(image, classifier,
+				generator, classLabel);
+
 		BufferedImage drawableImage = ImageIO.read(
 				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg"));
 		for(int i=0;i<objectBounds.getWidth();++i){
@@ -98,7 +96,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 					(int)objectBounds.getY() + (int)objectBounds.getHeight(),
 					Color.GREEN.getRGB());
 		}
-		
+
 		for(int i=0;i<objectBounds.getHeight();++i){
 			drawableImage.setRGB((int)objectBounds.getX(),
 					(int)objectBounds.getY() + i,
@@ -107,10 +105,10 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 					(int)objectBounds.getY() + i,
 					Color.GREEN.getRGB());
 		}
-		
+
 		ImageIO.write(drawableImage, "jpg",
 				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\out.jpg"));
-		
+
 		System.out.println("class lable: " + classLabel);
 		System.out.println("####################");
 		System.out.println("object bounds: ");
@@ -119,43 +117,5 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		System.out.println("width: " + objectBounds.getWidth());
 		System.out.println("height: " + objectBounds.getHeight());
 		System.out.println("####################");
-	}
-	
-	@Test
-	public void testBranchAndBound2(){
-		File trainFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\train\\apple");
-//		File testFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple");
-		
-		ArrayList<File> trainImagesFiles = new ArrayList<File>();
-		for(File file : trainFolder.listFiles()){
-			trainImagesFiles.add(file);
-		}
-		List<Image> trainImages = new FilesImageList(trainImagesFiles);
-		
-		SVMClassifier svm = new SVMClassifier();
-
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		featureVectorGenerator.prepareGenerator(trainImages);
-		
-		Mat trainImagesMat = new Mat(trainImages.size(), featureVectorGenerator.getFeatureVectorSize(), CvType.CV_32SC1);
-		int cur = 0;
-		for(Image image : trainImages){
-			Mat f = featureVectorGenerator.generateFeatureVector(image);
-			for(int i=0; i<featureVectorGenerator.getFeatureVectorSize(); i++)
-				trainImagesMat.get(cur, i)[0] = f.get(0, i)[0];
-			cur++;
-		}
-		svm.train(Arrays.asList(trainImagesMat, Mat.eye(1, 64, CvType.CV_32SC1)));
-		
-		Image testImage = ImageLoader.loadImage(new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple\\test05.jpg"));
-		
-		Rectangle objectBounds = new BranchAndBoundLocalizer().getObjectBounds(testImage, svm.svmArray[0], featureVectorGenerator);
-		
-		Rectangle real = new Rectangle(504, 21, 358, 293);
-
-		System.out.println("errorLeft = " + Math.abs(real.x - objectBounds.x));
-		System.out.println("errorTop = " + Math.abs(real.y - objectBounds.y));
-		System.out.println("errorRight = " + Math.abs((real.x+real.width) - (objectBounds.x + objectBounds.width)));
-		System.out.println("errorBottom = " + Math.abs((real.y+real.height) - (objectBounds.y + objectBounds.height)));
 	}
 }

@@ -1,9 +1,14 @@
 package grad.proj.recognition.localization;
 
-import grad.proj.recognition.train.ObjectRecognizer;
+import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.Image;
+
+import java.awt.Rectangle;
+
+import org.opencv.ml.SVM;
 
 public interface ObjectLocalizer {
 
-	public Image getObjectImage(Image image, ObjectRecognizer recognizer);
+	public Rectangle getObjectBounds(Image image, SVM svm,
+			SurfFeatureVectorGenerator featureVectorGenerator);
 }

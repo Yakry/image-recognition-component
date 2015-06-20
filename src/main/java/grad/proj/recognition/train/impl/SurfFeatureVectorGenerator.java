@@ -66,7 +66,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	@Override
 	public Mat generateFeatureVector(Image image) {
 		if(!prepared){
-			throw new RuntimeException("Generator not prepared, use SurfFeatureVectorGenerator.generateFeatureVector");
+			throw new RuntimeException("Generator not prepared, use SurfFeatureVectorGenerator.prepareGenerator");
 		}
 		
 		Mat imageMat = generateMatFromImage(image);
@@ -141,5 +141,4 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	public List<List<Integer>> getPointIdxsOfClusters() {
 		return pointIdxsOfClusters;
 	}
-	
 }
