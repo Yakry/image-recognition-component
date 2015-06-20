@@ -1,6 +1,10 @@
 package grad.proj.utils;
 
+import grad.proj.recognition.train.impl.SVMClassifier;
+import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestsDataSetsHelper {
@@ -40,8 +44,7 @@ public class TestsDataSetsHelper {
 		shoe,
 		teddyBear,
 		toy1,
-		trainToy2,
-		all
+		trainToy2
 	}
 	
 	public enum FeaturesVectorsDataSets{
@@ -55,8 +58,38 @@ public class TestsDataSetsHelper {
 		Test
 	}
 
-	public static List<Image> loadImageDataSetTrain(ImageDataSet dataset, Type type){
-		return null;
+	public static int loadImageDataSetTrain(ImageDataSet dataset,
+													Type type,
+													List<File> images,
+													List<Integer> labels,
+													int label){
+		
+		File dataSetDirectory = new File(IMAGE_DATASET_FILE, dataset.toString());
+		File imagesDirectory = new File(dataSetDirectory, type.toString());
+		
+		File imageFiles[] = imagesDirectory.listFiles();
+		for(File imageFile : imageFiles){
+			images.add(imageFile);
+			labels.add(label);
+		}
+		return imageFiles.length;
+	}
+
+	public static void loadAllImagesDataSets(Type type,
+											List<File> images,
+											List<Integer> labels,
+											List<Integer> classVectorsNum){
+		
+		ArrayList<File> inputImagesFiles = new ArrayList<File>();
+		Integer currentLabel = 0;
+		Integer classesNum = 0;
+		Integer featuresNum = 0;
+
+		for(ImageDataSet dataSet : ImageDataSet.values()){
+			int dataSetImages = loadImageDataSetTrain(dataSet, type, images, labels, currentLabel);
+			classVectorsNum.add(dataSetImages);
+			currentLabel++;
+		}
 	}
 
 	public static List<List<List<Double>>> loadFeaturesVectosDataSetSeperated(FeaturesVectorsDataSets dataset, Type type){
