@@ -3,7 +3,9 @@ package grad.proj.recognition.train.impl;
 import static org.junit.Assert.assertTrue;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.utils.DataFileLoader;
-import grad.proj.utils.DataFilesPathWrapper;
+import grad.proj.utils.TestsDataSetsHelper;
+import grad.proj.utils.TestsDataSetsHelper.FeaturesVectorsDataSets;
+import grad.proj.utils.TestsDataSetsHelper.Type;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
@@ -81,13 +83,13 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	@Test
 	public void testRealData() {
 		// training and testing data already scaled
-		List<List<List<Double>>> trainingDataList = DataFileLoader.
-				loadDataSeprated("src\\test\\java\\grad\\proj\\"
-						+ "recognition\\train\\satimage_scale_train.txt");
+		List<List<List<Double>>> trainingDataList = 
+				TestsDataSetsHelper.loadFeaturesVectosDataSetSeperated(FeaturesVectorsDataSets.satimage,
+						Type.Train);
 		
-		List<List<Double>> testingDataList = DataFileLoader.
-				loadDataCombined("src\\test\\java\\grad\\proj\\"
-						+ "recognition\\train\\satimage_scale_test.txt");
+		List<List<Double>> testingDataList = 
+				TestsDataSetsHelper.loadFeaturesVectosDataSetCombined(FeaturesVectorsDataSets.satimage,
+						Type.Test);
 
 		List<Mat> trainingData = new ArrayList<Mat>(trainingDataList.size());
 		
@@ -130,7 +132,7 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	
 	@Test
 	public void testRealImages() throws Exception{
-		File trainDataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+		File trainDataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
 												+ "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
@@ -181,7 +183,7 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 		
 		classifier.train(trainingData);
 		
-		File testDataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+		File testDataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
 												+ "\\test");
 		double correctLabels = 0;
 		double numberOfRows = 0;

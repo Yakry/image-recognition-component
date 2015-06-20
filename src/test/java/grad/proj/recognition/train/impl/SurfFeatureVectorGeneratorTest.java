@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
-import grad.proj.utils.DataFilesPathWrapper;
+import grad.proj.utils.TestsDataSetsHelper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
@@ -83,7 +83,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 	
 	@Test
 	public void generateTestDataFile() throws Exception{
-		File dataSetDirectory = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH
+		File dataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
 											+ "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
@@ -132,7 +132,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	@Test
 	public void testGenerateFeatureVectorOfSubimage(){
-		Image image = ImageLoader.loadImage(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg");
+		Image image = ImageLoader.loadImage(TestsDataSetsHelper.DATA_FILES_PATH + "\\001.jpg");
 		SubImage subImage = new SubImage(image, 5, 5, 100, 100);
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 

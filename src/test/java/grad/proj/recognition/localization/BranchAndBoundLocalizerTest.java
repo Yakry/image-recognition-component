@@ -3,7 +3,7 @@ package grad.proj.recognition.localization;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
-import grad.proj.utils.DataFilesPathWrapper;
+import grad.proj.utils.TestsDataSetsHelper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
@@ -28,7 +28,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 	@Test
 	public void testBranchAndBound() throws Exception {
 		File trainDataSetDirectory = new File(
-				DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\train");
+				TestsDataSetsHelper.CLASSIFIER_FILES_PATH + "\\train");
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
@@ -78,7 +78,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 
 		classifier.train(trainingData);
-		Image image = ImageLoader.loadImage(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg");
+		Image image = ImageLoader.loadImage(TestsDataSetsHelper.DATA_FILES_PATH + "\\001.jpg");
 		Mat featureVector = generator.generateFeatureVector(image);
 		int classLabel = classifier.classify(featureVector);
 		SVM classSVM = classifier.svmArray[classLabel];
@@ -89,7 +89,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		Rectangle objectBounds = localizer.getObjectBounds(image, classSVM, generator);
 		
 		BufferedImage drawableImage = ImageIO.read(
-				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg"));
+				new File(TestsDataSetsHelper.DATA_FILES_PATH + "\\001.jpg"));
 		for(int i=0;i<objectBounds.getWidth();++i){
 			drawableImage.setRGB((int)objectBounds.getX() + i,
 					(int)objectBounds.getY(),
@@ -109,7 +109,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 		
 		ImageIO.write(drawableImage, "jpg",
-				new File(DataFilesPathWrapper.DATA_FILES_PATH + "\\out.jpg"));
+				new File(TestsDataSetsHelper.DATA_FILES_PATH + "\\out.jpg"));
 		
 		System.out.println("class lable: " + classLabel);
 		System.out.println("####################");
@@ -123,7 +123,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	@Test
 	public void testBranchAndBound2(){
-		File trainFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\train\\apple");
+		File trainFolder = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH + "\\train\\apple");
 //		File testFolder = new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple");
 		
 		ArrayList<File> trainImagesFiles = new ArrayList<File>();
@@ -147,7 +147,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 		svm.train(Arrays.asList(trainImagesMat, Mat.eye(1, 64, CvType.CV_32SC1)));
 		
-		Image testImage = ImageLoader.loadImage(new File(DataFilesPathWrapper.CLASSIFIER_FILES_PATH + "\\test\\apple\\test05.jpg"));
+		Image testImage = ImageLoader.loadImage(new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH + "\\test\\apple\\test05.jpg"));
 		
 		Rectangle objectBounds = new BranchAndBoundLocalizer().getObjectBounds(testImage, svm.svmArray[0], featureVectorGenerator);
 		
