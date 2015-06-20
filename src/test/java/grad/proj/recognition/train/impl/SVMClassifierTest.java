@@ -20,8 +20,6 @@ import org.opencv.core.Mat;
 
 public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	
-	static{ System.load(Paths.get(System.getenv("OPENCV3_HOME"), "build", "java", System.getProperty("os.arch").contains("64") ? "x64" : "x86", System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toString()); }
-
 	@Test
 	public void testSimpleData() {
 		List<Mat> trainingData = new ArrayList<Mat>(2);
