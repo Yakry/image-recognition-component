@@ -6,7 +6,7 @@ import java.util.List;
 import org.opencv.core.Mat;
 
 public interface Classifier extends Serializable {
-	public int classify(Mat featureVector);
-	public double classify(Mat featureVector, int classLabel);
-	public void train(List<Mat> trainingData);
+	public int classify(List<Double> featureVector);
+	public double classify(List<Double> featureVector, int classLabel);
+	public void train(List<List<List<Double>>> trainingData);
 }

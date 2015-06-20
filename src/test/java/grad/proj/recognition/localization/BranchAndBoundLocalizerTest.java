@@ -1,6 +1,7 @@
 package grad.proj.recognition.localization;
 
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
+import grad.proj.recognition.train.impl.LinearNormalizer;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.TestsDataSetsHelper;
@@ -32,7 +33,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		ArrayList<File> inputImagesFiles = new ArrayList<File>();
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
-		SVMClassifier classifier = new SVMClassifier();
+		SVMClassifier classifier = new SVMClassifier(new LinearNormalizer());
 		Integer currentLabel = 0;
 		Integer classesNum = 0;
 		Integer featuresNum = 0;
@@ -57,21 +58,19 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		classesNum = classesDirectories.length;
 		featuresNum = generator.getFeatureVectorSize();
 
-		List<Mat> trainingData = new ArrayList<Mat>(classesNum);
+		List<List<List<Double>>> trainingData = new ArrayList<>(classesNum);
 		int index = 0;
 		for (File classDirectory : classesDirectories) {
 			if (!classDirectory.isDirectory())
 				continue; // for safety
-			Mat classTrainingData = new Mat(classVectorsNum.get(index++),
-					featuresNum, CvType.CV_32FC1);
+			List<List<Double>> classTrainingData = new ArrayList<>();
 			File imageFiles[] = classDirectory.listFiles();
 			int row = 0;
+			
 			for (File imageFile : imageFiles) {
-				Mat featureVector = generator.generateFeatureVector(ImageLoader
+				List<Double> featureVector = generator.generateFeatureVector(ImageLoader
 						.loadImage(imageFile));
-				for (int col = 0; col < featuresNum; ++col)
-					classTrainingData.put(row, col,
-							featureVector.get(0, col)[0]);
+				classTrainingData.add(featureVector);
 				++row;
 			}
 			trainingData.add(classTrainingData);
@@ -79,7 +78,7 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 
 		classifier.train(trainingData);
 		Image image = ImageLoader.loadImage(TestsDataSetsHelper.DATA_FILES_PATH + "\\001.jpg");
-		Mat featureVector = generator.generateFeatureVector(image);
+		List<Double> featureVector = generator.generateFeatureVector(image);
 		int classLabel = classifier.classify(featureVector);
 		SVM classSVM = classifier.svmArray[classLabel];
 		BranchAndBoundLocalizer localizer = new BranchAndBoundLocalizer();
@@ -132,20 +131,20 @@ public class BranchAndBoundLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 		List<Image> trainImages = new FilesImageList(trainImagesFiles);
 		
-		SVMClassifier svm = new SVMClassifier();
+		SVMClassifier svm = new SVMClassifier(new LinearNormalizer());
 
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		featureVectorGenerator.prepareGenerator(trainImages);
 		
-		Mat trainImagesMat = new Mat(trainImages.size(), featureVectorGenerator.getFeatureVectorSize(), CvType.CV_32SC1);
+		List<List<Double>> trainVectors = new ArrayList<>();
 		int cur = 0;
 		for(Image image : trainImages){
-			Mat f = featureVectorGenerator.generateFeatureVector(image);
-			for(int i=0; i<featureVectorGenerator.getFeatureVectorSize(); i++)
-				trainImagesMat.get(cur, i)[0] = f.get(0, i)[0];
+			List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
+			trainVectors.add(featureVector);
 			cur++;
 		}
-		svm.train(Arrays.asList(trainImagesMat, Mat.eye(1, 64, CvType.CV_32SC1)));
+		List<List<Double>> emptyClass = Arrays.asList(Arrays.asList(new Double[featureVectorGenerator.getFeatureVectorSize()]));
+		svm.train(Arrays.asList(trainVectors, emptyClass));
 		
 		Image testImage = ImageLoader.loadImage(new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH + "\\test\\apple\\test05.jpg"));
 		

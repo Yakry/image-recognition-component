@@ -40,12 +40,12 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		
 		generator.prepareGenerator(Arrays.asList(img1Big));
 
-		Mat generatedTry1 = generator.generateFeatureVector(img1Big);
+		List<Double> generatedTry1 = generator.generateFeatureVector(img1Big);
 		
-		Mat generatedTry2 = generator.generateFeatureVector(img1Big);
+		List<Double> generatedTry2 = generator.generateFeatureVector(img1Big);
 		
-		for(int i=0; i<generatedTry1.cols(); i++)
-			assertEquals(generatedTry1.get(0, i)[0], generatedTry2.get(0, i)[0], 0.01);
+		for(int i=0; i<generatedTry1.size(); i++)
+			assertEquals(generatedTry1.get(i), generatedTry2.get(i), 0.01);
 		
 		//assertArrayEquals(generatedTry1, generatedTry2, 0.0001f);
 
@@ -69,66 +69,65 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		
 		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
 
-		Mat generated = generator.generateFeatureVector(img1Big);
+		List<Double> generated = generator.generateFeatureVector(img1Big);
 		
-		Mat generatedFromDifferentImage = generator.generateFeatureVector(img1Small);
+		List<Double> generatedFromDifferentImage = generator.generateFeatureVector(img1Small);
 		
-		System.out.println(generatedFromDifferentImage.cols() + " " + generatedFromDifferentImage.rows());
-		
-		for(int i=0; i<generated.cols(); i++)
-			assertNotEquals(generated.get(0, i)[0], generatedFromDifferentImage.get(0, i)[0]);
+		//System.out.println(generatedFromDifferentImage.cols() + " " + generatedFromDifferentImage.rows());
+
+		for(int i=0; i<generated.size(); i++)
+			assertEquals(generated.get(i), generatedFromDifferentImage.get(i), 0.01);
 		
 		//assertFalse(Arrays.equals(generated, generatedFromDifferentImage));
 	}
 	
-	@Test
-	public void generateTestDataFile() throws Exception{
-		File dataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
-											+ "\\train");
-		ArrayList<File> inputImagesFiles = new ArrayList<File>();
-		ArrayList<Integer> labels = new ArrayList<Integer>();
-		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
-		Integer currentLabel = 0;
-		Integer classesNum = 0;
-		Integer vectorsNum = 0;
-		Integer featuresNum = 0;
-
-		File[] classesDirectories = dataSetDirectory.listFiles();
-		for(File classDirectory : classesDirectories){
-			if(!classDirectory.isDirectory())
-				continue; // for safety
-			File imageFiles[] = classDirectory.listFiles();
-			for(File imageFile : imageFiles){
-				inputImagesFiles.add(imageFile);
-				labels.add(currentLabel);
-			}
-			++currentLabel;
-		}
-		
-		List<Image> inputImages = new FilesImageList(inputImagesFiles);
-		
-		generator.prepareGenerator(inputImages);
-		classesNum = classesDirectories.length;
-		vectorsNum = inputImages.size();
-		featuresNum = generator.getFeatureVectorSize();
-		
-		FileWriter dataFile = new FileWriter("D:\\Dropbox\\Graduation project"
-				+ "\\grad-project\\src\\test\\java\\grad\\proj\\recognition\\train"
-				+ "\\impl\\dataFile1_train.txt");
-		dataFile.write(classesNum.toString() + ' ');
-		dataFile.write(vectorsNum.toString() + ' ');
-		dataFile.write(featuresNum.toString() + '\n');
-		for(int index=0;index<inputImages.size();++index){
-			Mat featureVector = generator.generateFeatureVector(
-					inputImages.get(index));
-			dataFile.write(labels.get(index).toString() + ' ');
-			for(int i=0; i<featuresNum; i++)
-				dataFile.write(featureVector.get(0, i)[0] + " ");
-			dataFile.write('\n');
-		}
-		
-		dataFile.close();
-	}
+// TODO: move to a seperate file, this is not a test
+//	@Test
+//	public void generateTestDataFile() throws Exception{
+//		File dataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
+//											+ "\\train");
+//		ArrayList<File> inputImagesFiles = new ArrayList<File>();
+//		ArrayList<Integer> labels = new ArrayList<Integer>();
+//		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
+//		Integer currentLabel = 0;
+//		Integer classesNum = 0;
+//		Integer vectorsNum = 0;
+//		Integer featuresNum = 0;
+//
+//		File[] classesDirectories = dataSetDirectory.listFiles();
+//		for(File classDirectory : classesDirectories){
+//			if(!classDirectory.isDirectory())
+//				continue; // for safety
+//			File imageFiles[] = classDirectory.listFiles();
+//			for(File imageFile : imageFiles){
+//				inputImagesFiles.add(imageFile);
+//				labels.add(currentLabel);
+//			}
+//			++currentLabel;
+//		}
+//		
+//		List<Image> inputImages = new FilesImageList(inputImagesFiles);
+//		
+//		generator.prepareGenerator(inputImages);
+//		classesNum = classesDirectories.length;
+//		vectorsNum = inputImages.size();
+//		featuresNum = generator.getFeatureVectorSize();
+//		
+//		FileWriter dataFile = new FileWriter("dataFile1_train.txt");
+//		dataFile.write(classesNum.toString() + ' ');
+//		dataFile.write(vectorsNum.toString() + ' ');
+//		dataFile.write(featuresNum.toString() + '\n');
+//		for(int index=0;index<inputImages.size();++index){
+//			List<Double> featureVector = generator.generateFeatureVector(
+//					inputImages.get(index));
+//			dataFile.write(labels.get(index).toString() + ' ');
+//			for(int i=0; i<featuresNum; i++)
+//				dataFile.write(featureVector.get(i) + " ");
+//			dataFile.write('\n');
+//		}
+//		
+//		dataFile.close();
+//	}
 
 	@Test
 	public void testGenerateFeatureVectorOfSubimage(){
@@ -137,13 +136,11 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 
 		generator.prepareGenerator(Arrays.asList(image));
-		Mat featureVector;
+		List<Double> featureVector;
 		featureVector = generator.generateFeatureVector(image);
-		assertEquals("feature vector rows != 1", 1, featureVector.rows());
-		assertEquals("feature vector rows != 64", 64, featureVector.cols());
+		assertEquals("feature vector rows != 64", 64, featureVector.size());
 
 		featureVector = generator.generateFeatureVector(subImage);
-		assertEquals("feature vector rows != 1", 1, featureVector.rows());
-		assertEquals("feature vector rows != 64", 64, featureVector.cols());
+		assertEquals("feature vector rows != 64", 64, featureVector.size());
 	}
 }

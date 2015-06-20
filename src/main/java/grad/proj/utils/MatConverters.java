@@ -1,12 +1,30 @@
 package grad.proj.utils;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
-public class ImageMatConverter {
+public class MatConverters {
 
+	public static Mat ListDoubleToMat(List<Double> list) {
+		Mat res = new Mat(1, list.size(), CvType.CV_32F);
+		for(int i=0; i<list.size(); i++){
+			res.put(0, i, list.get(i));
+		}
+		return res;
+	}
+	
+	public static List<Double> MatToListDouble(Mat mat) {
+		List<Double> res = new ArrayList<Double>();
+		for(int i=0; i<mat.cols(); i++){
+			res.add(mat.get(0, i)[0]);
+		}
+		return res;
+	}
+	
 	public static Mat ImageToMat(Image image) {
 		/*
 		 *

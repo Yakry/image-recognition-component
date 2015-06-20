@@ -10,9 +10,11 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+import org.opencv.utils.Converters;
 
 import grad.proj.recognition.train.FeatureVectorGenerator;
 import grad.proj.utils.Image;
+import grad.proj.utils.MatConverters;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	
@@ -64,7 +66,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 	
 	@Override
-	public Mat generateFeatureVector(Image image) {
+	public List<Double> generateFeatureVector(Image image) {
 		if(!prepared){
 			throw new RuntimeException("Generator not prepared, use SurfFeatureVectorGenerator.prepareGenerator");
 		}
@@ -80,10 +82,8 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		descriptors = new Mat();
 		imgDescriptor.compute(imageMat, keypoints, myImgDescriptor, pointIdxsOfClusters, descriptors);
 		
-//		float[] featureVector = new float[(int) (myImgDescriptor.total() * myImgDescriptor.channels())];
-//		myImgDescriptor.get(0, 0, featureVector);
-		
-		return myImgDescriptor;
+		List<Double> featureVector = MatConverters.MatToListDouble(myImgDescriptor);
+		return featureVector;
 	}
 
 	/**

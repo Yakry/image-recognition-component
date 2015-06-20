@@ -3,6 +3,7 @@ package grad.proj.recognition.train;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
+import grad.proj.recognition.train.impl.LinearNormalizer;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.Image;
@@ -23,7 +24,7 @@ public class ObjectRecognizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
 	public void testTrainingOnOneImageAndRecognizeIt() throws Exception {
-	ObjectRecognizer recognizer = new ObjectRecognizer(new SVMClassifier(),
+	ObjectRecognizer recognizer = new ObjectRecognizer(new SVMClassifier(new LinearNormalizer()),
 														new SurfFeatureVectorGenerator());
 		
 		final URL IMG1_BIG_URL = getClass().getResource(IMG1_BIG);
