@@ -8,6 +8,7 @@ import grad.proj.utils.DataFilesPathWrapper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
+import grad.proj.utils.SubImage;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -127,5 +128,22 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		}
 		
 		dataFile.close();
+	}
+
+	@Test
+	public void testGenerateFeatureVectorOfSubimage(){
+		Image image = ImageLoader.loadImage(DataFilesPathWrapper.DATA_FILES_PATH + "\\001.jpg");
+		SubImage subImage = new SubImage(image, 5, 5, 100, 100);
+		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
+
+		generator.prepareGenerator(Arrays.asList(image));
+		Mat featureVector;
+		featureVector = generator.generateFeatureVector(image);
+		assertEquals("feature vector rows != 1", 1, featureVector.rows());
+		assertEquals("feature vector rows != 64", 64, featureVector.cols());
+
+		featureVector = generator.generateFeatureVector(subImage);
+		assertEquals("feature vector rows != 1", 1, featureVector.rows());
+		assertEquals("feature vector rows != 64", 64, featureVector.cols());
 	}
 }
