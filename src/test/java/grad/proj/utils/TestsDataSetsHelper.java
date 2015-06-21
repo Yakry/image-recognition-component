@@ -14,38 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TestsDataSetsHelper {
-	/*
-	 * the datasets should be stored in the project root folder in the following hierarchy
-	 * 
-	 * 	datasets/
-	 * 		calteckUniversity/
-	 * 			images/
-	 * 				train/
-	 * 					apple
-	 * 					bikes
-	 * 					.
-	 * 					.
-	 * 				test/
-	 * 					apple
-	 * 					bikes
-	 * 					.
-	 * 					.
-	 * 					combined
-	 * 			features/
-	 * 				train.txt
-	 * 				test.txt
-	 * 			classifiers/
-	 * 				svm.xml
-	 * 
-	 * 		svmguide4
-	 * 			features
-	 * 
-	 * any images folder is ignored from the source control
-	 * to avoid bloating the repo with binary files
-	 * 
-	 * the "combined" folder belong to test images that belong to more than one category 
-	 */
-	
 	private static File DATASET_FILE = new File("datasets");
 	private static String IMAGES_FOLDER_NAME = "images";
 	private static String FEATURES_FOLDER_NAME = "features";

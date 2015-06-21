@@ -26,6 +26,38 @@ To run the tests, use
 
     mvn test
 
+## Dataset folder
+
+the datasets should be stored in the project root folder in the following hierarchy
+  
+ 	datasets/
+  		calteckUniversity/
+  			images/
+  				train/
+  					apple
+  					bikes
+  					.
+  					.
+  				test/
+  					apple
+  					bikes
+  					.
+  					.
+  					combined
+  			features/
+  				train.txt
+  				test.txt
+  			classifiers/
+  				svm.xml
+  
+  		svmguide4
+  			features
+  
+  any images folder is ignored from the source control
+  to avoid bloating the repo with binary files
+  
+  the "combined" folder belong to test images that belong to more than one category 
+ 
 
 [OpenCV 3.0]:http://opencv.org/downloads.html
 [maven]:http://maven.apache.org/download.cgi
