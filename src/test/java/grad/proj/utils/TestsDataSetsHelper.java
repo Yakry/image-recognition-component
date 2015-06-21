@@ -4,6 +4,7 @@ import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,43 +12,38 @@ public class TestsDataSetsHelper {
 	/*
 	 * the datasets should be stored in the project root folder in the following hierarchy
 	 * 	datasets
-	 * 		images
-	 * 			apple
-	 * 				train
-	 * 				test
-	 * 			bikes
-	 * 				train
-	 * 				test
-	 * 		featuresVectors
+	 * 		calteckUniversity
+	 * 			images
+	 * 				apple
+	 * 					train
+	 * 					test
+	 * 				bikes
+	 * 					train
+	 * 					test
+	 * 			features
 	 * 				train.txt
 	 * 				test.txt
+	 * 			classifiers
+	 * 				svm.xml
 	 * 
-	 * the images folder is ignored from the source control
+	 * 		svmguide4
+	 * 			features
+	 * 
+	 * any images folder is ignored from the source control
 	 * to avoid bloating the repo with binary files
 	 */
 	
 	private static File DATASET_FILE = new File("datasets");
-	private static File IMAGE_DATASET_FILE = new File(DATASET_FILE, "images");
-	private static File FEATURES_VECTORS_DATASET = new File(DATASET_FILE, "featuresVectors");
+	private static String IMAGES_FOLDER_NAME = "images";
+	private static String FEATURES_FOLDER_NAME = "features";
 
 	// path relative to local machine
 	public static String DATA_FILES_PATH = "E:\\dataset";
 	public static String CLASSIFIER_FILES_PATH = DATA_FILES_PATH + "\\classifierFiles";
 	public static String SYSTEM_FILES_PATH = DATA_FILES_PATH + "\\system";
 	
-	public enum ImageDataSet{
-		apple,
-		bikes,
-		can,
-		mug,
-		sculpt,
-		shoe,
-		teddyBear,
-		toy1,
-		trainToy2
-	}
-	
-	public enum FeaturesVectorsDataSets{
+	public enum DataSet{
+		calteckUniversity,
 		satimage,
 		svmguide4,
 		vowel
@@ -58,13 +54,10 @@ public class TestsDataSetsHelper {
 		Test
 	}
 
-	public static List<Image> loadImageDataSet(ImageDataSet dataset,
-													Type type){
+	public static List<Image> loadDataSetClassImages(DataSet dataset, Type type, String className){
+		File classImagesFolder = getImagesClassFolder(dataset, type, className);
 		
-		File dataSetDirectory = new File(IMAGE_DATASET_FILE, dataset.toString());
-		File imagesDirectory = new File(dataSetDirectory, type.toString());
-		
-		File imageFiles[] = imagesDirectory.listFiles();
+		File imageFiles[] = classImagesFolder.listFiles();
 		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
 			images.add(imageFile);
@@ -72,22 +65,51 @@ public class TestsDataSetsHelper {
 		
 		return new FilesImageList(images);
 	}
-
-	public static List<List<Image>> loadAllImagesDataSets(Type type){
+	
+	public static List<List<Image>> loadDataSetImages(DataSet dataset, Type type){
 		List<List<Image>> data = new ArrayList<List<Image>>();
-		for(ImageDataSet dataSet : ImageDataSet.values()){
-			data.add(loadImageDataSet(dataSet, type));
+
+		File imagesMainFolder = getImagesFolder(dataset);
+		
+		String[] classes = imagesMainFolder.list();
+		for(String className : classes){
+			data.add(loadDataSetClassImages(dataset, type, className));
 		}
+		
 		return data;
 	}
 
-	public static List<List<List<Double>>> loadFeaturesVectosDataSetSeperated(FeaturesVectorsDataSets dataset, Type type){
-		File datasetFolder = new File(FEATURES_VECTORS_DATASET, dataset.toString());
-		return DataFileLoader.loadDataSeprated(new File(datasetFolder, type.toString() + ".txt").toString());
+	public static List<List<List<Double>>> loadDataSetFeaturesSeperated(DataSet dataset, Type type){
+		return DataFileLoader.loadDataSeprated(getFeaturesFile(dataset, type).toString());
 	}
 	
-	public static List<List<Double>> loadFeaturesVectosDataSetCombined(FeaturesVectorsDataSets dataset, Type type){
-		File datasetFolder = new File(FEATURES_VECTORS_DATASET, dataset.toString());
-		return DataFileLoader.loadDataCombined(new File(datasetFolder, type.toString() + ".txt").toString());
+	public static List<List<Double>> loadDataSetFeaturesCombined(DataSet dataset, Type type){
+		return DataFileLoader.loadDataCombined(getFeaturesFile(dataset, type).toString());
+	}
+
+	private static File getFeaturesFile(DataSet dataset, Type type) {
+		File datasetFolder = getDataSetFolder(dataset);
+		File features = new File(datasetFolder, FEATURES_FOLDER_NAME);
+		File featuresFilePath = new File(features, type.toString() + ".txt");
+		return featuresFilePath;
+	}
+	
+	private static File getImagesClassFolder(DataSet dataset, Type type,
+			String className) {
+		File imagesMainFolder = getImagesFolder(dataset);
+		File classFolder = new File(imagesMainFolder, className);
+		File classImagesFolder = new File(classFolder, type.toString());
+		return classImagesFolder;
+	}
+	
+	private static File getImagesFolder(DataSet dataset) {
+		File datasetFolder = getDataSetFolder(dataset);
+		File imagesMainFolder = new File(datasetFolder, IMAGES_FOLDER_NAME);
+		return imagesMainFolder;
+	}
+
+	private static File getDataSetFolder(DataSet dataset) {
+		File datasetFolder = new File(DATASET_FILE, dataset.toString());
+		return datasetFolder;
 	}
 }

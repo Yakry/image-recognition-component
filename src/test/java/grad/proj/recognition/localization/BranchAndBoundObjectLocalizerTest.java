@@ -9,7 +9,7 @@ import grad.proj.utils.TestsDataSetsHelper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
-import grad.proj.utils.TestsDataSetsHelper.ImageDataSet;
+import grad.proj.utils.TestsDataSetsHelper.DataSet;
 import grad.proj.utils.TestsDataSetsHelper.Type;
 
 import java.awt.Color;
@@ -36,12 +36,12 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		List<List<Image>> trainingData = TestsDataSetsHelper.loadAllImagesDataSets(Type.Train);
+		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train);
+		List<List<Image>> testingClassData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Test);
+		
 		classifier.train(trainingData);
 		
-		List<Image> testingClassData = TestsDataSetsHelper.loadImageDataSet(ImageDataSet.apple, Type.Test);
-		
-		Image sampleTestImage = testingClassData.get(0);
+		Image sampleTestImage = testingClassData.get(0).get(0);
 		
 		int classLabel = classifier.classify(sampleTestImage);
 		
