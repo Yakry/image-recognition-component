@@ -1,6 +1,6 @@
 package grad.proj.recognition.train.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.utils.DataFileLoader;
 import grad.proj.utils.TestsDataSetsHelper;
@@ -33,8 +33,8 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 		class0.add(Arrays.asList(-0.5, -0.5));
 
 		List<List<Double>> class1 = new ArrayList<>();
-		class0.add(Arrays.asList(-1.0, 0.5));
-		class0.add(Arrays.asList(-0.5, 1.0));
+		class1.add(Arrays.asList(-1.0, 0.5));
+		class1.add(Arrays.asList(-0.5, 1.0));
 
 		trainingData.add(class0);
 		trainingData.add(class1);
@@ -42,23 +42,15 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 		SVMClassifier classifier = new SVMClassifier(new LinearNormalizer());
 		classifier.train(trainingData);
 		
-		double class0Value1 = classifier.classify(Arrays.asList(0.25, 0.25));
+		int class0Value1 = classifier.classify(Arrays.asList(0.0, 0.0));
 		
-		double class0Value2 = classifier.classify(Arrays.asList(-0.25, -0.25));
+		int class0Value2 = classifier.classify(Arrays.asList(-0.25, -0.25));
 		
-		double class1Value1 = classifier.classify(Arrays.asList(-0.75, 0.75));
+		int class1Value1 = classifier.classify(Arrays.asList(-0.75, 0.75));
 		
-		System.out.println("MultiClassSVMClassifierTest::testSimpleData:");
-		System.out.println("class0Value1 " + class0Value1);
-		System.out.println("class0Value2 " + class0Value2);
-		System.out.println("class1Value1 " + class1Value1);
-		
-		assertTrue("class 0 vector 1 not recognized",
-				class0Value1 == 0);
-		assertTrue("class 0 vector 2 not recognized",
-				class0Value2 == 0);
-		assertTrue("class 1 vector 1 not recognized",
-				class1Value1 == 1);
+		assertEquals("class 0 vector 1 not recognized", 0, class0Value1);
+		assertEquals("class 0 vector 2 not recognized", 0, class0Value2);
+		assertEquals("class 1 vector 1 not recognized", 1, class1Value1);
 	}
 
 	@Test
