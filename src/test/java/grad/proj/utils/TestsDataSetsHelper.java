@@ -114,14 +114,14 @@ public class TestsDataSetsHelper {
 	public static void generateFeaturesFile(DataSet dataset){
 		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		
-		List<List<Image>> trainingData = loadDataSetImages(dataset, Type.Train, "can");
+		List<List<Image>> trainingData = loadDataSetImages(dataset, Type.Train);
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 
 		File trainFeaturesFile = getFeaturesFile(dataset, Type.Train);
 		generateAndWrite(trainingData, featureVectorGenerator, trainFeaturesFile);
 
-		List<List<Image>> testingData = loadDataSetImages(dataset, Type.Test, "can");
+		List<List<Image>> testingData = loadDataSetImages(dataset, Type.Test);
 		File testFeaturesFile = getFeaturesFile(dataset, Type.Test);
 		generateAndWrite(testingData, featureVectorGenerator, testFeaturesFile);
 	}
