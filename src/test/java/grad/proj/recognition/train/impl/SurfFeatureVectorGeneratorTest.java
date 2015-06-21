@@ -80,54 +80,6 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		
 		//assertFalse(Arrays.equals(generated, generatedFromDifferentImage));
 	}
-	
-// TODO: move to a seperate file, this is not a test
-//	@Test
-//	public void generateTestDataFile() throws Exception{
-//		File dataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
-//											+ "\\train");
-//		ArrayList<File> inputImagesFiles = new ArrayList<File>();
-//		ArrayList<Integer> labels = new ArrayList<Integer>();
-//		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
-//		Integer currentLabel = 0;
-//		Integer classesNum = 0;
-//		Integer vectorsNum = 0;
-//		Integer featuresNum = 0;
-//
-//		File[] classesDirectories = dataSetDirectory.listFiles();
-//		for(File classDirectory : classesDirectories){
-//			if(!classDirectory.isDirectory())
-//				continue; // for safety
-//			File imageFiles[] = classDirectory.listFiles();
-//			for(File imageFile : imageFiles){
-//				inputImagesFiles.add(imageFile);
-//				labels.add(currentLabel);
-//			}
-//			++currentLabel;
-//		}
-//		
-//		List<Image> inputImages = new FilesImageList(inputImagesFiles);
-//		
-//		generator.prepareGenerator(inputImages);
-//		classesNum = classesDirectories.length;
-//		vectorsNum = inputImages.size();
-//		featuresNum = generator.getFeatureVectorSize();
-//		
-//		FileWriter dataFile = new FileWriter("dataFile1_train.txt");
-//		dataFile.write(classesNum.toString() + ' ');
-//		dataFile.write(vectorsNum.toString() + ' ');
-//		dataFile.write(featuresNum.toString() + '\n');
-//		for(int index=0;index<inputImages.size();++index){
-//			List<Double> featureVector = generator.generateFeatureVector(
-//					inputImages.get(index));
-//			dataFile.write(labels.get(index).toString() + ' ');
-//			for(int i=0; i<featuresNum; i++)
-//				dataFile.write(featureVector.get(i) + " ");
-//			dataFile.write('\n');
-//		}
-//		
-//		dataFile.close();
-//	}
 
 	@Test
 	public void testGenerateFeatureVectorOfSubimage(){

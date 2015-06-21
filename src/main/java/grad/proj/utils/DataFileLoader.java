@@ -12,16 +12,14 @@ public class DataFileLoader {
 		try {
 			Scanner scanner = new Scanner(new FileInputStream(path));
 			int classNum = scanner.nextInt();
-			int vectorNum = scanner.nextInt();
 			int featureNum = scanner.nextInt();
-			List<List<List<Double> > > featureVectors = 
-					new ArrayList<List<List<Double>>>(classNum);
+			List<List<List<Double>>> featureVectors = new ArrayList<List<List<Double>>>(classNum);
 			List<Double> featureVector;
 			
 			for(int i=0;i<classNum;++i)
 				featureVectors.add(new ArrayList<List<Double>>());
 			
-			for(int i=0; i<vectorNum; ++i){
+			while(scanner.hasNext()){
 				int classLabel = scanner.nextInt();
 				featureVector = new ArrayList<Double>(featureNum);
 				for(int j=0; j<featureNum; ++j)
@@ -45,13 +43,11 @@ public class DataFileLoader {
 		try {
 			Scanner scanner = new Scanner(new FileInputStream(path));
 			int classNum = scanner.nextInt();
-			int vectorNum = scanner.nextInt();
 			int featureNum = scanner.nextInt();
-			List<List<Double> > featureVectors = 
-					new ArrayList<List<Double>>(vectorNum);
+			List<List<Double>> featureVectors = new ArrayList<List<Double>>();
 			List<Double> featureVector;
 			
-			for(int i=0; i<vectorNum; ++i){
+			while(scanner.hasNext()){
 				featureVector = new ArrayList<Double>(featureNum + 1);
 				featureVector.add((double) scanner.nextInt());
 				for(int j=0; j<featureNum; ++j)
