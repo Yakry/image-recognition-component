@@ -5,6 +5,7 @@ import grad.proj.utils.ImageLoader;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ImageClassifier implements Classifier<Image> {
@@ -34,6 +35,12 @@ public class ImageClassifier implements Classifier<Image> {
 	public void train(List<List<Image>> trainingData) {
 		List<List<List<Double>>> trainingDataAsDouble = new ArrayList<>();
 		
+		List<Image> allimages = new ArrayList<>();
+		for (List<Image> clazz : trainingData) 
+			allimages.addAll(clazz);
+		
+		featureVectorGenerator.prepareGenerator(allimages);
+		
 		for (List<Image> clazz : trainingData) {
 			List<List<Double>> classTrainingData = new ArrayList<>();
 			for (Image image : clazz) {
@@ -44,6 +51,7 @@ public class ImageClassifier implements Classifier<Image> {
 		}
 		
 		classifier.train(trainingDataAsDouble);
+		return;
 	}
 
 	@Override
