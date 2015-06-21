@@ -6,6 +6,7 @@ import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestsDataSetsHelper {
@@ -57,6 +58,9 @@ public class TestsDataSetsHelper {
 	public static List<Image> loadDataSetClassImages(DataSet dataset, Type type, String className){
 		File classImagesFolder = getImagesClassFolder(dataset, type, className);
 		
+		if(!classImagesFolder.exists())
+			return new ArrayList<>();
+		
 		File imageFiles[] = classImagesFolder.listFiles();
 		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
@@ -66,12 +70,14 @@ public class TestsDataSetsHelper {
 		return new FilesImageList(images);
 	}
 	
-	public static List<List<Image>> loadDataSetImages(DataSet dataset, Type type){
+	public static List<List<Image>> loadDataSetImages(DataSet dataset, Type type, String ...classes){
 		List<List<Image>> data = new ArrayList<List<Image>>();
 
 		File imagesMainFolder = getImagesFolder(dataset);
 		
-		String[] classes = imagesMainFolder.list();
+		if(classes == null)
+			imagesMainFolder.list();
+		
 		for(String className : classes){
 			data.add(loadDataSetClassImages(dataset, type, className));
 		}
