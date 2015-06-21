@@ -16,9 +16,7 @@ public class LinearNormalizer implements Normalizer, Serializable {
 	private double rangeMin;
 	private double rangeMax;
 
-	public List<List<Double>> reset(List<List<Double>> featureVectors, double rangeMin, double rangeMax) {
-		List<List<Double>> scaledFeatureVectors =  new ArrayList<>();
-		
+	public List<List<List<Double>>> reset(List<List<List<Double>>> featureVectors, double rangeMin, double rangeMax) {
 		// array of maximum elements in each column in the matrix
 		max = new ArrayList<Double>(featureVectors.size());
 		
@@ -29,25 +27,35 @@ public class LinearNormalizer implements Normalizer, Serializable {
 		this.rangeMax = rangeMax;
 		
 		// get the max and min of each column
-		int featureVectorSize = featureVectors.get(0).size();
-		
-		for (int col = 0; col < featureVectorSize; ++col){
+		int featureVectorSize = featureVectors.get(0).get(0).size();
+
+		for(int i=0; i<featureVectorSize; i++){
 			double columnMax = Integer.MIN_VALUE;
 			double columnMin = Integer.MAX_VALUE;
-			for (int row = 0; row < featureVectors.size(); ++row){
-				double newnumber = featureVectors.get(row).get(col);
-				if (newnumber > columnMax)
-					columnMax = newnumber;
-				if (newnumber < columnMin)
-					columnMin = newnumber;
+			
+			for(List<List<Double>> clazz : featureVectors){
+				for(List<Double> featureVector : clazz){
+					double newnumber = featureVector.get(i);
+					if (newnumber > columnMax)
+						columnMax = newnumber;
+					if (newnumber < columnMin)
+						columnMin = newnumber;
+				}
 			}
 			max.add(columnMax);
 			min.add(columnMin);
 		}
 		
-		double range = rangeMax-rangeMin;
-		for(int i = 0; i < featureVectors.size(); ++i){
-			scaledFeatureVectors.add(normalize(featureVectors.get(i)));
+		List<List<List<Double>>> scaledFeatureVectors =  new ArrayList<>();
+		
+		for(List<List<Double>> clazz : featureVectors){
+			List<List<Double>> normalizedClass = new ArrayList<List<Double>>();
+			
+			for(List<Double> featureVector : clazz){
+				normalizedClass.add(normalize(featureVector));
+			}
+			
+			scaledFeatureVectors.add(normalizedClass);
 		}
 		
 		return scaledFeatureVectors;

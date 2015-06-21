@@ -28,7 +28,7 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		int classLabel = 0;
 		double bestDistance = Double.MIN_VALUE;
 		
-		//featureVector = normalizer.normalize(featureVector);
+		featureVector = normalizer.normalize(featureVector);
 		
 		Mat featureVectorMat = MatConverters.ListDoubleToMat(featureVector);
 		
@@ -82,6 +82,8 @@ public class SVMClassifier implements FeatureVectorClassifier {
 				trainingDataCols,CvType.CV_32FC1);
 		Mat labels = new Mat(trainingDataRows, 1, CvType.CV_32FC1);
 		int curRow = 0;
+
+		trainingData = normalizer.reset(trainingData, -1, 1);
 		
 		for(int i=0; i<trainingData.size(); ++i){
 			trainingData.set(i, trainingData.get(i));
