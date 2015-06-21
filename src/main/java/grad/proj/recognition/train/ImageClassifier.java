@@ -28,6 +28,8 @@ public class ImageClassifier implements Classifier<Image> {
 	@Override
 	public double classify(Image instance, int classLabel) {
 		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
+		if(featureVector.size() != featureVectorGenerator.getFeatureVectorSize())
+			return Double.MAX_VALUE;
 		return classifier.classify(featureVector, classLabel);
 	}
 
