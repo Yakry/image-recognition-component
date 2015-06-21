@@ -18,6 +18,9 @@ public class TestsDataSetsHelper {
 	private static File DATASET_FILE = new File("datasets");
 	private static String IMAGES_FOLDER_NAME = "images";
 	private static String FEATURES_FOLDER_NAME = "features";
+	
+	// special class that holds test images that has more than one image, used with object localizer tests
+	public static String COMBINED_CLASS = "combined";
 
 	public enum DataSet{
 		calteckUniversity,
@@ -55,7 +58,7 @@ public class TestsDataSetsHelper {
 			classes = imagesMainFolder.list(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
-					return new File(dir, name).isDirectory();
+					return (name != COMBINED_CLASS) && (new File(dir, name).isDirectory());
 				}
 			});
 		}
