@@ -9,6 +9,8 @@ import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 import grad.proj.utils.SubImage;
+import grad.proj.utils.TestsDataSetsHelper.DataSet;
+import grad.proj.utils.TestsDataSetsHelper.Type;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -83,7 +85,8 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	@Test
 	public void testGenerateFeatureVectorOfSubimage(){
-		Image image = ImageLoader.loadImage(TestsDataSetsHelper.DATA_FILES_PATH + "\\001.jpg");
+		List<Image> testDataset = TestsDataSetsHelper.loadDataSetClassImages(DataSet.calteckUniversity, Type.Test, "apple");
+		Image image = testDataset.get(0);
 		SubImage subImage = new SubImage(image, 5, 5, 100, 100);
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 
