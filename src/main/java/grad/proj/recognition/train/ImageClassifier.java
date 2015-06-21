@@ -35,11 +35,7 @@ public class ImageClassifier implements Classifier<Image> {
 	public void train(List<List<Image>> trainingData) {
 		List<List<List<Double>>> trainingDataAsDouble = new ArrayList<>();
 		
-		List<Image> allimages = new ArrayList<>();
-		for (List<Image> clazz : trainingData) 
-			allimages.addAll(clazz);
-		
-		featureVectorGenerator.prepareGenerator(allimages);
+		featureVectorGenerator.prepareGenerator(trainingData);
 		
 		for (List<Image> clazz : trainingData) {
 			List<List<Double>> classTrainingData = new ArrayList<>();

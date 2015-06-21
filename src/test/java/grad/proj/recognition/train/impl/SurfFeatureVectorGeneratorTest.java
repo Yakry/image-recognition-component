@@ -38,7 +38,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		//Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(Arrays.asList(img1Big));
+		generator.prepareGenerator(Arrays.asList(Arrays.asList(img1Big)));
 
 		List<Double> generatedTry1 = generator.generateFeatureVector(img1Big);
 		
@@ -67,7 +67,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		Image img1Big = ImageLoader.loadImage(new File(IMG1_BIG_URL.toURI()));
 		Image img1Small = ImageLoader.loadImage(new File(IMG1_SMALL_URL.toURI()));
 		
-		generator.prepareGenerator(Arrays.asList(img1Big, img1Small));
+		generator.prepareGenerator(Arrays.asList(Arrays.asList(img1Big, img1Small)));
 
 		List<Double> generated = generator.generateFeatureVector(img1Big);
 		
@@ -135,7 +135,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		SubImage subImage = new SubImage(image, 5, 5, 100, 100);
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 
-		generator.prepareGenerator(Arrays.asList(image));
+		generator.prepareGenerator(Arrays.asList(Arrays.asList(image)));
 		List<Double> featureVector;
 		featureVector = generator.generateFeatureVector(image);
 		assertEquals("feature vector rows != 64", 64, featureVector.size());

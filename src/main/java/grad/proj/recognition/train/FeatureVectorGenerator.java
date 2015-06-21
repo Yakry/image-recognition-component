@@ -8,7 +8,7 @@ import grad.proj.utils.Image;
 
 public interface FeatureVectorGenerator {
 	List<Double> generateFeatureVector(Image image);
-	void prepareGenerator(List<Image> trainingSet);
+	void prepareGenerator(List<List<Image>> trainingSet);
 	
 	int getFeatureVectorSize();
 }

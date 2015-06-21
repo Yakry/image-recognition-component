@@ -51,13 +51,15 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 	
 	@Override
-	public void prepareGenerator(List<Image> trainingSet){
+	public void prepareGenerator(List<List<Image>> trainingSet){
 		
-		for(Image image : trainingSet){
-			Mat imageMat = generateMatFromImage(image);
-			Mat surfDescriptors = generateSurfDescriptors(imageMat);
-			
-			trainer.add(surfDescriptors);
+		for(List<Image> clazz : trainingSet){
+			for(Image image : clazz){
+				Mat imageMat = generateMatFromImage(image);
+				Mat surfDescriptors = generateSurfDescriptors(imageMat);
+				
+				trainer.add(surfDescriptors);
+			}
 		}
 		
 		imgDescriptor.setVocabulary(trainer.cluster());
