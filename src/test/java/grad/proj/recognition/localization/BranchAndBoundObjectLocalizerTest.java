@@ -70,7 +70,7 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		System.out.println("####################");
 	}
 
-	private void drawRectangle(Rectangle objectBounds, Image drawableImage) {
+	public static void drawRectangle(Rectangle objectBounds, Image drawableImage) {
 		for(int i=0;i<objectBounds.getWidth();++i){
 			drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
 			drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
