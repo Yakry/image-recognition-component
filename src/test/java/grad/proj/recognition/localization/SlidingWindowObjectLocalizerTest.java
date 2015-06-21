@@ -43,6 +43,7 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 		
 		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();
 		
+		System.out.println("starting search");
 		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, 0);
 		
 		BranchAndBoundObjectLocalizerTest.drawRectangle(objectBounds, sampleTestImage);
