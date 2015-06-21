@@ -26,6 +26,8 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	 */
 	
 	private int clusterCount;
+	
+	private FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF);
 	private DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
 	private DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
@@ -78,7 +80,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		keypoints = new MatOfKeyPoint();
 		pointIdxsOfClusters = new ArrayList<>();
 
-		FeatureDetector.create(FeatureDetector.SURF).detect(imageMat, keypoints);
+		featureDetector.detect(imageMat, keypoints);
 
 		myImgDescriptor = new Mat();
 		descriptors = new Mat();
@@ -93,11 +95,8 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	 * @return
 	 */
 	private Mat generateSurfDescriptors(Mat imageMat) {
-		FeatureDetector detector = FeatureDetector.create(FeatureDetector.SURF);
 		MatOfKeyPoint keypoints = new MatOfKeyPoint();
-		detector.detect(imageMat, keypoints);
-		
-		DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+		featureDetector.detect(imageMat, keypoints);
 		
 		Mat featureVector = new Mat();
 		extractor.compute(imageMat, keypoints, featureVector);
