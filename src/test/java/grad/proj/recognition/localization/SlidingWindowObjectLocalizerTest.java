@@ -28,7 +28,7 @@ import org.opencv.core.Mat;
 public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	@Test
-	public void testBranchAndBound() throws Exception {
+	public void testSlidingWindow() throws Exception {
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
 		
@@ -44,12 +44,19 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();
 		
 		System.out.println("starting search");
+		System.out.println("####################");
 		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, 0);
 		
 		BranchAndBoundObjectLocalizerTest.drawRectangle(objectBounds, sampleTestImage);
 		
-		ImageLoader.saveImage(sampleTestImage, "jpg", new File("branchAndBounds.jpg"));
+		ImageLoader.saveImage(sampleTestImage, "jpg", new File("slidingWindow.jpg"));
 		
+		System.out.println("object bounds: ");
+		System.out.println("x: " + objectBounds.getX());
+		System.out.println("y: " + objectBounds.getY());
+		System.out.println("width: " + objectBounds.getWidth());
+		System.out.println("height: " + objectBounds.getHeight());
+		System.out.println("####################");
 	}
 	
 //	@Test
