@@ -58,38 +58,27 @@ public class TestsDataSetsHelper {
 		Test
 	}
 
-	public static int loadImageDataSetTrain(ImageDataSet dataset,
-													Type type,
-													List<File> images,
-													List<Integer> labels,
-													int label){
+	public static List<Image> loadImageDataSet(ImageDataSet dataset,
+													Type type){
 		
 		File dataSetDirectory = new File(IMAGE_DATASET_FILE, dataset.toString());
 		File imagesDirectory = new File(dataSetDirectory, type.toString());
 		
 		File imageFiles[] = imagesDirectory.listFiles();
+		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
 			images.add(imageFile);
-			labels.add(label);
 		}
-		return imageFiles.length;
+		
+		return new FilesImageList(images);
 	}
 
-	public static void loadAllImagesDataSets(Type type,
-											List<File> images,
-											List<Integer> labels,
-											List<Integer> classVectorsNum){
-		
-		ArrayList<File> inputImagesFiles = new ArrayList<File>();
-		Integer currentLabel = 0;
-		Integer classesNum = 0;
-		Integer featuresNum = 0;
-
+	public static List<List<Image>> loadAllImagesDataSets(Type type){
+		List<List<Image>> data = new ArrayList<List<Image>>();
 		for(ImageDataSet dataSet : ImageDataSet.values()){
-			int dataSetImages = loadImageDataSetTrain(dataSet, type, images, labels, currentLabel);
-			classVectorsNum.add(dataSetImages);
-			currentLabel++;
+			data.add(loadImageDataSet(dataSet, type));
 		}
+		return data;
 	}
 
 	public static List<List<List<Double>>> loadFeaturesVectosDataSetSeperated(FeaturesVectorsDataSets dataset, Type type){

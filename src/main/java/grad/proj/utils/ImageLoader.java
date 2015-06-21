@@ -11,7 +11,7 @@ public class ImageLoader {
 	public static Image loadImage(String imagePath) {
 		return loadImage(new File(imagePath));
 	}
-	
+
 	public static Image loadImage(File imageFile) {
 		BufferedImage image = null;
 
@@ -31,6 +31,23 @@ public class ImageLoader {
 		}
 
 		return new ImageImpl(pixels);
+	}
+	public static void saveImage(Image image, String formatName, File imageFile) {
+		BufferedImage bufferedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_BGR);
+
+		for (int y = 0; y < image.getHeight(); y++) {
+			for (int x = 0; x < image.getWidth(); x++) {
+				bufferedImage.setRGB(x, y, image.getPixelAt(y, x));
+			}
+		}
+		
+		try {
+			ImageIO.write(bufferedImage, formatName, imageFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 }

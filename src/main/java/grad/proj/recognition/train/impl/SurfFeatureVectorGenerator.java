@@ -134,8 +134,21 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		return clusterCount;
 	}
 
-	public MatOfKeyPoint getKeypoints() {
-		return keypoints;
+	public Mat getKeypointsClusterIdxMat() {
+		MatOfKeyPoint keyPointsCoordinates = this.keypoints;
+		List<List<Integer>> clusterPoints = this.getPointIdxsOfClusters();
+
+		// combining key points with cluster index
+		Mat keyPointsAndClustersCombined = new Mat(keyPointsCoordinates.rows(), 3, CvType.CV_32FC1);
+		for(int clusterIndex = 0;clusterIndex < clusterPoints.size();++clusterIndex){
+			for(int pointIndex : clusterPoints.get(clusterIndex)){
+				keyPointsAndClustersCombined.put(pointIndex, 0, keyPointsCoordinates.get(pointIndex, 0)[3]);
+				keyPointsAndClustersCombined.put(pointIndex, 1, keyPointsCoordinates.get(pointIndex, 0)[4]);
+				keyPointsAndClustersCombined.put(pointIndex, 2, clusterIndex);
+			}
+		}
+		
+		return keyPointsAndClustersCombined;
 	}
 
 	public List<List<Integer>> getPointIdxsOfClusters() {

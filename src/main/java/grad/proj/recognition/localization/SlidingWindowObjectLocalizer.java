@@ -1,25 +1,24 @@
 package grad.proj.recognition.localization;
 
-import grad.proj.recognition.train.FeatureVectorClassifier;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+import grad.proj.recognition.train.ImageClassifier;
 import grad.proj.utils.Image;
 import grad.proj.utils.MatConverters;
 import grad.proj.utils.SubImage;
 
 import java.awt.Rectangle;
-import java.util.List;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class SlidingWindowLocalizer {
+public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 	private static final int IMAGE_DIM = 500;
 	private static final int WINDOW_DIM = 100;
 
-	public Rectangle getObjectBounds(Image image, FeatureVectorClassifier classifier,
-			SurfFeatureVectorGenerator featureVectorGenerator, int classLabel) {
+	@Override
+	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, int classLabel) {
+		
 		int bestX = 0, bestY = 0;
 		double bestDistance = Double.MAX_VALUE;
 		Image resizedImage = this.resizeImage(image);
@@ -27,9 +26,7 @@ public class SlidingWindowLocalizer {
 		for(int x = 0; x+WINDOW_DIM < IMAGE_DIM ; ++x ){
 			for(int y = 0; y+WINDOW_DIM < IMAGE_DIM ; ++y){
 				SubImage subimage = new SubImage(resizedImage, x, y, WINDOW_DIM, WINDOW_DIM);
-				List<Double> featureVector = featureVectorGenerator.generateFeatureVector(subimage);
-				//System.out.println(featureVector.rows() + "  " + featureVector.cols());
-				double distance = classifier.classify(featureVector, classLabel);
+				double distance = classifier.classify(subimage, classLabel);
 				if(distance < bestDistance){
 					bestX = x;
 					bestY = y;
@@ -52,4 +49,5 @@ public class SlidingWindowLocalizer {
 		Imgproc.resize(inputImageMat, resizedImageMat, scaledImageSize);
 		return MatConverters.MatToImage(resizedImageMat);
 	}
+
 }
