@@ -59,12 +59,15 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 			for(Image image : clazz){
 				Mat imageMat = generateMatFromImage(image);
 				Mat surfDescriptors = generateSurfDescriptors(imageMat);
-				
+				if(surfDescriptors.empty())
+					continue;
 				trainer.add(surfDescriptors);
 			}
 		}
 		
-		imgDescriptor.setVocabulary(trainer.cluster());
+		if(trainer.getDescriptors().size() > 0){
+			imgDescriptor.setVocabulary(trainer.cluster());
+		}
 		
 		prepared = true;
 	}

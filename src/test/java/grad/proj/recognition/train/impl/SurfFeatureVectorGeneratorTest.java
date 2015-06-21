@@ -59,4 +59,16 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 		for(int i=0; i<generated.size(); i++)
 			assertNotEquals(generated.get(i), generatedFromDifferentImage.get(i), 0.0);
 	}
+
+	@Test
+	public void testGenerateFeatureVectorForClearImageWithNoCorners(){
+		Image image = SubImageTest.createRandomTestImage(100, 100, Color.white.getRGB());
+		
+		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
+		generator.prepareGenerator(Arrays.asList(Arrays.asList(image)));
+		
+		List<Double> featureVector = generator.generateFeatureVector(image);
+		
+		assertEquals("feature vector for clear images by surf should be 0", 0, featureVector.size());
+	}
 }
