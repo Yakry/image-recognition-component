@@ -1,7 +1,47 @@
 package grad.proj.recognition.train.impl;
 
-public class ImageClassifierTest {
+import grad.proj.recognition.RequiresLoadingTestBaseClass;
+import grad.proj.recognition.train.ImageClassifier;
+import grad.proj.utils.Image;
+import grad.proj.utils.TestsDataSetsHelper;
+import grad.proj.utils.TestsDataSetsHelper.DataSet;
+import grad.proj.utils.TestsDataSetsHelper.Type;
 
+import java.util.List;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
+
+	@Test
+	public void testClassifiySingleAppleAndCanTrainImages(){
+		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
+		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
+		
+		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
+		
+		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "can");
+		classifier.train(trainingData);
+		
+		double classifiedCorrectly = 0;
+		int totalImages = 0;
+
+		// I couldn't use the testing images because they are for branch and bound, so they contain other objects
+		for(int clazz=0; clazz < trainingData.size(); clazz++){
+			for(Image image : trainingData.get(clazz)){
+				classifiedCorrectly += (classifier.classify(image) == clazz) ? 1 : 0;
+			}			
+			totalImages += trainingData.get(clazz).size();
+		}
+		classifiedCorrectly /= totalImages;
+		
+		System.out.println("classifiedCorrectly: " + classifiedCorrectly);
+		
+		assertTrue("classifiedCorrectly < 90", classifiedCorrectly >= 0.9);
+	}
+	
 //	@Test
 //	public void testRealImages() throws Exception{
 //		File trainDataSetDirectory = new File(TestsDataSetsHelper.CLASSIFIER_FILES_PATH
