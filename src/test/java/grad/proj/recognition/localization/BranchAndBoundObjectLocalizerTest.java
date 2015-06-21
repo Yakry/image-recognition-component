@@ -36,7 +36,7 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "others");
+		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "can");
 		List<List<Image>> testingClassData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Test, "apple");
 		
 		classifier.train(trainingData);
