@@ -99,10 +99,10 @@ public class TestsDataSetsHelper {
 		return datasetFolder;
 	}
 	
-	public static void main(String[] args) {
-		Loader.load();
-		generateFeaturesFile(DataSet.calteckUniversity);
-	}
+//	public static void main(String[] args) {
+//		Loader.load();
+//		generateFeaturesFile(DataSet.calteckUniversity);
+//	}
 	
 	public static void generateFeaturesFile(DataSet dataset){
 		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
