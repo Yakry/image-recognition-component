@@ -7,6 +7,7 @@ import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -53,10 +54,16 @@ public class TestsDataSetsHelper {
 	public static List<List<Image>> loadDataSetImages(DataSet dataset, Type type, String ...classes){
 		List<List<Image>> data = new ArrayList<List<Image>>();
 
-		File imagesMainFolder = getImagesFolder(dataset);
+		File imagesMainFolder = getImagesFolder(dataset, type);
 		
-		if(classes == null)
-			imagesMainFolder.list();
+		if(classes.length == 0){
+			classes = imagesMainFolder.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return new File(dir, name).isDirectory();
+				}
+			});
+		}
 		
 		for(String className : classes){
 			data.add(loadDataSetClassImages(dataset, type, className));
@@ -82,16 +89,16 @@ public class TestsDataSetsHelper {
 	
 	private static File getImagesClassFolder(DataSet dataset, Type type,
 			String className) {
-		File imagesMainFolder = getImagesFolder(dataset);
-		File typeFolder = new File(imagesMainFolder, type.toString());
-		File classImagesFolder = new File(typeFolder, className);
+		File imagesMainFolder = getImagesFolder(dataset, type);
+		File classImagesFolder = new File(imagesMainFolder, className);
 		return classImagesFolder;
 	}
 	
-	private static File getImagesFolder(DataSet dataset) {
+	private static File getImagesFolder(DataSet dataset, Type type) {
 		File datasetFolder = getDataSetFolder(dataset);
 		File imagesMainFolder = new File(datasetFolder, IMAGES_FOLDER_NAME);
-		return imagesMainFolder;
+		File typeFolder = new File(imagesMainFolder, type.toString());
+		return typeFolder;
 	}
 
 	private static File getDataSetFolder(DataSet dataset) {
