@@ -1,17 +1,10 @@
 package grad.proj.recognition.localization;
 
 import grad.proj.recognition.train.ImageClassifier;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.Image;
 
 import java.awt.Rectangle;
-import java.util.List;
 import java.util.PriorityQueue;
-
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfKeyPoint;
-import org.opencv.ml.SVM;
 
 public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 
@@ -23,7 +16,7 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 
 	@Override
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier,int classLabel) {
-		int counter = 500;
+		int counter = 10000;
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
 		SearchState startState = new SearchState(image);
 		startState.quality = qualityFunction.evaluate(image, startState, classifier, classLabel);
