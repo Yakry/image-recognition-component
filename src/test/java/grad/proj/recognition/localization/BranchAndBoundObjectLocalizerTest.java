@@ -37,13 +37,13 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
 		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "can");
-		List<List<Image>> testingClassData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Test, "apple");
+		List<Image> testingClassData = TestsDataSetsHelper.loadDataSetClassImages(DataSet.calteckUniversity, Type.Test, "apple");
 		
 		classifier.train(trainingData);
 		
-		Image sampleTestImage = testingClassData.get(0).get(0);
+		Image sampleTestImage = testingClassData.get(0);
 		
-		int classLabel = classifier.classify(sampleTestImage);
+		int classLabel = 0;
 		
 		Mat supportVectors = svmClassifier.svmArray[classLabel].getSupportVectors();
 		featureVectorGenerator.generateFeatureVector(sampleTestImage);
@@ -60,8 +60,6 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		drawRectangle(objectBounds, sampleTestImage);
 		ImageLoader.saveImage(sampleTestImage, "jpg", new File("branchAndBounds.jpg"));
 		
-		System.out.println("class lable: " + classLabel);
-		System.out.println("####################");
 		System.out.println("object bounds: ");
 		System.out.println("x: " + objectBounds.getX());
 		System.out.println("y: " + objectBounds.getY());
