@@ -2,10 +2,11 @@ package grad.proj.recognition.train.impl;
 
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.recognition.train.ImageClassifier;
+import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.Image;
-import grad.proj.utils.TestsDataSetsHelper;
-import grad.proj.utils.TestsDataSetsHelper.DataSet;
-import grad.proj.utils.TestsDataSetsHelper.Type;
+import grad.proj.utils.DataSetsTestsHelper;
+import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.DataSetsTestsHelper.Type;
 
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "can");
+		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		List<List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
 		classifier.train(trainingData);
 		
 		double classifiedCorrectly = 0;

@@ -6,13 +6,13 @@ import static org.junit.Assert.assertNotNull;
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
 import grad.proj.utils.ImageImpl;
 import grad.proj.utils.SubImageTest;
-import grad.proj.utils.TestsDataSetsHelper;
+import grad.proj.utils.DataSetsTestsHelper;
 import grad.proj.utils.FilesImageList;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 import grad.proj.utils.SubImage;
-import grad.proj.utils.TestsDataSetsHelper.DataSet;
-import grad.proj.utils.TestsDataSetsHelper.Type;
+import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.DataSetsTestsHelper.Type;
 
 import java.awt.Color;
 import java.io.File;

@@ -5,11 +5,12 @@ import grad.proj.recognition.train.ImageClassifier;
 import grad.proj.recognition.train.impl.LinearNormalizer;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
-import grad.proj.utils.TestsDataSetsHelper;
-import grad.proj.utils.TestsDataSetsHelper.DataSet;
-import grad.proj.utils.TestsDataSetsHelper.Type;
+import grad.proj.utils.DataSetsTestsHelper;
+import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.DataSetsTestsHelper.Type;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -26,8 +27,9 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		List<List<Image>> trainingData = TestsDataSetsHelper.loadDataSetImages(DataSet.calteckUniversity, Type.Train, "apple", "can");
-		List<Image> testingClassData = TestsDataSetsHelper.loadDataSetClassImages(DataSet.calteckUniversity, Type.Test, "apple");
+		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		List<List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
+		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "apple");
 		
 		classifier.train(trainingData);
 		
