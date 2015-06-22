@@ -39,7 +39,6 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	private Mat myImgDescriptor;
 	private Mat descriptors;
 	
-	
 	private boolean prepared = false;
 	
 	public SurfFeatureVectorGenerator(){
@@ -50,6 +49,15 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		this.clusterCount = size;
 		
 		trainer = new BOWKMeansTrainer(clusterCount);
+	}
+
+	public Mat getVocab(){
+		return imgDescriptor.getVocabulary();
+	}
+	
+	public void setVocab(Mat vocab){
+		imgDescriptor.setVocabulary(vocab);
+		prepared = true;
 	}
 	
 	@Override

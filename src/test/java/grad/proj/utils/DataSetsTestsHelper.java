@@ -16,6 +16,8 @@ public class DataSetsTestsHelper {
 	private static File DATASET_FOLDER = new File("datasets");
 	private static String FEATURES_FOLDER_NAME = "features";
 	
+	private static final String FEATURE_VECTOR_GENERATOR_FOLDER = "featureVectorGenerators";
+	
 	public enum DataSet{
 		calteckUniversity,
 		satimage,
@@ -43,6 +45,15 @@ public class DataSetsTestsHelper {
 		return featuresFilePath;
 	}
 	
+	public static File getFeatureVectorGeneratorsFile(DataSet dataset, String name) {
+		File datasetFolder = getDataSetFolder(dataset);
+		File generators = new File(datasetFolder, FEATURE_VECTOR_GENERATOR_FOLDER);
+		File generator = new File(generators, name + ".txt");
+		return generator;
+	}
+	
+	
+	
 	public static List<List<List<Double>>> loadDataSetFeaturesSeperated(DataSet dataset, Type type){
 		File datasetFolder = getDataSetFolder(dataset);
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
@@ -60,6 +71,20 @@ public class DataSetsTestsHelper {
 //		Loader.load();
 //		generateFeaturesFile(DataSet.calteckUniversity);
 //	}
+
+	public static void generateSurfGeneratorFile(DataSet dataset){
+		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
+		
+		List<List<Image>> trainingData = getDataSetLoader(dataset).loadImages(Type.Train);
+		
+		featureVectorGenerator.prepareGenerator(trainingData);
+		
+		SurfLoader.saveSurf(featureVectorGenerator, getFeatureVectorGeneratorsFile(dataset, "surf"));
+	}
+	
+	public static SurfFeatureVectorGenerator loadSurfGenerator(DataSet dataset){
+		return SurfLoader.loadSurf(getFeatureVectorGeneratorsFile(dataset, "surf"));
+	}
 	
 	public static void generateFeaturesFile(DataSet dataset){
 		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
