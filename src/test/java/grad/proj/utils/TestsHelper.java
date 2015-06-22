@@ -49,15 +49,15 @@ public class TestsHelper {
 	}
 
 	public static Image createRandomTestImage(int width, int height){
-		return TestsHelper.createRandomTestImage(width, height, 0);
+		return TestsHelper.createTestImage(width, height, Long.MAX_VALUE);
 	}
 
-	public static Image createRandomTestImage(int width, int height, int color) {
+	public static Image createTestImage(int width, int height, long color) {
 		Random random = new Random();
 		Image originalImage = new ImageImpl(width, height);
 		for(int row=0; row<originalImage.getHeight(); row++){
 			for(int col=0; col<originalImage.getWidth(); col++){
-				originalImage.setPixelAt(row, col, color);
+				originalImage.setPixelAt(row, col, (color == Long.MAX_VALUE) ? random.nextInt() : (int)color);
 			}
 		}
 		return originalImage;
