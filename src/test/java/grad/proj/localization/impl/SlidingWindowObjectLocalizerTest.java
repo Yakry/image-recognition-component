@@ -7,8 +7,8 @@ import grad.proj.recognition.impl.LinearNormalizer;
 import grad.proj.recognition.impl.SVMClassifier;
 import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataSetLoader;
-import grad.proj.utils.DataSetsTestsHelper;
-import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.TestsHelper;
+import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.DataSetLoader.Type;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
@@ -25,7 +25,7 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 	@Test
 	public void testSlidingWindow() throws Exception {
 		// saved generator and features
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
 		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 
 		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "bikes");
@@ -36,7 +36,7 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 		for(Image sampleTestImage : testingClassData){
 			System.out.println("starting search " + searchIndex);
 			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, 0);
-			BranchAndBoundObjectLocalizerTest.drawRectangle(objectBounds, sampleTestImage);
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
 			ImageLoader.saveImage(sampleTestImage, "jpg", new File("slidingWindow" + searchIndex + ".jpg"));
 			++searchIndex;
 		}

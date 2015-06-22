@@ -5,7 +5,7 @@ import grad.proj.recognition.ImageClassifier;
 import grad.proj.recognition.impl.LinearNormalizer;
 import grad.proj.recognition.impl.SVMClassifier;
 import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
-import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.imaging.Image;
 
 import java.io.File;

@@ -1,0 +1,67 @@
+package grad.proj.utils;
+
+import grad.proj.recognition.FeatureVectorGenerator;
+import grad.proj.recognition.ImageClassifier;
+import grad.proj.recognition.impl.LinearNormalizer;
+import grad.proj.recognition.impl.SVMClassifier;
+import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
+import grad.proj.utils.imaging.Image;
+import grad.proj.utils.imaging.ImageImpl;
+
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+public class TestsHelper {
+	private static File DATASET_FOLDER = new File("datasets");
+	
+	public enum DataSet{
+		calteckUniversity,
+		satimage,
+		svmguide4,
+		vowel
+	}
+	
+	public static DataSetLoader getDataSetLoader(DataSet dataset) {
+		return new DataSetLoader(getDataSetFolder(dataset));
+	}
+	
+	private static File getDataSetFolder(DataSet dataset) {
+		return new File(DATASET_FOLDER, dataset.toString());
+	}
+
+	public static void drawRectangle(Rectangle objectBounds, Image drawableImage) {
+		for(int i=0;i<objectBounds.getWidth();++i){
+			drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
+			drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
+		}
+		
+		for(int i=0;i<objectBounds.getHeight();++i){
+			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, Color.GREEN.getRGB());
+			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, Color.GREEN.getRGB());
+		}
+	}
+
+	public static Image createRandomTestImage(int width, int height){
+		return TestsHelper.createRandomTestImage(width, height, 0);
+	}
+
+	public static Image createRandomTestImage(int width, int height, int color) {
+		Random random = new Random();
+		Image originalImage = new ImageImpl(width, height);
+		for(int row=0; row<originalImage.getHeight(); row++){
+			for(int col=0; col<originalImage.getWidth(); col++){
+				originalImage.setPixelAt(row, col, color);
+			}
+		}
+		return originalImage;
+	}
+
+	
+}

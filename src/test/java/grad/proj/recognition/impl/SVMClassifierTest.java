@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 import grad.proj.recognition.impl.LinearNormalizer;
 import grad.proj.recognition.impl.SVMClassifier;
 import grad.proj.utils.DataFileLoader;
-import grad.proj.utils.DataSetsTestsHelper;
-import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.TestsHelper;
+import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.DataSetLoader.Type;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
@@ -59,7 +59,7 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	@Test
 	public void testRealData() {
 		// training and testing data already scaled
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.satimage);
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.satimage);
 		List<List<List<Double>>> trainingData = dataSetLoader.loadDataSetFeaturesSeperated(Type.Train);
 		List<List<Double>> testingData = dataSetLoader.loadDataSetFeaturesCombined(Type.Test);
 

@@ -10,14 +10,13 @@ import grad.proj.recognition.impl.LinearNormalizer;
 import grad.proj.recognition.impl.SVMClassifier;
 import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataSetLoader;
-import grad.proj.utils.DataSetsTestsHelper;
-import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.TestsHelper;
+import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.DataSetLoader.Type;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.List;
@@ -29,7 +28,7 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 
 	@Test
 	public void testBranchAndBound() throws Exception {
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
 		
 		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 		
@@ -50,21 +49,9 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 			BranchAndBoundObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(qualityFunction);
 			
 			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, classLabel);
-			drawRectangle(objectBounds, sampleTestImage);
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
 			ImageLoader.saveImage(sampleTestImage, "jpg", new File("branchAndBound" + searchIndex + ".jpg"));
 			++searchIndex;
-		}
-	}
-
-	public static void drawRectangle(Rectangle objectBounds, Image drawableImage) {
-		for(int i=0;i<objectBounds.getWidth();++i){
-			drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
-			drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
-		}
-		
-		for(int i=0;i<objectBounds.getHeight();++i){
-			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, Color.GREEN.getRGB());
-			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, Color.GREEN.getRGB());
 		}
 	}
 }

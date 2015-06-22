@@ -4,15 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
-import grad.proj.utils.DataSetsTestsHelper;
+import grad.proj.utils.TestsHelper;
 import grad.proj.utils.FilesImageList;
-import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.DataSetLoader.Type;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageImpl;
 import grad.proj.utils.imaging.ImageLoader;
 import grad.proj.utils.imaging.SubImage;
-import grad.proj.utils.imaging.SubImageTest;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
 import java.awt.Color;
@@ -32,7 +31,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 	@Test
 	public void testFeatureVectorForSameImageDoesnotChange() throws Exception {
 
-		Image image = SubImageTest.createRandomTestImage(100, 100);
+		Image image = TestsHelper.createRandomTestImage(100, 100);
 		
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 		generator.prepareGenerator(Arrays.asList(Arrays.asList(image)));
@@ -47,8 +46,8 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	@Test
 	public void testFeatureVectorForDifferentImagesShouldBeDifferent() throws Exception {
-		Image image1 = SubImageTest.createRandomTestImage(100, 100);
-		Image image2 = SubImageTest.createRandomTestImage(100, 100);
+		Image image1 = TestsHelper.createRandomTestImage(100, 100);
+		Image image2 = TestsHelper.createRandomTestImage(100, 100);
 		
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 		generator.prepareGenerator(Arrays.asList(Arrays.asList(image1, image2)));
@@ -63,7 +62,7 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	@Test
 	public void testGenerateFeatureVectorForClearImageWithNoCorners(){
-		Image image = SubImageTest.createRandomTestImage(100, 100, Color.white.getRGB());
+		Image image = TestsHelper.createRandomTestImage(100, 100, Color.white.getRGB());
 		
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();
 		generator.prepareGenerator(Arrays.asList(Arrays.asList(image)));
