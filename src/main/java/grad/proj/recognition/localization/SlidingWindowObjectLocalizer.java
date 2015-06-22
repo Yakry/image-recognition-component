@@ -13,61 +13,50 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
-	private static final int IMAGE_DIM = 500;
-	private static final int WINDOW_DIM = 400;
+	private static final int MIN_IMAGE_DIM = 500;
+	private static final int MAX_IMAGE_DIM = 1000;
+	private static final int IMAGE_DIM_STEP = 250;
+	private static final int WINDOW_DIM = 300;
+	private static final int WINDOW_STEP = 10;
 
 	@Override
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, int classLabel) {
-		int bestX = 0, bestY = 0;
-		double bestDistance = Double.MAX_VALUE;
-		for(int x = 0; x+WINDOW_DIM < image.getWidth() ; x+=10){
-			for(int y = 0; y+WINDOW_DIM < image.getHeight() ; y+=10){
-				SubImage subimage = new SubImage(image, x, y, WINDOW_DIM, WINDOW_DIM);
-				double distance = classifier.classify(subimage, classLabel);
-				//System.out.println(distance);
-				if(distance < bestDistance){
-					bestX = x;
-					bestY = y;
-					bestDistance = distance;
+		Rectangle globalBestBounds = new Rectangle();
+		double globalBestScore = Double.MAX_VALUE;
+		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){
+			Image scaledImage = this.scaleImage(image, imageDim, imageDim);
+			int localBestBoundsX = 0, localBestBoundsY = 0;
+			double localBestScore = Double.MAX_VALUE;
+			for(int x = 0; x+WINDOW_DIM < imageDim; x += WINDOW_STEP){
+				for(int y=0; y+WINDOW_DIM < imageDim; y += WINDOW_STEP){
+					SubImage subimage = new SubImage(scaledImage, x, y, WINDOW_DIM, WINDOW_DIM);
+					double score = classifier.classify(subimage, classLabel);
+					if(score < localBestScore){
+						localBestBoundsX = x;
+						localBestBoundsY = y;
+						localBestScore = score;
+					}
 				}
 			}
+			
+			if(localBestScore <= globalBestScore){
+				globalBestBounds.setBounds((localBestBoundsX*image.getWidth()) / imageDim,
+						(localBestBoundsY*image.getHeight()) / imageDim,
+						(WINDOW_DIM*image.getWidth()) / imageDim,
+						(WINDOW_DIM*image.getHeight()) / imageDim);
+				globalBestScore = localBestScore;
+			}
 		}
-		int rectX = bestX;
-		int rectY = bestY;
-		int rectWidth = WINDOW_DIM;
-		int rectHeight = WINDOW_DIM;
 		
-		/*
-		int bestX = 0, bestY = 0;
-		double bestDistance = Double.MAX_VALUE;
-		Image resizedImage = this.resizeImage(image);
-
-		for(int x = 0; x+WINDOW_DIM < IMAGE_DIM ; x+=10){
-			for(int y = 0; y+WINDOW_DIM < IMAGE_DIM ; y+=10){
-				SubImage subimage = new SubImage(resizedImage, x, y, WINDOW_DIM, WINDOW_DIM);
-				double distance = classifier.classify(subimage, classLabel);
-				if(distance < bestDistance){
-					bestX = x;
-					bestY = y;
-					bestDistance = distance;
-				}
-			}
-		}
-
-		int rectX = (bestX*image.getWidth()) / IMAGE_DIM;
-		int rectY = (bestY*image.getHeight()) / IMAGE_DIM;
-		int rectWidth = (WINDOW_DIM*image.getWidth()) / IMAGE_DIM;
-		int rectHeight = (WINDOW_DIM*image.getHeight()) / IMAGE_DIM;
-		*/
-		return new Rectangle(rectX,rectY,rectWidth,rectHeight);
+		return globalBestBounds;
 	}
 
-	private Image resizeImage(Image image){
+	private Image scaleImage(Image image, int width, int height){
 		Mat inputImageMat = MatConverters.ImageToMat(image);
-		Mat resizedImageMat = new Mat(IMAGE_DIM, IMAGE_DIM, CvType.CV_8UC3);
-		Size scaledImageSize = new Size(IMAGE_DIM, IMAGE_DIM);
-		Imgproc.resize(inputImageMat, resizedImageMat, scaledImageSize);
-		return MatConverters.MatToImage(resizedImageMat);
+		Mat scaledImageMat = new Mat(height, width, CvType.CV_8UC3);
+		Size scaledImageSize = new Size(width, height);
+		Imgproc.resize(inputImageMat, scaledImageMat, scaledImageSize);
+		return MatConverters.MatToImage(scaledImageMat);
 	}
 
 }
