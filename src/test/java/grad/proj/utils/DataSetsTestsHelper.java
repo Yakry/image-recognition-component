@@ -2,6 +2,8 @@ package grad.proj.utils;
 
 import grad.proj.recognition.Loader;
 import grad.proj.recognition.train.FeatureVectorGenerator;
+import grad.proj.recognition.train.ImageClassifier;
+import grad.proj.recognition.train.impl.LinearNormalizer;
 import grad.proj.recognition.train.impl.SVMClassifier;
 import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
 
@@ -133,6 +135,16 @@ public class DataSetsTestsHelper {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static ImageClassifier getTrainedClassifier(DataSet dataset) {
+		SurfFeatureVectorGenerator featureVectorGenerator = DataSetsTestsHelper.loadSurfGenerator(dataset);
+		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
+		svmClassifier.train(DataSetsTestsHelper.loadDataSetFeaturesSeperated(dataset, Type.Train));
+		
+		// doesn't need to be trained
+		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
+		return classifier;
 	}
 	
 }

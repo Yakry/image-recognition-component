@@ -57,4 +57,11 @@ public class ImageClassifier implements Classifier<Image> {
 		return classifier.getClassesNo();
 	}
 
+	public FeatureVectorGenerator getFeatureVectorGenerator() {
+		return featureVectorGenerator;
+	}
+
+	public FeatureVectorClassifier getClassifier() {
+		return classifier;
+	}
 }

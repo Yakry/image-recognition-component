@@ -22,17 +22,13 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 	
 	@Test
 	public void testSlidingWindow() throws Exception {
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
-		
-		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
-		
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		List<List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
-		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "apple");
-		
-		classifier.train(trainingData);
-		
+		// saved generator and features
+		DataSet dataset = DataSet.calteckUniversity;
+		ImageClassifier classifier = DataSetsTestsHelper.getTrainedClassifier(dataset);
+
+		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(dataset);
+		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "bikes");
+				
 		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();
 		
 		int searchIndex = 1;
@@ -44,4 +40,5 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 			++searchIndex;
 		}
 	}
+
 }

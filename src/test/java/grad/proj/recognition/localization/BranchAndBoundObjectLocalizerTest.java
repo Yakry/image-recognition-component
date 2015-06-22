@@ -1,6 +1,8 @@
 package grad.proj.recognition.localization;
 
 import grad.proj.recognition.RequiresLoadingTestBaseClass;
+import grad.proj.recognition.train.FeatureVectorClassifier;
+import grad.proj.recognition.train.FeatureVectorGenerator;
 import grad.proj.recognition.train.ImageClassifier;
 import grad.proj.recognition.train.impl.LinearNormalizer;
 import grad.proj.recognition.train.impl.SVMClassifier;
@@ -24,16 +26,13 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 
 	@Test
 	public void testBranchAndBound() throws Exception {
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
+		ImageClassifier classifier = DataSetsTestsHelper.getTrainedClassifier(DataSet.calteckUniversity);
 		
-		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
-
+		SurfFeatureVectorGenerator featureVectorGenerator = (SurfFeatureVectorGenerator)classifier.getFeatureVectorGenerator();
+		SVMClassifier svmClassifier = (SVMClassifier) classifier.getClassifier();
+		
 		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		List<List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
 		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "apple");
-		
-		classifier.train(trainingData);
 		
 		int classLabel = 0;
 		Mat supportVectors = svmClassifier.svmArray[classLabel].getSupportVectors();
