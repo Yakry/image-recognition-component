@@ -5,7 +5,6 @@ import grad.proj.recognition.ImageClassifier;
 import grad.proj.recognition.impl.LinearNormalizer;
 import grad.proj.recognition.impl.SVMClassifier;
 import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
-import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.imaging.Image;
 
 import java.io.File;
@@ -14,8 +13,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.opencv.ml.TrainData;
 
 public class DataSetLoader {
 	public enum Type{

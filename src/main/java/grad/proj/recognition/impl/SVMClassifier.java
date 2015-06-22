@@ -11,6 +11,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
 import org.opencv.ml.SVM;
 
+@SuppressWarnings("unused")
 public class SVMClassifier implements FeatureVectorClassifier {
 	private static final long serialVersionUID = 1L;
 	public SVM svmArray[] = null;
@@ -62,8 +63,6 @@ public class SVMClassifier implements FeatureVectorClassifier {
 			
 			double distanceFromMargin = predictRes.get(0, 0)[0];
 			boolean belongToClass = distanceFromMargin < 0;
-//			System.out.println(predict + " " + svmArray[i].predict(featureVector));
-//			System.out.println(distanceFromMargin);
 			
 			if(belongToClass){
 				distanceFromMargin = Math.abs(distanceFromMargin); 
@@ -74,7 +73,6 @@ public class SVMClassifier implements FeatureVectorClassifier {
 			}
 		}
 		
-		//System.out.println(bestError);
 		return classLabel;
 	}
 	
@@ -91,7 +89,6 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		return predictRes.get(0, 0)[0];
 	}
 	
-	// all classes feature vectors
 	public void train(List<List<List<Double>>> trainingData) {
 		if(trainingData.size() < 2)
 			throw new RuntimeException("number of classes below minimum " +
@@ -124,26 +121,6 @@ public class SVMClassifier implements FeatureVectorClassifier {
 	}
 	
 	private static SVM constructSVM(Mat trainingData, Mat Labels, int classLabel){
-		// setting the training parameters
-//		CvSVMParams trainingPram = new CvSVMParams();
-//		trainingPram.set_svm_type(CvSVM.C_SVC);
-//		trainingPram.set_kernel_type(CvSVM.LINEAR);
-//		trainingPram.set_degree(0); // not needed with linear kernel
-//		trainingPram.set_gamma(1); // not needed with linear kernel
-//		trainingPram.set_coef0(0); // not needed with linear kernel
-//		trainingPram.set_C(1); // initial default value
-//		trainingPram.set_nu(0); // not needed with C_SVC classification
-//		trainingPram.set_p(0); // not needed with C_SVC classification
-//		trainingPram.set_term_crit(new TermCriteria(TermCriteria.COUNT, 
-//											1000, TermCriteria.EPS));
-		
-//		CvParamGrid cGrid = constructParamGrid(1.0/16.0, 16, 2);
-//		CvParamGrid gammaGrid = constructParamGrid(1, 1, 0);
-//		CvParamGrid degreeGrid = constructParamGrid(1, 1, 0);
-//		CvParamGrid coeffGrid = constructParamGrid(1, 1, 0);
-//		CvParamGrid nuGrid = constructParamGrid(1, 1, 0);
-//		CvParamGrid pGrid = constructParamGrid(1, 1, 0);
-		
 		Mat binaryLabels = new Mat(trainingData.rows(), 1, CvType.CV_32SC1);
 		for(int i=0; i<trainingData.rows(); ++i)
 			binaryLabels.put(i, 0, ((Labels.get(i, 0)[0] == classLabel) ? 1.0 : -1.0));
@@ -167,10 +144,6 @@ public class SVMClassifier implements FeatureVectorClassifier {
 //				degreeMinVal, degreeMaxVal, degreeLogStep,
 //				true);
 		
-//		svm.train_auto(trainingData, binaryLabels, new Mat(), new Mat(),
-//				trainingPram, 10, cGrid, gammaGrid, pGrid, nuGrid,
-//				coeffGrid, degreeGrid, true);
-		
 		return svm;
 	}
 	
@@ -186,13 +159,4 @@ public class SVMClassifier implements FeatureVectorClassifier {
 	public int getClassesNo() {
 		return svmArray.length;
 	}
-	
-//	private static CvParamGrid constructParamGrid(double minVal,
-//			double maxVal, double step){
-//		CvParamGrid grid = new CvParamGrid();
-//		grid.set_min_val(minVal);
-//		grid.set_max_val(maxVal);
-//		grid.set_step(step);
-//		return grid;
-//	}
 }

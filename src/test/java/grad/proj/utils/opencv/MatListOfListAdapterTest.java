@@ -3,11 +3,9 @@ package grad.proj.utils.opencv;
 
 import static org.junit.Assert.*;
 
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.Test;
-import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 

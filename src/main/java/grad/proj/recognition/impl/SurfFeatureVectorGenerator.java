@@ -10,15 +10,11 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
-import org.opencv.utils.Converters;
-
 import grad.proj.recognition.FeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.MatConverters;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
-	
-	// No proof it is correct yet
 	
 	/*
 	 * Helpful materials
@@ -101,10 +97,6 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		return featureVector;
 	}
 
-	/**
-	 * @param imageMat
-	 * @return
-	 */
 	private Mat generateSurfDescriptors(Mat imageMat) {
 		MatOfKeyPoint keypoints = new MatOfKeyPoint();
 		featureDetector.detect(imageMat, keypoints);
@@ -114,16 +106,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		return featureVector;
 	}
 
-	/**
-	 * @param image
-	 * @return
-	 */
 	private Mat generateMatFromImage(Image image) {
-		/*
-		 * 
-		 * For more about CvType: http://docs.opencv.org/modules/core/doc/basic_structures.html
-		 * basically CV_ 8 UC 3 means a tuple of 3 elements, each element is an unsigned char
-		 */
 		Mat imageMat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
 		for(int row=0; row<image.getHeight(); row++){
 			for(int col=0; col<image.getWidth(); col++){

@@ -1,21 +1,11 @@
 package grad.proj.utils;
 
-import grad.proj.recognition.FeatureVectorGenerator;
-import grad.proj.recognition.ImageClassifier;
-import grad.proj.recognition.impl.LinearNormalizer;
-import grad.proj.recognition.impl.SVMClassifier;
-import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageImpl;
 
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class TestsHelper {

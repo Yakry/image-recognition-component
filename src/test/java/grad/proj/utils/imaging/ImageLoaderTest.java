@@ -5,8 +5,6 @@ import grad.proj.utils.imaging.ImageLoader;
 
 import java.awt.Color;
 import java.io.File;
-import java.nio.file.Paths;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,13 +1,9 @@
 package grad.proj.matching;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.SortedSet;
 
 public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 
@@ -35,8 +31,6 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 		};
 		
 		Comparator<Integer> decendingComparator = acendingComparator.reversed();
-		
-		SortedSet<Integer> a;
 		
 		PriorityQueue<Integer> topNSoFar = new PriorityQueue<>(topN, decendingComparator);
 		

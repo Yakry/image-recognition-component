@@ -1,11 +1,7 @@
 package grad.proj.recognition;
 
 import grad.proj.utils.imaging.Image;
-import grad.proj.utils.imaging.ImageLoader;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ImageClassifier implements Classifier<Image> {
