@@ -19,7 +19,31 @@ public class SVMClassifier implements FeatureVectorClassifier {
 //	extracted from opencv c++ code
 	private static final int ROW_SAMPLE = 0;
 	private static final int RAW_OUTPUT = 1;
+	
+	private static final double cMinVal = 0.1;
+	private static final double cMaxVal = 500;
+	private static final double cLogStep = 5; // total iterations = 5
+	
+	private static final double gammaMinVal = 1e-5;
+	private static final double gammaMaxVal = 0.6;
+	private static final double gammaLogStep = 15;
+	
+	private static final double pMinVal = 0.01;
+	private static final double pMaxVal = 100;
+	private static final double pMogStep = 7; // total iterations = 4
+	
+	private static final double nuMinVal = 0.01;
+	private static final double nuMaxVal = 0.2;
+	private static final double nuLogStep = 3; // total iterations = 3
+	
+	private static final double coeffMinVal = 0.1;
+	private static final double coeffMaxVal = 300;
+	private static final double coeffLogStep = 14; // total iterations = 3
 
+	private static final double degreeMinVal = 0.01;
+	private static final double degreeMaxVal = 4;
+	private static final double degreeLogStep = 7; // total iterations = 3
+    
 	public SVMClassifier(Normalizer normalizer) {
 		this.normalizer = normalizer;
 	}
@@ -133,6 +157,15 @@ public class SVMClassifier implements FeatureVectorClassifier {
 				2000, TermCriteria.EPS));
 		
 		svm.train(trainingData, ROW_SAMPLE, binaryLabels);
+		
+//		svm.trainAutoFlat(trainingData, ROW_SAMPLE, binaryLabels, 10, 
+//				cMinVal, cMaxVal, cLogStep,
+//				gammaMinVal, gammaMaxVal, gammaLogStep,
+//				pMinVal, pMaxVal, pMogStep,
+//				nuMinVal, nuMaxVal, nuLogStep,
+//				coeffMinVal, coeffMaxVal, coeffLogStep,
+//				degreeMinVal, degreeMaxVal, degreeLogStep,
+//				true);
 		
 //		svm.train_auto(trainingData, binaryLabels, new Mat(), new Mat(),
 //				trainingPram, 10, cGrid, gammaGrid, pGrid, nuGrid,
