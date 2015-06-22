@@ -47,8 +47,8 @@ the datasets should be stored in the project root folder in the following hierar
   			features/
   				train.txt
   				test.txt
-  			classifiers/
-  				svm.xml
+  			featureVectorGenerators/
+  				surf.xml
   
   		svmguide4
   			features
