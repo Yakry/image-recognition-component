@@ -1,11 +1,12 @@
 package grad.proj.utils;
 
-import grad.proj.recognition.train.FeatureVectorGenerator;
-import grad.proj.recognition.train.ImageClassifier;
-import grad.proj.recognition.train.impl.LinearNormalizer;
-import grad.proj.recognition.train.impl.SVMClassifier;
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+import grad.proj.recognition.FeatureVectorGenerator;
+import grad.proj.recognition.ImageClassifier;
+import grad.proj.recognition.impl.LinearNormalizer;
+import grad.proj.recognition.impl.SVMClassifier;
+import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataSetsTestsHelper.DataSet;
+import grad.proj.utils.imaging.Image;
 
 import java.io.File;
 import java.io.FileWriter;

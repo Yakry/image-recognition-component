@@ -1,5 +1,8 @@
 package grad.proj.utils;
 
+import grad.proj.utils.imaging.Image;
+import grad.proj.utils.imaging.ImageLoader;
+
 import java.io.File;
 import java.util.AbstractList;
 import java.util.List;

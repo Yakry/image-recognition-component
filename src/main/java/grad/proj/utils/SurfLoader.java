@@ -9,7 +9,7 @@ import java.util.Scanner;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
-import grad.proj.recognition.train.impl.SurfFeatureVectorGenerator;
+import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 
 public class SurfLoader {
 

@@ -3,8 +3,8 @@ package grad.proj.matching;
 import java.util.ArrayList;
 import java.util.List;
 
-import grad.proj.recognition.train.FeatureVectorGenerator;
-import grad.proj.utils.Image;
+import grad.proj.recognition.FeatureVectorGenerator;
+import grad.proj.utils.imaging.Image;
 
 public class ImageMatcher implements Matcher<Image> {
 

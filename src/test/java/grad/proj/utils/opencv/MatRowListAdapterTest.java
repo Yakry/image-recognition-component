@@ -2,7 +2,6 @@ package grad.proj.utils.opencv;
 
 
 import static org.junit.Assert.*;
-import grad.proj.recognition.RequiresLoadingTestBaseClass;
 
 import java.nio.file.Paths;
 import java.util.List;
