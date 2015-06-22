@@ -10,7 +10,7 @@ import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 import grad.proj.utils.DataSetsTestsHelper;
 import grad.proj.utils.DataSetsTestsHelper.DataSet;
-import grad.proj.utils.DataSetsTestsHelper.Type;
+import grad.proj.utils.DataSetLoader.Type;
 
 import java.awt.Rectangle;
 import java.io.File;
@@ -23,10 +23,9 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 	@Test
 	public void testSlidingWindow() throws Exception {
 		// saved generator and features
-		DataSet dataset = DataSet.calteckUniversity;
-		ImageClassifier classifier = DataSetsTestsHelper.getTrainedClassifier(dataset);
+		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(dataset);
 		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "bikes");
 				
 		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();

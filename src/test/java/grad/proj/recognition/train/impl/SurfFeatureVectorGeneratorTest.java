@@ -12,7 +12,7 @@ import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 import grad.proj.utils.SubImage;
 import grad.proj.utils.DataSetsTestsHelper.DataSet;
-import grad.proj.utils.DataSetsTestsHelper.Type;
+import grad.proj.utils.DataSetLoader.Type;
 
 import java.awt.Color;
 import java.io.File;

@@ -6,7 +6,7 @@ import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.Image;
 import grad.proj.utils.DataSetsTestsHelper;
 import grad.proj.utils.DataSetsTestsHelper.DataSet;
-import grad.proj.utils.DataSetsTestsHelper.Type;
+import grad.proj.utils.DataSetLoader.Type;
 
 import java.util.List;
 

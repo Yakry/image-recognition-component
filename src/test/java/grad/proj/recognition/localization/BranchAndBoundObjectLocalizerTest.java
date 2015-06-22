@@ -12,7 +12,7 @@ import grad.proj.utils.Image;
 import grad.proj.utils.ImageLoader;
 import grad.proj.utils.DataSetsTestsHelper;
 import grad.proj.utils.DataSetsTestsHelper.DataSet;
-import grad.proj.utils.DataSetsTestsHelper.Type;
+import grad.proj.utils.DataSetLoader.Type;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -26,13 +26,14 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 
 	@Test
 	public void testBranchAndBound() throws Exception {
-		ImageClassifier classifier = DataSetsTestsHelper.getTrainedClassifier(DataSet.calteckUniversity);
+		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		
+		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 		
 		SurfFeatureVectorGenerator featureVectorGenerator = (SurfFeatureVectorGenerator)classifier.getFeatureVectorGenerator();
 		SVMClassifier svmClassifier = (SVMClassifier) classifier.getClassifier();
 		
-		DataSetLoader dataSetLoader = DataSetsTestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		List<Image> testingClassData = dataSetLoader.loadClassImages( Type.Test, "apple");
+		List<Image> testingClassData = dataSetLoader.loadClassImages(Type.Test, "apple");
 		
 		int classLabel = 0;
 		Mat supportVectors = svmClassifier.svmArray[classLabel].getSupportVectors();
