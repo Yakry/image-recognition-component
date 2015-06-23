@@ -9,10 +9,6 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 
 	@Override
 	public List<Integer> match(List<Double> instance, List<List<Double>> instances, int topN) {
-		if(topN > instances.size()){
-			throw new RuntimeException("topN can't be more than size of instances");
-		}
-
 		final List<Double> _instance = instance;
 		final List<List<Double>> _instances = instances;
 		
