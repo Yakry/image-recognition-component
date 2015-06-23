@@ -1,9 +1,16 @@
 package grad.proj.recognition.impl;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Map.Entry;
 
 import org.opencv.core.CvType;
@@ -16,6 +23,7 @@ import org.opencv.features2d.FeatureDetector;
 import grad.proj.recognition.FeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.MatConverters;
+import grad.proj.utils.opencv.MatListOfListAdapter;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	
@@ -24,39 +32,31 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	 * http://docs.opencv.org/doc/tutorials/features2d/feature_description/feature_description.html
 	 */
 	
-	private int clusterCount;
+	private static final long serialVersionUID = 681641512397327289L;
 	
-	private FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF);
-	private DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
-	private DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+	private static FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF);
+	private static DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+	private static DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
-	private BOWKMeansTrainer trainer;
-	private BOWImgDescriptorExtractor imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
-	
-	private MatOfKeyPoint keypoints;
-	private List<List<Integer>> pointIdxsOfClusters;
-	private Mat myImgDescriptor;
-	private Mat descriptors;
+	// not needed when serializing
+	private transient MatOfKeyPoint keypoints;
+	private transient List<List<Integer>> pointIdxsOfClusters;
+	private transient Mat myImgDescriptor;
+	private transient Mat descriptors;
+
+	// manually serializing it
+	private transient BOWImgDescriptorExtractor imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
+	private transient BOWKMeansTrainer trainer;
 	
 	private boolean prepared = false;
+	
 	
 	public SurfFeatureVectorGenerator(){
 		this(64);
 	}
 	
 	public SurfFeatureVectorGenerator(int size) {
-		this.clusterCount = size;
-		
-		trainer = new BOWKMeansTrainer(clusterCount);
-	}
-
-	public Mat getVocab(){
-		return imgDescriptor.getVocabulary();
-	}
-	
-	public void setVocab(Mat vocab){
-		imgDescriptor.setVocabulary(vocab);
-		prepared = true;
+		trainer = new BOWKMeansTrainer(size);
 	}
 	
 	@Override
@@ -129,7 +129,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 
 	@Override
 	public int getFeatureVectorSize() {
-		return clusterCount;
+		return trainer.getClusterCount();
 	}
 
 	public Mat getKeypointsClusterIdxMat() {
@@ -151,5 +151,54 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 
 	public List<List<Integer>> getPointIdxsOfClusters() {
 		return pointIdxsOfClusters;
+	}
+	
+	public Mat getVocab(){
+		return imgDescriptor.getVocabulary();
+	}
+	
+	public void setVocab(Mat vocab){
+		imgDescriptor.setVocabulary(vocab);
+		prepared = true;
+	}
+	
+	// Serialization support
+	
+	private void writeObject(ObjectOutputStream out) throws IOException{
+		Mat vocab = getVocab();
+		
+		out.defaultWriteObject();
+		
+		out.writeInt(trainer.getClusterCount());
+		out.writeInt(vocab.rows());
+		out.writeInt(vocab.cols());
+		
+		for(int i=0; i<vocab.rows(); i++){
+			for(int j=0; j<vocab.cols(); j++){
+				out.writeFloat((float) vocab.get(i, j)[0]);
+			}
+		}
+	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+		in.defaultReadObject();
+		
+		int clusterCount = in.readInt();
+		
+		int rows = in.readInt();
+		int cols = in.readInt();
+
+		trainer = new BOWKMeansTrainer(clusterCount);
+		imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
+		
+		Mat mat = new Mat(rows, cols, CvType.CV_32F);
+		
+		for(int i=0; i<rows; i++){
+			for(int j=0; j<cols; j++){
+				mat.put(i, j, in.readFloat());
+			}
+		}
+		
+		setVocab(mat);
 	}
 }

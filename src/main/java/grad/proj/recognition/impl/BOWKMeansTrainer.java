@@ -1,5 +1,7 @@
 package grad.proj.recognition.impl;
 
+import java.io.Serializable;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
@@ -9,6 +11,7 @@ import org.opencv.core.TermCriteria;
  *
  */
 class BOWKMeansTrainer extends BOWTrainer{
+
 	protected int clusterCount;
 	protected TermCriteria termcrit;
 	protected int attempts;
@@ -49,5 +52,13 @@ class BOWKMeansTrainer extends BOWTrainer{
 		Mat labels = new Mat(), vocabulary = new Mat();
 		Core.kmeans( _descriptors, clusterCount, labels, termcrit, attempts, flags, vocabulary );
 		return vocabulary;
+	}
+
+	public void setClusterCount(int clusterCount) {
+		this.clusterCount = clusterCount;
+	}
+	
+	public int getClusterCount() {
+		return clusterCount;
 	}
 }
