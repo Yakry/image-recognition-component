@@ -1,6 +1,8 @@
 package grad.proj.localization;
 
 import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
 
 import grad.proj.recognition.ImageClassifier;
 import grad.proj.utils.imaging.Image;
@@ -15,11 +17,11 @@ public class ObjectsLocalizer {
 		this.classifier = classifier;
 	}
 	
-	public Rectangle[] getObjectsBounds(Image image){
-		Rectangle[] bounds = new Rectangle[classifier.getClassesNo()];
+	public Map<String, Rectangle> getObjectsBounds(Image image){
+		Map<String, Rectangle> bounds = new HashMap<>();
 		
-		for(int i=0; i<classifier.getClassesNo(); i++){
-			bounds[i] = localizer.getObjectBounds(image, classifier, i);
+		for(String classLabel : classifier.getClasses()){
+			bounds.put(classLabel, localizer.getObjectBounds(image, classifier, classLabel));
 		}
 		
 		return bounds;

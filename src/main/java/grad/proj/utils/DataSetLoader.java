@@ -11,8 +11,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class DataSetLoader {
 	public enum Type{
@@ -48,8 +52,8 @@ public class DataSetLoader {
 		return new FilesImageList(images);
 	}
 	
-	public List<List<Image>> loadImages(Type type, String ...classes){
-		List<List<Image>> data = new ArrayList<List<Image>>();
+	public Map<String, List<Image>> loadImages(Type type, String ...classes){
+		Map<String, List<Image>> data = new HashMap<>();
 	
 		File imagesMainFolder = getImagesFolder(type);
 		
@@ -63,16 +67,16 @@ public class DataSetLoader {
 		}
 		
 		for(String className : classes){
-			data.add(loadClassImages(type, className));
+			data.put(className, loadClassImages(type, className));
 		}
 		
 		return data;
 	}
-	public List<List<List<Double>>> loadDataSetFeaturesSeperated(Type type){
+	public Map<String, List<List<Double>>> loadDataSetFeaturesSeperated(Type type){
 		return loadDataSetFeaturesSeperated(type, false);
 	}
 	
-	public List<List<List<Double>>> loadDataSetFeaturesSeperated(Type type, boolean generateIfNotExists){
+	public Map<String, List<List<Double>>> loadDataSetFeaturesSeperated(Type type, boolean generateIfNotExists){
 		if(generateIfNotExists){
 			generateFeaturesFile();
 		}
@@ -80,11 +84,11 @@ public class DataSetLoader {
 		return DataFileLoader.loadDataSeprated(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
 	}
 	
-	public List<List<Double>> loadDataSetFeaturesCombined(Type type){
+	public List<SimpleEntry<String,List<Double>>> loadDataSetFeaturesCombined(Type type){
 		return loadDataSetFeaturesCombined(type, false);
 	}
 	
-	public List<List<Double>> loadDataSetFeaturesCombined(Type type, boolean generateIfNotExists){
+	public List<SimpleEntry<String,List<Double>>> loadDataSetFeaturesCombined(Type type, boolean generateIfNotExists){
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
 		return DataFileLoader.loadDataCombined(new File(featuresFolder, type.toString() + ".txt").toString());
 	}
@@ -113,7 +117,7 @@ public class DataSetLoader {
 	public void generateSurfGeneratorFile(){
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		
-		List<List<Image>> trainingData = loadImages(Type.Train);
+		Map<String, List<Image>> trainingData = loadImages(Type.Train);
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 		
@@ -123,19 +127,19 @@ public class DataSetLoader {
 	public void generateFeaturesFile(){
 		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		
-		List<List<Image>> trainingData = loadImages(Type.Train);;
+		Map<String, List<Image>> trainingData = loadImages(Type.Train);;
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 
 		File trainFeaturesFile = getFeaturesFile(Type.Train);
 		generateAndWriteFeatures(trainingData, featureVectorGenerator, trainFeaturesFile);
 		
-		List<List<Image>> testingData = loadImages(Type.Test);;
+		Map<String, List<Image>> testingData = loadImages(Type.Test);;
 		File testFeaturesFile = getFeaturesFile(Type.Test);
 		generateAndWriteFeatures(testingData, featureVectorGenerator, testFeaturesFile);
 	}
 
-	private void generateAndWriteFeatures(List<List<Image>> data,
+	private void generateAndWriteFeatures(Map<String, List<Image>> data,
 								  FeatureVectorGenerator featureVectorGenerator,
 								  File file){
 		try {
@@ -146,19 +150,17 @@ public class DataSetLoader {
 			
 			featuresFile.write(classesNum + " " + featuresNum + "\n");
 			
-			int currentLabel = 0;
-			for (List<Image> clazz : data) {
-				for (Image image : clazz) {
+			for (Entry<String, List<Image>> clazz : data.entrySet()) {
+				for (Image image : clazz.getValue()) {
 					List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
 	
-					featuresFile.write(currentLabel + " ");
+					featuresFile.write(clazz.getKey() + " ");
 					
 					for(Double elem : featureVector)
 						featuresFile.write(elem + " ");
 					
 					featuresFile.write('\n');
 				}
-				currentLabel++;
 			}
 			
 			featuresFile.close();

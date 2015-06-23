@@ -32,7 +32,7 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 		int searchIndex = 1;
 		for(Image sampleTestImage : testingClassData){
 			System.out.println("starting search " + searchIndex);
-			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, 0);
+			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, "0");
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
 			ImageLoader.saveImage(sampleTestImage, "jpg", new File("slidingWindow" + searchIndex + ".jpg"));
 			++searchIndex;

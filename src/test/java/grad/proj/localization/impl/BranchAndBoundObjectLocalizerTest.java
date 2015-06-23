@@ -34,8 +34,8 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		
 		List<Image> testingClassData = dataSetLoader.loadClassImages(Type.Test, "apple");
 		
-		int classLabel = 0;
-		Mat supportVectors = svmClassifier.svmArray[classLabel].getSupportVectors();
+		String classLabel = "0";
+		Mat supportVectors = svmClassifier.getSupportVector(classLabel);
 		
 		int searchIndex = 1;
 		for(Image sampleTestImage : testingClassData){

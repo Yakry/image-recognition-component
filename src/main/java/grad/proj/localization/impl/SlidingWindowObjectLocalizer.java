@@ -21,7 +21,7 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 	private static final int WINDOW_STEP = 10;
 
 	@Override
-	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, int classLabel) {
+	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
 		Rectangle globalBestBounds = new Rectangle();
 		double globalBestScore = Double.MAX_VALUE;
 		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){

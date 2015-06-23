@@ -16,7 +16,7 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 	}
 
 	@Override
-	public Rectangle getObjectBounds(Image image, ImageClassifier classifier,int classLabel) {
+	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
 		int counter = 10000;
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
 		SearchState startState = new SearchState(image);

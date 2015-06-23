@@ -4,7 +4,10 @@ import grad.proj.recognition.Normalizer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class LinearNormalizer implements Normalizer, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -13,7 +16,7 @@ public class LinearNormalizer implements Normalizer, Serializable {
 	private double rangeMin;
 	private double rangeMax;
 
-	public List<List<List<Double>>> reset(List<List<List<Double>>> featureVectors, double rangeMin, double rangeMax) {
+	public Map<String, List<List<Double>>> reset(Map<String, List<List<Double>>> featureVectors, double rangeMin, double rangeMax) {
 		// array of maximum elements in each column in the matrix
 		max = new ArrayList<Double>(featureVectors.size());
 		
@@ -24,14 +27,14 @@ public class LinearNormalizer implements Normalizer, Serializable {
 		this.rangeMax = rangeMax;
 		
 		// get the max and min of each column
-		int featureVectorSize = featureVectors.get(0).get(0).size();
+		int featureVectorSize = featureVectors.values().iterator().next().get(0).size();
 
 		for(int i=0; i<featureVectorSize; i++){
 			double columnMax = Integer.MIN_VALUE;
 			double columnMin = Integer.MAX_VALUE;
 			
-			for(List<List<Double>> clazz : featureVectors){
-				for(List<Double> featureVector : clazz){
+			for(Entry<String, List<List<Double>>> clazz : featureVectors.entrySet()){
+				for(List<Double> featureVector : clazz.getValue()){
 					double newnumber = featureVector.get(i);
 					if (newnumber > columnMax)
 						columnMax = newnumber;
@@ -43,16 +46,16 @@ public class LinearNormalizer implements Normalizer, Serializable {
 			min.add(columnMin);
 		}
 		
-		List<List<List<Double>>> scaledFeatureVectors =  new ArrayList<>();
+		Map<String, List<List<Double>>> scaledFeatureVectors =  new HashMap<>();
 		
-		for(List<List<Double>> clazz : featureVectors){
+		for(Entry<String, List<List<Double>>> clazz : featureVectors.entrySet()){
 			List<List<Double>> normalizedClass = new ArrayList<List<Double>>();
 			
-			for(List<Double> featureVector : clazz){
+			for(List<Double> featureVector : clazz.getValue()){
 				normalizedClass.add(normalize(featureVector));
 			}
 			
-			scaledFeatureVectors.add(normalizedClass);
+			scaledFeatureVectors.put(clazz.getKey(), normalizedClass);
 		}
 		
 		return scaledFeatureVectors;

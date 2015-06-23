@@ -2,30 +2,36 @@ package grad.proj.utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class DataFileLoader {
 
-	public static List<List<List<Double> > > loadDataSeprated(String path){
+	public static Map<String, List<List<Double> > > loadDataSeprated(String path){
 		try {
 			Scanner scanner = new Scanner(new FileInputStream(path));
 			int classNum = scanner.nextInt();
 			int featureNum = scanner.nextInt();
-			List<List<List<Double>>> featureVectors = new ArrayList<List<List<Double>>>(classNum);
+			Map<String, List<List<Double>>> featureVectors = new HashMap<>();
 			List<Double> featureVector;
 			
-			for(int i=0;i<classNum;++i)
-				featureVectors.add(new ArrayList<List<Double>>());
-			
 			while(scanner.hasNext()){
-				int classLabel = scanner.nextInt();
+				String classLabel = scanner.next();
 				featureVector = new ArrayList<Double>(featureNum);
 				for(int j=0; j<featureNum; ++j)
 					featureVector.add(scanner.nextDouble());
 				
-				featureVectors.get(classLabel).add(featureVector);
+				
+				List<List<Double>> clazz = featureVectors.get(classLabel);
+				if(clazz == null){
+					clazz = new ArrayList<>();
+					featureVectors.put(classLabel, clazz);
+				}
+				clazz.add(featureVector);
 			}
 
 			scanner.close();
@@ -39,20 +45,24 @@ public class DataFileLoader {
 	}
 	
 	@SuppressWarnings("unused")
-	public static List<List<Double> > loadDataCombined(String path){
+	public static List<SimpleEntry<String, List<Double>>> loadDataCombined(String path){
 		try {
+			
 			Scanner scanner = new Scanner(new FileInputStream(path));
 			int classNum = scanner.nextInt();
 			int featureNum = scanner.nextInt();
-			List<List<Double>> featureVectors = new ArrayList<List<Double>>();
-			List<Double> featureVector;
+			List<SimpleEntry<String, List<Double>>> featureVectors = new ArrayList<>();
 			
 			while(scanner.hasNext()){
-				featureVector = new ArrayList<Double>(featureNum + 1);
-				featureVector.add((double) scanner.nextInt());
+				List<Double >featureVector = new ArrayList<Double>(featureNum + 1);
+				
+				String classLabel = scanner.next();
+				
 				for(int j=0; j<featureNum; ++j)
 					featureVector.add(scanner.nextDouble());
-				featureVectors.add(featureVector);
+
+
+				featureVectors.add(new SimpleEntry<>(classLabel, featureVector));
 			}
 
 			scanner.close();

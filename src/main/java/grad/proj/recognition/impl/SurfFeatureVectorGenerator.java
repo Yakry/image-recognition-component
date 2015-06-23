@@ -3,6 +3,8 @@ package grad.proj.recognition.impl;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -10,6 +12,7 @@ import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
+
 import grad.proj.recognition.FeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.MatConverters;
@@ -57,10 +60,10 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 	
 	@Override
-	public void prepareGenerator(List<List<Image>> trainingSet){
+	public void prepareGenerator(Map<String, List<Image>> trainingSet){
 		
-		for(List<Image> clazz : trainingSet){
-			for(Image image : clazz){
+		for(Entry<String, List<Image>> clazz : trainingSet.entrySet()){
+			for(Image image : clazz.getValue()){
 				Mat imageMat = generateMatFromImage(image);
 				Mat surfDescriptors = generateSurfDescriptors(imageMat);
 				if(surfDescriptors.empty())

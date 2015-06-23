@@ -1,8 +1,13 @@
 package grad.proj.recognition;
 
 import grad.proj.utils.imaging.Image;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class ImageClassifier implements Classifier<Image> {
 	private static final long serialVersionUID = 8364985649869770754L;
@@ -16,13 +21,13 @@ public class ImageClassifier implements Classifier<Image> {
 	}
 
 	@Override
-	public int classify(Image instance) {
+	public String classify(Image instance) {
 		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
 		return classifier.classify(featureVector);
 	}
 
 	@Override
-	public double classify(Image instance, int classLabel) {
+	public double classify(Image instance, String classLabel) {
 		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
 		if(featureVector.size() != featureVectorGenerator.getFeatureVectorSize())
 			return Double.MAX_VALUE;
@@ -30,27 +35,30 @@ public class ImageClassifier implements Classifier<Image> {
 	}
 
 	@Override
-	public void train(List<List<Image>> trainingData) {
-		List<List<List<Double>>> trainingDataAsDouble = new ArrayList<>();
+	public void train(Map<String, List<Image>> trainingData) {
+		Map<String, List<List<Double>>> trainingDataAsDouble = new HashMap<>();
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 		
-		for (List<Image> clazz : trainingData) {
+		for (Entry<String, List<Image>> clazzEntry : trainingData.entrySet()) {
+			String className = clazzEntry.getKey();
+			List<Image> clazz = clazzEntry.getValue();
+			
 			List<List<Double>> classTrainingData = new ArrayList<>();
 			for (Image image : clazz) {
 				List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
 				classTrainingData.add(featureVector);
 			}
-			trainingDataAsDouble.add(classTrainingData);
+			
+			trainingDataAsDouble.put(className, classTrainingData);
 		}
 		
 		classifier.train(trainingDataAsDouble);
-		return;
 	}
 
 	@Override
-	public int getClassesNo() {
-		return classifier.getClassesNo();
+	public Set<String> getClasses() {
+		return classifier.getClasses();
 	}
 
 	public FeatureVectorGenerator getFeatureVectorGenerator() {

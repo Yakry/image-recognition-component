@@ -2,10 +2,12 @@ package grad.proj.recognition;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface Classifier<T> extends Serializable {
-	public int classify(T instance);
-	public double classify(T instance, int classLabel);
-	public void train(List<List<T>> trainingData);
-	public int getClassesNo();
+	public String classify(T instance);
+	public double classify(T instance, String classLabel);
+	public void train(Map<String, List<T>> trainingData);
+	public Set<String> getClasses();
 }

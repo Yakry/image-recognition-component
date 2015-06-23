@@ -18,7 +18,7 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 	}
 
 	@Override
-	public double evaluate(Image image, SearchState state, ImageClassifier classifier, int classLabel) {
+	public double evaluate(Image image, SearchState state, ImageClassifier classifier, String classLabel) {
 		int maxRectangleWidth = state.maxCoordinate[SearchState.RIGHT] - 
 				state.minCoordinate[SearchState.LEFT];
 		int maxRectangleHeight = state.maxCoordinate[SearchState.BOTTOM] - 

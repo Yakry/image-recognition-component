@@ -12,6 +12,8 @@ import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
@@ -27,19 +29,24 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		List<List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
+		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
 		classifier.train(trainingData);
 		
 		double classifiedCorrectly = 0;
 		int totalImages = 0;
 
 		// I couldn't use the testing images because they are for branch and bound, so they contain other objects
-		for(int clazz=0; clazz < trainingData.size(); clazz++){
-			for(Image image : trainingData.get(clazz)){
-				classifiedCorrectly += (classifier.classify(image) == clazz) ? 1 : 0;
+		for(Entry<String, List<Image>> classEntry : trainingData.entrySet()){
+			String classLabel = classEntry.getKey();
+			
+			for(Image image : classEntry.getValue()){
+				String predictedLabel = classifier.classify(image);
+				
+				classifiedCorrectly += (predictedLabel.equals(classLabel)) ? 1 : 0;
 			}			
-			totalImages += trainingData.get(clazz).size();
+			totalImages += classEntry.getValue().size();
 		}
+		
 		classifiedCorrectly /= totalImages;
 		
 		System.out.println("classifiedCorrectly: " + classifiedCorrectly);

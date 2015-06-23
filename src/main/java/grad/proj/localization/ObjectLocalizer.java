@@ -7,5 +7,5 @@ import java.awt.Rectangle;
 
 public interface ObjectLocalizer {
 
-	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, int classLabel);
+	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel);
 }
