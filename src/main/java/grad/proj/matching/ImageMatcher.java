@@ -19,10 +19,17 @@ public class ImageMatcher implements Matcher<Image> {
 	@Override
 	public List<Integer> match(Image instance, List<Image> instances, int topN) {
 		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
+
+		if(featureVector.size() == 0)
+			return new ArrayList<Integer>();
+		
 		List<List<Double>> featureVectors = new ArrayList<List<Double>>();
 		
 		for(Image image : instances){
-			featureVectors.add(featureVectorGenerator.generateFeatureVector(image));
+			List<Double> generated = featureVectorGenerator.generateFeatureVector(image);
+			
+			if(generated.size() > 0)
+				featureVectors.add(generated);
 		}
 		
 		return featureVectorMatcher.match(featureVector, featureVectors, topN);
