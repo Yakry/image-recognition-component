@@ -119,47 +119,30 @@ public class DataSetLoader {
 		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		
 		Map<String, List<Image>> trainingData = loadImages(Type.Train);;
-		
 		featureVectorGenerator.prepareGenerator(trainingData);
 
 		File trainFeaturesFile = getFeaturesFile(Type.Train);
-		generateAndWriteFeatures(trainingData, featureVectorGenerator, trainFeaturesFile);
+		DataFileLoader.writeDataSeperated(generateFeatures(trainingData, featureVectorGenerator), trainFeaturesFile);
 		
 		Map<String, List<Image>> testingData = loadImages(Type.Test);;
 		File testFeaturesFile = getFeaturesFile(Type.Test);
-		generateAndWriteFeatures(testingData, featureVectorGenerator, testFeaturesFile);
+		DataFileLoader.writeDataSeperated(generateFeatures(testingData, featureVectorGenerator), testFeaturesFile);
 	}
-
-	private void generateAndWriteFeatures(Map<String, List<Image>> data,
-								  FeatureVectorGenerator featureVectorGenerator,
-								  File file){
-		try {
-			FileWriter featuresFile = new FileWriter(file);
-			
-			int classesNum = data.size();
-			int featuresNum = featureVectorGenerator.getFeatureVectorSize();
-			
-			featuresFile.write(classesNum + " " + featuresNum + "\n");
-			
-			for (Entry<String, List<Image>> clazz : data.entrySet()) {
-				for (Image image : clazz.getValue()) {
-					List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
 	
-					featuresFile.write(clazz.getKey() + " ");
-					
-					for(Double elem : featureVector)
-						featuresFile.write(elem + " ");
-					
-					featuresFile.write('\n');
-				}
+	private Map<String, List<List<Double>>> generateFeatures(Map<String, List<Image>> data, FeatureVectorGenerator featureVectorGenerator){
+		Map<String, List<List<Double>>> features = new HashMap<>();
+		
+		for (Entry<String, List<Image>> clazz : data.entrySet()) {
+			ArrayList<List<Double>> clazzFeatures = new ArrayList<List<Double>>();
+			features.put(clazz.getKey(), clazzFeatures);
+			
+			for (Image image : clazz.getValue()) {
+				List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
+				clazzFeatures.add(featureVector);
 			}
-			
-			featuresFile.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
 		}
+		
+		return features;
 	}
 
 	private File getImagesClassFolder(Type type, String className) {
