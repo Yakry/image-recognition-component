@@ -72,25 +72,16 @@ public class DataSetLoader {
 		
 		return data;
 	}
-	public Map<String, List<List<Double>>> loadDataSetFeaturesSeperated(Type type){
-		return loadDataSetFeaturesSeperated(type, false);
+	public Map<String, List<List<Double>>> loadFeatures(Type type){
+		return loadFeatures(type, false);
 	}
 	
-	public Map<String, List<List<Double>>> loadDataSetFeaturesSeperated(Type type, boolean generateIfNotExists){
+	public Map<String, List<List<Double>>> loadFeatures(Type type, boolean generateIfNotExists){
 		if(generateIfNotExists){
 			generateFeaturesFile();
 		}
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
 		return DataFileLoader.loadDataSeprated(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
-	}
-	
-	public List<SimpleEntry<String,List<Double>>> loadDataSetFeaturesCombined(Type type){
-		return loadDataSetFeaturesCombined(type, false);
-	}
-	
-	public List<SimpleEntry<String,List<Double>>> loadDataSetFeaturesCombined(Type type, boolean generateIfNotExists){
-		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
-		return DataFileLoader.loadDataCombined(new File(featuresFolder, type.toString() + ".txt").toString());
 	}
 	
 	public SurfFeatureVectorGenerator loadSurfGenerator(){
@@ -107,7 +98,7 @@ public class DataSetLoader {
 	public ImageClassifier loadTrainedClassifier() {
 		SurfFeatureVectorGenerator featureVectorGenerator = loadSurfGenerator();
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
-		svmClassifier.train(loadDataSetFeaturesSeperated(Type.Train));
+		svmClassifier.train(loadFeatures(Type.Train));
 		
 		// doesn't need to be trained
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);

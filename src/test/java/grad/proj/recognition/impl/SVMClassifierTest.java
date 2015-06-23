@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
@@ -54,29 +55,32 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	public void testRealData() {
 		// training and testing data already scaled
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.satimage);
-		Map<String, List<List<Double>>> trainingData = dataSetLoader.loadDataSetFeaturesSeperated(Type.Train);
-		List<SimpleEntry<String,List<Double>>> testingData = dataSetLoader.loadDataSetFeaturesCombined(Type.Test);
+		Map<String, List<List<Double>>> trainingData = dataSetLoader.loadFeatures(Type.Train);
+		Map<String, List<List<Double>>> testingData = dataSetLoader.loadFeatures(Type.Test);
 
 		SVMClassifier classifier = new SVMClassifier(new LinearNormalizer());
 		classifier.train(trainingData);
 		
 		double correctLabels = 0;
-		
-		for(SimpleEntry<String, List<Double>> testingPair : testingData){
-			String classLabel = testingPair.getKey();
-			List<Double> testVector = testingPair.getValue();
-				
-			String predictedLabel = classifier.classify(testVector);
+		int totalVectors = 0;
+		for(Entry<String, List<List<Double>>> classEntry : testingData.entrySet()){
+			String classLabel = classEntry.getKey();
+			List<List<Double>> classVectors = classEntry.getValue();
 			
-			correctLabels += (classLabel.equals(predictedLabel)) ? 1 : 0;
+			totalVectors += classVectors.size();
+			for(List<Double> testVector : classVectors){
+				String predictedLabel = classifier.classify(testVector);
+				
+				correctLabels += (classLabel.equals(predictedLabel)) ? 1 : 0;
+			}
 		}
 		
 		System.out.println("MultiClassSVMClassifierTest::testRealData:");
-		System.out.println("number of vectors: " + testingData.size());
+		System.out.println("number of vectors: " + totalVectors);
 		System.out.println("number of correctly classified vectors: " + correctLabels);
-		System.out.println("percentage: " + (correctLabels*100)/testingData.size() + "%");
+		System.out.println("percentage: " + (correctLabels*100)/totalVectors + "%");
 		
 		assertTrue("correct predicted labels percentage below 75%",
-				((correctLabels*100)/testingData.size()) >= 65.0);
+				((correctLabels*100)/totalVectors) >= 65.0);
 	}
 }
