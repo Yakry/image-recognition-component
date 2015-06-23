@@ -8,10 +8,7 @@ import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,61 +69,52 @@ public class DataSetLoader {
 		
 		return data;
 	}
+	
 	public Map<String, List<List<Double>>> loadFeatures(Type type){
-		return loadFeatures(type, false);
-	}
-	
-	public Map<String, List<List<Double>>> loadFeatures(Type type, boolean generateIfNotExists){
-		if(generateIfNotExists){
-			generateFeaturesFile();
-		}
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
-		return DataFileLoader.loadDataSeprated(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
+		return (!featuresFolder.exists()) ? null : DataFileLoader.loadDataSeprated(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
 	}
 	
-	public SurfFeatureVectorGenerator loadSurfGenerator(){
-		return loadSurfGenerator(false);
-	}
-	
-	public SurfFeatureVectorGenerator loadSurfGenerator(boolean generateIfNotExists){
-		if(generateIfNotExists){
-			generateSurfGeneratorFile();
-		}
-		return SurfLoader.loadSurf(getFeatureVectorGeneratorsFile("surf"));
+	public SurfFeatureVectorGenerator loadSurfFeatureVectorGenerator(){
+		File generatorFolder = getFeatureVectorGeneratorsFile("surf");
+		return (!generatorFolder.exists()) ? null : SurfLoader.loadSurf(generatorFolder);
 	}
 	
 	public ImageClassifier loadTrainedClassifier() {
-		SurfFeatureVectorGenerator featureVectorGenerator = loadSurfGenerator();
+		
+		FeatureVectorGenerator featureVectorGenerator = loadSurfFeatureVectorGenerator();
+		Map<String, List<List<Double>>> features = loadFeatures(Type.Train);
+		
+		if(featureVectorGenerator == null || features == null)
+			return null;
+		
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
-		svmClassifier.train(loadFeatures(Type.Train));
+		svmClassifier.train(features);
 		
-		// doesn't need to be trained
-		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
-		return classifier;
+		return new ImageClassifier(featureVectorGenerator, svmClassifier);
 	}
 	
-	public void generateSurfGeneratorFile(){
+	public void generateAndSave(){
+		generateAndSave(false);
+	}
+	
+	public void generateAndSave(boolean generatorOnly){
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		
-		Map<String, List<Image>> trainingData = loadImages(Type.Train);
-		
-		featureVectorGenerator.prepareGenerator(trainingData);
-		
-		SurfLoader.saveSurf(featureVectorGenerator, getFeatureVectorGeneratorsFile("surf"));
-	}
 	
-	public void generateFeaturesFile(){
-		FeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		
-		Map<String, List<Image>> trainingData = loadImages(Type.Train);;
+		Map<String, List<Image>> trainingData = loadImages(Type.Train);
 		featureVectorGenerator.prepareGenerator(trainingData);
 
-		File trainFeaturesFile = getFeaturesFile(Type.Train);
-		DataFileLoader.writeDataSeperated(generateFeatures(trainingData, featureVectorGenerator), trainFeaturesFile);
+		SurfLoader.saveSurf(featureVectorGenerator, getFeatureVectorGeneratorsFile("surf"));
+		
+		if(generatorOnly)
+			return;
+		
+		Map<String, List<List<Double>>> trainingFeatures = generateFeatures(trainingData, featureVectorGenerator);
+		DataFileLoader.writeDataSeperated(trainingFeatures, getFeaturesFile(Type.Train));
 		
 		Map<String, List<Image>> testingData = loadImages(Type.Test);;
-		File testFeaturesFile = getFeaturesFile(Type.Test);
-		DataFileLoader.writeDataSeperated(generateFeatures(testingData, featureVectorGenerator), testFeaturesFile);
+		Map<String, List<List<Double>>> testFeatures = generateFeatures(testingData, featureVectorGenerator);
+		DataFileLoader.writeDataSeperated(testFeatures, getFeaturesFile(Type.Test));
 	}
 	
 	private Map<String, List<List<Double>>> generateFeatures(Map<String, List<Image>> data, FeatureVectorGenerator featureVectorGenerator){
