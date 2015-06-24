@@ -52,9 +52,14 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 	}
 
 	@Test
-	public void testRealData() {
-		// training and testing data already scaled
-		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.satimage);
+	public void testOnSatImageDataSet(){
+
+		// training and testing data already scaled for satimage
+		testOnDataSet(DataSet.satimage);
+	}
+	
+	public void testOnDataSet(DataSet dataSet) {
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
 		Map<String, List<List<Double>>> trainingData = dataSetLoader.loadFeatures(Type.Train);
 		Map<String, List<List<Double>>> testingData = dataSetLoader.loadFeatures(Type.Test);
 

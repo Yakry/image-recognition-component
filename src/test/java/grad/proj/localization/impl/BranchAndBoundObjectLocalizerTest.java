@@ -27,18 +27,27 @@ import org.opencv.core.Mat;
 public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
-	public void testBranchAndBound() throws Exception {
+	public void testBranchAndBoundOnCaltech(){
+		testBranchAndBoundOnOneClass(DataSet.calteckUniversity, new String[] {"apple", "can"}, "apple");
+	}
+	
+	@Test
+	public void testBranchAndBoundOnMohsen(){
+		testBranchAndBoundOnOneClass(DataSet.mohsen, new String[] {"mouse", "clipper", "toy1", "toy2"}, "mouse");
+	}
+	
+	public void testBranchAndBoundOnOneClass(DataSet dataSet, String[] trainClasses, String testClass) {
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "mouse", "clipper", "toy1", "toy2");
-		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, "mouse");
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
+		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, trainClasses);
+		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
 		classifier.train(trainingData);
 		
-		String classLabel = "mouse";
+		String classLabel = testClass;
 		
 		BranchAndBoundObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
 		

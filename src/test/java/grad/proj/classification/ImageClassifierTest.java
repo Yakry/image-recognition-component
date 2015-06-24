@@ -22,14 +22,24 @@ import static org.junit.Assert.*;
 public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 
 	@Test
-	public void testClassifiySingleAppleAndCanTrainImages(){
+	public void testClassifiyOnCaltechDataSet(){
+		testClassifiyTrainImages(DataSet.calteckUniversity, "apple", "can");
+		//testClassifyingCompleteDataset(DataSet.calteckUniversity);
+	}
+	@Test
+	public void testClassifiyOnMohsenDataSet(){
+		testClassifiyTrainImages(DataSet.mohsen);
+		testClassifyingCompleteDataset(DataSet.mohsen);
+	}
+	
+	public void testClassifiyTrainImages(DataSet dataSet, String... trainClasses){
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "apple", "can");
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
+		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, trainClasses);
 		classifier.train(trainingData);
 		
 		double classifiedCorrectly = 0;
@@ -54,16 +64,15 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 		assertTrue("classifiedCorrectly < 90", classifiedCorrectly >= 0.9);
 	}
 	
-	@Test
-	public void testClassifyingCompleteDataset(){
+	public void testClassifyingCompleteDataset(DataSet dataSet){
 		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
 		
 		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
 		
-		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
-		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "mouse", "clipper", "toy1", "toy2");
-		Map<String, List<Image>> testingData = dataSetLoader.loadImages( Type.Test, "mouse", "clipper", "toy1", "toy2");
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
+		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train);
+		Map<String, List<Image>> testingData = dataSetLoader.loadImages( Type.Test);
 		classifier.train(trainingData);
 		
 		double classifiedCorrectly = 0;
