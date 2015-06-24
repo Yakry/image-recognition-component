@@ -7,7 +7,7 @@ import grad.proj.localization.impl.SlidingWindowObjectLocalizer;
 public class SlidingWindowObjectLocalizerTest extends ObjectLocalizerTest {
 
 	@Override
-	public ObjectLocalizer getLocalizer() {
+	public ObjectLocalizer createLocalizer() {
 		return new SlidingWindowObjectLocalizer();
 	}
 }

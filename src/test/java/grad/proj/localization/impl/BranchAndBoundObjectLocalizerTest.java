@@ -8,7 +8,7 @@ import grad.proj.localization.impl.SurfLinearSvmQualityFunction;
 public class BranchAndBoundObjectLocalizerTest extends ObjectLocalizerTest {
 
 	@Override
-	public ObjectLocalizer getLocalizer() {
+	public ObjectLocalizer createLocalizer() {
 		return new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
 	}	
 }

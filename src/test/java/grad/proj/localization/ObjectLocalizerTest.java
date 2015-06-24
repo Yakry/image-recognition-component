@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
-	public abstract ObjectLocalizer getLocalizer();
+	public abstract ObjectLocalizer createLocalizer();
 	
 	@Test
 	public void testOnCaltech(){
@@ -37,7 +37,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		
 		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
 		
-		ObjectLocalizer localizer = getLocalizer();
+		ObjectLocalizer localizer = createLocalizer();
 		
 		int searchIndex = 1;
 		for(Image sampleTestImage : testingData){
