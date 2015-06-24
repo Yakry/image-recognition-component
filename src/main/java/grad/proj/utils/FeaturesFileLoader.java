@@ -18,14 +18,9 @@ public class FeaturesFileLoader {
 		try {
 			FileWriter featuresFile = new FileWriter(path);
 			
-			int classesNum = data.size();
-			int featuresNum = 0;
-
-			for (Entry<String, List<List<Double>>> clazz : data.entrySet()) {
-				featuresNum +=  clazz.getValue().size();
-			}
+			int featureVectorSize = data.values().iterator().next().get(0).size();
 			
-			featuresFile.write(classesNum + " " + featuresNum + "\n");
+			featuresFile.write(featureVectorSize + "\n");
 			
 			for (Entry<String, List<List<Double>>> clazz : data.entrySet()) {
 				String classLabel = clazz.getKey();
@@ -52,15 +47,14 @@ public class FeaturesFileLoader {
 	public static Map<String, List<List<Double>>> loadFeatures(String path){
 		try {
 			Scanner scanner = new Scanner(new FileInputStream(path));
-			int classNum = scanner.nextInt();
-			int featureNum = scanner.nextInt();
+			int featureVectorSize = scanner.nextInt();
 			Map<String, List<List<Double>>> featureVectors = new HashMap<>();
 			List<Double> featureVector;
 			
 			while(scanner.hasNext()){
 				String classLabel = scanner.next();
-				featureVector = new ArrayList<Double>(featureNum);
-				for(int j=0; j<featureNum; ++j)
+				featureVector = new ArrayList<Double>(featureVectorSize);
+				for(int j=0; j<featureVectorSize; ++j)
 					featureVector.add(scanner.nextDouble());
 				
 				

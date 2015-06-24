@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseClass {
@@ -28,29 +29,24 @@ public class SlidingWindowObjectLocalizerTest extends RequiresLoadingTestBaseCla
 //		testSlidingWindowOnOneClass(DataSet.calteckUniversity, new String[] {"apple", "can"}, "apple");
 //	}
 	
+	@Ignore // Slow
 	@Test
 	public void testSlidingWindowOnMohsen(){
-		testSlidingWindowOnOneClass(DataSet.mohsen, new String[] {"mouse", "clipper", "toy1", "toy2"}, "mouse");
+		testSlidingWindowOnOneClass(DataSet.mohsen, "mouse");
 	}
 	
-	public void testSlidingWindowOnOneClass(DataSet dataSet, String[] trainClasses, String testClass) {
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
-		
-		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
-		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();
-		
+	public void testSlidingWindowOnOneClass(DataSet dataSet, String testClass) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		Map<String, List<Image>> trainingData = dataSetLoader.loadImages(Type.Train, trainClasses);
-		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
-		classifier.train(trainingData);
+		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 		
-		String classLabel = testClass;
+		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
+		
+		ObjectLocalizer localizer = new SlidingWindowObjectLocalizer();
 		
 		int searchIndex = 1;
 		for(Image image : testingData){
 			System.out.println("starting search " + searchIndex);
-			Rectangle objectBounds = localizer.getObjectBounds(image, classifier, classLabel);
+			Rectangle objectBounds = localizer.getObjectBounds(image, classifier, testClass);
 			TestsHelper.drawRectangle(objectBounds, image);
 			ImageLoader.saveImage(image, "jpg", new File("slidingWindow" + searchIndex + ".jpg"));
 			++searchIndex;

@@ -28,34 +28,26 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 
 	@Test
 	public void testBranchAndBoundOnCaltech(){
-		testBranchAndBoundOnOneClass(DataSet.calteckUniversity, new String[] {"apple", "can"}, "apple");
+		testBranchAndBoundOnOneClass(DataSet.calteckUniversity, "apple");
 	}
 	
 	@Test
 	public void testBranchAndBoundOnMohsen(){
-		testBranchAndBoundOnOneClass(DataSet.mohsen, new String[] {"mouse", "clipper", "toy1", "toy2"}, "mouse");
+		testBranchAndBoundOnOneClass(DataSet.mohsen, "mouse");
 	}
 	
-	public void testBranchAndBoundOnOneClass(DataSet dataSet, String[] trainClasses, String testClass) {
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
-		
-		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
-		
+	public void testBranchAndBoundOnOneClass(DataSet dataSet, String testClass) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, trainClasses);
+		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
+		
 		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
-		classifier.train(trainingData);
 		
-		String classLabel = testClass;
-		
-		BranchAndBoundObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
+		ObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
 		
 		int searchIndex = 1;
 		for(Image sampleTestImage : testingData){
 			System.out.println("starting search " + searchIndex);
-			
-			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, classLabel);
+			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
 			ImageLoader.saveImage(sampleTestImage, "jpg", new File("branchAndBound" + searchIndex + ".jpg"));
 			++searchIndex;

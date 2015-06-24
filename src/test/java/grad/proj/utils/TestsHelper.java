@@ -20,7 +20,13 @@ public class TestsHelper {
 	}
 	
 	public static DataSetLoader getDataSetLoader(DataSet dataset) {
-		return new DataSetLoader(getDataSetFolder(dataset));
+		DataSetLoader dataSetLoader = new DataSetLoader(getDataSetFolder(dataset));
+		if(dataSetLoader.hasImages()){
+			if(!dataSetLoader.hasFeaturesFile() || !dataSetLoader.hasSurfGenerator()){
+					dataSetLoader.generateAndSave();
+			}
+		}
+		return dataSetLoader;
 	}
 	
 	private static File getDataSetFolder(DataSet dataset) {

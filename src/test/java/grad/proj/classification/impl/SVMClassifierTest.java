@@ -53,9 +53,18 @@ public class SVMClassifierTest  extends RequiresLoadingTestBaseClass{
 
 	@Test
 	public void testOnSatImageDataSet(){
-
 		// training and testing data already scaled for satimage
 		testOnDataSet(DataSet.satimage);
+	}
+	
+	@Test
+	public void testOncaltechDataSet(){
+		testOnDataSet(DataSet.calteckUniversity);
+	}
+	
+	@Test
+	public void testOnMohsenDataSet(){
+		testOnDataSet(DataSet.mohsen);
 	}
 	
 	public void testOnDataSet(DataSet dataSet) {

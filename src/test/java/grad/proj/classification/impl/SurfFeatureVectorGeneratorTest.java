@@ -66,7 +66,6 @@ public class SurfFeatureVectorGeneratorTest extends RequiresLoadingTestBaseClass
 
 	@Test
 	public void testGenerateFeatureVectorForClearImageWithNoCorners(){
-		System.out.println(Color.white.getRGB());
 		Image image = TestsHelper.createTestImage(100, 100, Color.white.getRGB());
 		
 		SurfFeatureVectorGenerator generator = new SurfFeatureVectorGenerator();

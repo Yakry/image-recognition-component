@@ -100,13 +100,18 @@ public class DataSetLoader {
 	}
 	
 	public void generateAndSave(boolean generatorOnly){
-		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
-	
 		Map<String, List<Image>> trainingData = loadImages(Type.Train);
-		featureVectorGenerator.prepareGenerator(trainingData);
-
-		SurfLoader.saveSurf(featureVectorGenerator, getFeatureVectorGeneratorsFile("surf"));
 		
+		SurfFeatureVectorGenerator featureVectorGenerator;
+		if(hasSurfGenerator()){
+			featureVectorGenerator = loadSurfFeatureVectorGenerator();
+		}
+		else{
+			featureVectorGenerator = new SurfFeatureVectorGenerator();
+			featureVectorGenerator.prepareGenerator(trainingData);
+			SurfLoader.saveSurf(featureVectorGenerator, getFeatureVectorGeneratorsFile("surf"));
+		}
+
 		if(generatorOnly)
 			return;
 		
@@ -140,6 +145,18 @@ public class DataSetLoader {
 		return classImagesFolder;
 	}
 	
+	public boolean hasImages(){
+		return getImagesFolder(Type.Train).exists() || getImagesFolder(Type.Test).exists();
+	}
+	
+	public boolean hasSurfGenerator(){
+		return getFeatureVectorGeneratorsFile("surf").exists();
+	}
+	
+	public boolean hasFeaturesFile(){
+		return getFeaturesFile(Type.Train).exists() && getFeaturesFile(Type.Test).exists();
+	}
+	
 	private File getImagesFolder(Type type) {
 		File imagesMainFolder = new File(datasetFolder, IMAGES_FOLDER_NAME);
 		File typeFolder = new File(imagesMainFolder, type.toString());
@@ -152,7 +169,7 @@ public class DataSetLoader {
 		return featuresFilePath;
 	}
 	
-	public File getFeatureVectorGeneratorsFile(String name) {
+	private File getFeatureVectorGeneratorsFile(String name) {
 		File generators = new File(datasetFolder, FEATURE_VECTOR_GENERATOR_FOLDER);
 		File generator = new File(generators, name + ".txt");
 		return generator;
