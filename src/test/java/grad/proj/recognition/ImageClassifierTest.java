@@ -53,4 +53,37 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 		
 		assertTrue("classifiedCorrectly < 90", classifiedCorrectly >= 0.9);
 	}
+	
+	@Test
+	public void testClassifyingCompleteDataset(){
+		SurfFeatureVectorGenerator featureVectorGenerator = new SurfFeatureVectorGenerator();
+		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
+		
+		ImageClassifier classifier = new ImageClassifier(featureVectorGenerator, svmClassifier);
+		
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(DataSet.calteckUniversity);
+		Map<String, List<Image>> trainingData = dataSetLoader.loadImages( Type.Train, "mouse", "clipper", "toy1", "toy2");
+		Map<String, List<Image>> testingData = dataSetLoader.loadImages( Type.Test, "mouse", "clipper", "toy1", "toy2");
+		classifier.train(trainingData);
+		
+		double classifiedCorrectly = 0;
+		int totalImages = 0;
+
+		for(Entry<String, List<Image>> classEntry : testingData.entrySet()){
+			String classLabel = classEntry.getKey();
+			
+			for(Image image : classEntry.getValue()){
+				String predictedLabel = classifier.classify(image);
+				
+				classifiedCorrectly += (predictedLabel.equals(classLabel)) ? 1 : 0;
+			}			
+			totalImages += classEntry.getValue().size();
+		}
+		
+		System.out.println("total images: " + totalImages);
+		System.out.println("classifiedCorrectly: " + classifiedCorrectly);
+		System.out.println("accuracy: " + classifiedCorrectly / totalImages);
+		
+		assertTrue("classifiedCorrectly < 75", classifiedCorrectly >= 0.75);
+	}
 }

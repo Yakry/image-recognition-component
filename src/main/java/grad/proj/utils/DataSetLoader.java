@@ -18,7 +18,8 @@ import java.util.Map.Entry;
 public class DataSetLoader {
 	public enum Type{
 		Train,
-		Test
+		Test,
+		Localization
 	}
 	
 	private static final String IMAGES_FOLDER_NAME = "images";

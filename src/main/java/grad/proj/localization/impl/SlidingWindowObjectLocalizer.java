@@ -14,10 +14,10 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
-	private static final int MIN_IMAGE_DIM = 500;
-	private static final int MAX_IMAGE_DIM = 1000;
-	private static final int IMAGE_DIM_STEP = 250;
-	private static final int WINDOW_DIM = 300;
+	private static final int MIN_IMAGE_DIM = 300;
+	private static final int MAX_IMAGE_DIM = 600;
+	private static final int IMAGE_DIM_STEP = 100;
+	private static final int WINDOW_DIM = 200;
 	private static final int WINDOW_STEP = 10;
 
 	@Override
