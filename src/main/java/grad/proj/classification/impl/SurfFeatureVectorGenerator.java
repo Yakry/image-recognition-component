@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 import org.opencv.core.CvType;
@@ -38,12 +39,6 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	private static DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
 	private static DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
-	// not needed when serializing
-	private transient MatOfKeyPoint keypoints;
-	private transient List<List<Integer>> pointIdxsOfClusters;
-	private transient Mat myImgDescriptor;
-	private transient Mat descriptors;
-
 	// manually serializing it
 	private transient BagOfWordsImageDescriptorExtractor imgDescriptor = new BagOfWordsImageDescriptorExtractor(extractor, matcher);
 	private transient BagOfWordsKMeansTrainer trainer;
@@ -81,23 +76,48 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	
 	@Override
 	public List<Double> generateFeatureVector(Image image) {
+		return generateFeatureVector(image, false).getKey();
+	}
+	
+	public SimpleEntry<List<Double>, Mat> generateFeatureVector(Image image, boolean getKeypoints) {
 		if(!prepared){
 			throw new RuntimeException("Generator not prepared, use SurfFeatureVectorGenerator.prepareGenerator");
 		}
-		
+
 		Mat imageMat = generateMatFromImage(image);
 		
-		keypoints = new MatOfKeyPoint();
-		pointIdxsOfClusters = new ArrayList<>();
+		Mat myImgDescriptor = new Mat();
+		Mat descriptors = new Mat();
+
+		MatOfKeyPoint keypoints = new MatOfKeyPoint();
+		List<List<Integer>> pointIdxsOfClusters = new ArrayList<>();
 
 		featureDetector.detect(imageMat, keypoints);
 
-		myImgDescriptor = new Mat();
-		descriptors = new Mat();
 		imgDescriptor.compute(imageMat, keypoints, myImgDescriptor, pointIdxsOfClusters, descriptors);
 		
 		List<Double> featureVector = MatConverters.MatToListDouble(myImgDescriptor);
-		return featureVector;
+		
+		Mat KeypointsClusterIdx = null;
+		if(getKeypoints)
+			createKeypointsClusterIdxMat(keypoints, pointIdxsOfClusters);
+
+		return new SimpleEntry<>(featureVector, KeypointsClusterIdx);
+	}
+
+	public Mat createKeypointsClusterIdxMat(Mat keyPointsCoordinates, List<List<Integer>> clusterPoints) {
+		
+		// combining key points with cluster index
+		Mat keyPointsAndClustersCombined = new Mat(keyPointsCoordinates.rows(), 3, CvType.CV_32FC1);
+		for(int clusterIndex = 0;clusterIndex < clusterPoints.size();++clusterIndex){
+			for(int pointIndex : clusterPoints.get(clusterIndex)){
+				keyPointsAndClustersCombined.put(pointIndex, 0, keyPointsCoordinates.get(pointIndex, 0)[3]);
+				keyPointsAndClustersCombined.put(pointIndex, 1, keyPointsCoordinates.get(pointIndex, 0)[4]);
+				keyPointsAndClustersCombined.put(pointIndex, 2, clusterIndex);
+			}
+		}
+		
+		return keyPointsAndClustersCombined;
 	}
 
 	private Mat generateSurfDescriptors(Mat imageMat) {
@@ -130,27 +150,6 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	@Override
 	public int getFeatureVectorSize() {
 		return trainer.getClusterCount();
-	}
-
-	public Mat getKeypointsClusterIdxMat() {
-		MatOfKeyPoint keyPointsCoordinates = this.keypoints;
-		List<List<Integer>> clusterPoints = this.getPointIdxsOfClusters();
-
-		// combining key points with cluster index
-		Mat keyPointsAndClustersCombined = new Mat(keyPointsCoordinates.rows(), 3, CvType.CV_32FC1);
-		for(int clusterIndex = 0;clusterIndex < clusterPoints.size();++clusterIndex){
-			for(int pointIndex : clusterPoints.get(clusterIndex)){
-				keyPointsAndClustersCombined.put(pointIndex, 0, keyPointsCoordinates.get(pointIndex, 0)[3]);
-				keyPointsAndClustersCombined.put(pointIndex, 1, keyPointsCoordinates.get(pointIndex, 0)[4]);
-				keyPointsAndClustersCombined.put(pointIndex, 2, clusterIndex);
-			}
-		}
-		
-		return keyPointsAndClustersCombined;
-	}
-
-	public List<List<Integer>> getPointIdxsOfClusters() {
-		return pointIdxsOfClusters;
 	}
 	
 	public Mat getVocab(){

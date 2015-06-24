@@ -24,8 +24,7 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 		SVMClassifier svmClassifier = (SVMClassifier) classifier.getClassifier();
 		
 		Mat supportVector = svmClassifier.getSupportVector(classLabel);
-		generator.generateFeatureVector(image);
-		Mat imageKeypoints = generator.getKeypointsClusterIdxMat();
+		Mat imageKeypoints = generator.generateFeatureVector(image, true).getValue();
 		
 		return new SimpleEntry<Mat, Mat>(supportVector, imageKeypoints);
 	}
