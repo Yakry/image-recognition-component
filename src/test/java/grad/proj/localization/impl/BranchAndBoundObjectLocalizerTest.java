@@ -39,15 +39,12 @@ public class BranchAndBoundObjectLocalizerTest extends RequiresLoadingTestBaseCl
 		classifier.train(trainingData);
 		
 		String classLabel = "mouse";
-		Mat supportVectors = svmClassifier.getSupportVector(classLabel);
+		
+		BranchAndBoundObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
 		
 		int searchIndex = 1;
 		for(Image sampleTestImage : testingData){
 			System.out.println("starting search " + searchIndex);
-			featureVectorGenerator.generateFeatureVector(sampleTestImage);
-			Mat imageKeypoints = featureVectorGenerator.getKeypointsClusterIdxMat();
-			QualityFunction qualityFunction = new SurfLinearSvmQualityFunction(supportVectors, imageKeypoints);
-			BranchAndBoundObjectLocalizer localizer = new BranchAndBoundObjectLocalizer(qualityFunction);
 			
 			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, classLabel);
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage);

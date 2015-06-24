@@ -18,16 +18,21 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 	@Override
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
 		int counter = 10000;
+		
+		Object preprocessedInfo = qualityFunction.preprocess(image, classifier, classLabel);
+		
 		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
+		
 		SearchState startState = new SearchState(image);
-		startState.quality = qualityFunction.evaluate(image, startState, classifier, classLabel);
+		startState.quality = qualityFunction.evaluate(startState, image, classifier, classLabel, preprocessedInfo);
+		
 		searchQueue.add(startState);
 		while(searchQueue.peek().hasSubStates() && (counter > 0)){
 			SearchState subState1 = new SearchState();
 			SearchState subState2 = new SearchState();
 			searchQueue.poll().split(subState1, subState2);
-			subState1.quality = qualityFunction.evaluate(image, subState1, classifier, classLabel);
-			subState2.quality = qualityFunction.evaluate(image, subState2, classifier, classLabel);
+			subState1.quality = qualityFunction.evaluate(subState1, image, classifier, classLabel, preprocessedInfo);
+			subState2.quality = qualityFunction.evaluate(subState2, image, classifier, classLabel, preprocessedInfo);
 			searchQueue.add(subState1);
 			searchQueue.add(subState2);
 			--counter;

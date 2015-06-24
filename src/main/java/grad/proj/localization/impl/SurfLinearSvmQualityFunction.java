@@ -1,24 +1,45 @@
 package grad.proj.localization.impl;
 
 import java.awt.Rectangle;
+import java.util.AbstractMap.SimpleEntry;
 
 import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.impl.SVMClassifier;
+import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 
 import org.opencv.core.Mat;
 
 public class SurfLinearSvmQualityFunction implements QualityFunction {
 	
-	private Mat supportVector;
-	private Mat imageKeypoints;
-	
-	public SurfLinearSvmQualityFunction(Mat supportVector, Mat imageKeypoints) {
-		this.supportVector = supportVector;
-		this.imageKeypoints = imageKeypoints;
-	}
-
 	@Override
-	public double evaluate(Image image, SearchState state, ImageClassifier classifier, String classLabel) {
+	public Object preprocess(Image image, ImageClassifier classifier, String classLabel) {
+	
+		if(!(classifier.getFeatureVectorGenerator() instanceof SurfFeatureVectorGenerator) || 
+			!(classifier.getClassifier() instanceof SVMClassifier) ){
+			throw new RuntimeException("SurfLinearSvmQualityFunction works only with Surf generator and Svm Classifier");
+		}
+
+		SurfFeatureVectorGenerator generator = (SurfFeatureVectorGenerator) classifier.getFeatureVectorGenerator();
+		SVMClassifier svmClassifier = (SVMClassifier) classifier.getClassifier();
+		
+		Mat supportVector = svmClassifier.getSupportVector(classLabel);
+		generator.generateFeatureVector(image);
+		Mat imageKeypoints = generator.getKeypointsClusterIdxMat();
+		
+		return new SimpleEntry<Mat, Mat>(supportVector, imageKeypoints);
+	}
+	
+	@Override
+	public double evaluate(SearchState state, Image image,
+						   ImageClassifier classifier, String classLabel,
+						   Object preprocessedInfo) {
+		
+		SimpleEntry<Mat, Mat> preprocessedInfoEntry = (SimpleEntry<Mat, Mat>) preprocessedInfo;
+
+		Mat supportVector = preprocessedInfoEntry.getKey();
+		Mat imageKeypoints = preprocessedInfoEntry.getValue();
+		
 		int maxRectangleWidth = state.maxCoordinate[SearchState.RIGHT] - 
 				state.minCoordinate[SearchState.LEFT];
 		int maxRectangleHeight = state.maxCoordinate[SearchState.BOTTOM] - 
@@ -56,5 +77,4 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 		
 		return stateQuality;
 	}
-
 }

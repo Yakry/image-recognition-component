@@ -4,5 +4,8 @@ import grad.proj.classification.ImageClassifier;
 import grad.proj.utils.imaging.Image;
 
 public interface QualityFunction {
-	public double evaluate(Image image, SearchState searchState, ImageClassifier classifier, String classLabel);
+	public Object preprocess(Image image, ImageClassifier classifier, String classLabel);
+	public double evaluate(SearchState searchState, Image image,
+							ImageClassifier classifier, String classLabel,
+							Object preprocessedInfo);
 }
