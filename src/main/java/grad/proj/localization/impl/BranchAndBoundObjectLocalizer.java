@@ -1,7 +1,7 @@
 package grad.proj.localization.impl;
 
+import grad.proj.classification.ImageClassifier;
 import grad.proj.localization.ObjectLocalizer;
-import grad.proj.recognition.ImageClassifier;
 import grad.proj.utils.imaging.Image;
 
 import java.awt.Rectangle;

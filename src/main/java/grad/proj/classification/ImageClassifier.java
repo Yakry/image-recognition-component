@@ -1,4 +1,4 @@
-package grad.proj.recognition;
+package grad.proj.classification;
 
 import grad.proj.utils.imaging.Image;
 

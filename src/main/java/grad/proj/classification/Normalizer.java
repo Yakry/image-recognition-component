@@ -1,4 +1,4 @@
-package grad.proj.recognition;
+package grad.proj.classification;
 
 import java.util.List;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package grad.proj.recognition;
+package grad.proj.classification;
 
-import grad.proj.recognition.ImageClassifier;
-import grad.proj.recognition.impl.LinearNormalizer;
-import grad.proj.recognition.impl.SVMClassifier;
-import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
+import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.impl.LinearNormalizer;
+import grad.proj.classification.impl.SVMClassifier;
+import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.TestsHelper.DataSet;

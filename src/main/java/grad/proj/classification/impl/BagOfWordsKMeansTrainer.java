@@ -1,4 +1,4 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;

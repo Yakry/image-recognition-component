@@ -1,7 +1,7 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
-import grad.proj.recognition.FeatureVectorClassifier;
-import grad.proj.recognition.Normalizer;
+import grad.proj.classification.FeatureVectorClassifier;
+import grad.proj.classification.Normalizer;
 import grad.proj.utils.opencv.MatConverters;
 
 import java.util.HashMap;

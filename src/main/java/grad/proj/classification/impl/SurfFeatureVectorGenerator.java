@@ -1,4 +1,4 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
 import java.awt.Color;
 import java.io.File;
@@ -20,7 +20,7 @@ import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 
-import grad.proj.recognition.FeatureVectorGenerator;
+import grad.proj.classification.FeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.MatConverters;
 import grad.proj.utils.opencv.MatListOfListAdapter;

@@ -2,7 +2,7 @@ package grad.proj.localization.impl;
 
 import java.awt.Rectangle;
 
-import grad.proj.recognition.ImageClassifier;
+import grad.proj.classification.ImageClassifier;
 import grad.proj.utils.imaging.Image;
 
 import org.opencv.core.Mat;

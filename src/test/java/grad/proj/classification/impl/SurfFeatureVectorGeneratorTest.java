@@ -1,8 +1,8 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
+import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;

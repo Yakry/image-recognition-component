@@ -1,6 +1,6 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
-import grad.proj.recognition.Normalizer;
+import grad.proj.classification.Normalizer;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
-package grad.proj.recognition.impl;
+package grad.proj.classification.impl;
 
 import static org.junit.Assert.*;
-import grad.proj.recognition.impl.LinearNormalizer;
-import grad.proj.recognition.impl.SVMClassifier;
+import grad.proj.classification.impl.LinearNormalizer;
+import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.DataSetLoader.Type;

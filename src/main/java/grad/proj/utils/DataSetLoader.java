@@ -1,10 +1,10 @@
 package grad.proj.utils;
 
-import grad.proj.recognition.FeatureVectorGenerator;
-import grad.proj.recognition.ImageClassifier;
-import grad.proj.recognition.impl.LinearNormalizer;
-import grad.proj.recognition.impl.SVMClassifier;
-import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
+import grad.proj.classification.FeatureVectorGenerator;
+import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.impl.LinearNormalizer;
+import grad.proj.classification.impl.SVMClassifier;
+import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 
 import java.io.File;

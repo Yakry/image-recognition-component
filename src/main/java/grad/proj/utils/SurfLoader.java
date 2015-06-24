@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.opencv.core.Mat;
 
-import grad.proj.recognition.impl.SurfFeatureVectorGenerator;
+import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.opencv.MatLoader;
 
 public class SurfLoader {

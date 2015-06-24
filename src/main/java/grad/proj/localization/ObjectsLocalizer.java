@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
-import grad.proj.recognition.ImageClassifier;
+import grad.proj.classification.ImageClassifier;
 import grad.proj.utils.imaging.Image;
 
 public class ObjectsLocalizer {
