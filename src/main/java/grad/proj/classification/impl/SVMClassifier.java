@@ -4,6 +4,10 @@ import grad.proj.classification.FeatureVectorClassifier;
 import grad.proj.classification.Normalizer;
 import grad.proj.utils.opencv.MatConverters;
 
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +20,12 @@ import org.opencv.core.Mat;
 import org.opencv.core.TermCriteria;
 import org.opencv.ml.SVM;
 
+/***
+ * note: This class can't be serialized because it uses opencv
+ * SVM implementation which is just a pointer to the native obj.
+ * The class override writeObject and readObject and throw 
+ * NotSerializableException when called
+ */
 @SuppressWarnings("unused")
 public class SVMClassifier implements FeatureVectorClassifier {
 	private static final long serialVersionUID = 1L;
@@ -171,5 +181,15 @@ public class SVMClassifier implements FeatureVectorClassifier {
 	@Override
 	public Set<String> getClasses() {
 		return svmArray.keySet();
+	}
+	
+	// Disable Serialization
+	
+	private void writeObject(ObjectOutputStream out) throws IOException{
+		throw new NotSerializableException("This class can't be serialized because it uses opencv SVM implementation which is just a pointer to the native obj");
+	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+		throw new NotSerializableException("This class can't be deserialized because it uses opencv SVM implementation which is just a pointer to the native obj");
 	}
 }
