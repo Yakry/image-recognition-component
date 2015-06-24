@@ -23,7 +23,6 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	public abstract ObjectLocalizer createLocalizer();
 	
 	@Ignore
-	@Test
 	public void testOnCaltech(){
 		testOnOneClass(DataSet.calteckUniversity, "apple");
 	}
