@@ -19,13 +19,13 @@ import org.opencv.features2d.DescriptorMatcher;
  * port of BOWImgDescriptorExtractor of OpenCV
  * 
  */
-class BOWImgDescriptorExtractor {
+class BagOfWordsImageDescriptorExtractor {
 	
 	private Mat vocabulary;
 	private DescriptorExtractor dextractor;
 	private DescriptorMatcher dmatcher;
 	
-	public BOWImgDescriptorExtractor( DescriptorExtractor _dextractor, DescriptorMatcher _dmatcher ) {
+	public BagOfWordsImageDescriptorExtractor( DescriptorExtractor _dextractor, DescriptorMatcher _dmatcher ) {
 		dextractor = _dextractor;
 		dmatcher = _dmatcher;
 	}

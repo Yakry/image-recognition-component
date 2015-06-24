@@ -45,8 +45,8 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	private transient Mat descriptors;
 
 	// manually serializing it
-	private transient BOWImgDescriptorExtractor imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
-	private transient BOWKMeansTrainer trainer;
+	private transient BagOfWordsImageDescriptorExtractor imgDescriptor = new BagOfWordsImageDescriptorExtractor(extractor, matcher);
+	private transient BagOfWordsKMeansTrainer trainer;
 	
 	private boolean prepared = false;
 	
@@ -56,7 +56,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 	
 	public SurfFeatureVectorGenerator(int size) {
-		trainer = new BOWKMeansTrainer(size);
+		trainer = new BagOfWordsKMeansTrainer(size);
 	}
 	
 	@Override
@@ -188,8 +188,8 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		int rows = in.readInt();
 		int cols = in.readInt();
 
-		trainer = new BOWKMeansTrainer(clusterCount);
-		imgDescriptor = new BOWImgDescriptorExtractor(extractor, matcher);
+		trainer = new BagOfWordsKMeansTrainer(clusterCount);
+		imgDescriptor = new BagOfWordsImageDescriptorExtractor(extractor, matcher);
 		
 		Mat mat = new Mat(rows, cols, CvType.CV_32F);
 		
