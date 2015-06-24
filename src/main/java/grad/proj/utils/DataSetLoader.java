@@ -73,7 +73,7 @@ public class DataSetLoader {
 	
 	public Map<String, List<List<Double>>> loadFeatures(Type type){
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
-		return (!featuresFolder.exists()) ? null : DataFileLoader.loadDataSeprated(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
+		return (!featuresFolder.exists()) ? null : FeaturesFileLoader.loadFeatures(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
 	}
 	
 	public SurfFeatureVectorGenerator loadSurfFeatureVectorGenerator(){
@@ -111,11 +111,11 @@ public class DataSetLoader {
 			return;
 		
 		Map<String, List<List<Double>>> trainingFeatures = generateFeatures(trainingData, featureVectorGenerator);
-		DataFileLoader.writeDataSeperated(trainingFeatures, getFeaturesFile(Type.Train));
+		FeaturesFileLoader.saveFeatures(trainingFeatures, getFeaturesFile(Type.Train));
 		
 		Map<String, List<Image>> testingData = loadImages(Type.Test);;
 		Map<String, List<List<Double>>> testFeatures = generateFeatures(testingData, featureVectorGenerator);
-		DataFileLoader.writeDataSeperated(testFeatures, getFeaturesFile(Type.Test));
+		FeaturesFileLoader.saveFeatures(testFeatures, getFeaturesFile(Type.Test));
 	}
 	
 	private Map<String, List<List<Double>>> generateFeatures(Map<String, List<Image>> data, FeatureVectorGenerator featureVectorGenerator){
