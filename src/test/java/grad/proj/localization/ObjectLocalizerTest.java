@@ -15,12 +15,14 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	public abstract ObjectLocalizer createLocalizer();
 	
+	@Ignore
 	@Test
 	public void testOnCaltech(){
 		testOnOneClass(DataSet.calteckUniversity, "apple");

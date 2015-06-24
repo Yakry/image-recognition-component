@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 
 public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 
+	@Ignore
 	@Test
 	public void testClassifiyOnCaltechDataSet(){
 		testClassifyingAccuracyDataset(DataSet.calteckUniversity, Type.Train, "apple");
