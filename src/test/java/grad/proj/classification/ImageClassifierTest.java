@@ -64,6 +64,6 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 		System.out.println("classifiedCorrectly: " + classifiedCorrectly);
 		System.out.println("accuracy: " + classifiedCorrectly / totalImages);
 		
-		assertTrue("classifiedCorrectly < 75", classifiedCorrectly >= 0.75);
+		assertTrue("classifiedCorrectly < 75", (classifiedCorrectly / totalImages) >= 0.75);
 	}
 }
