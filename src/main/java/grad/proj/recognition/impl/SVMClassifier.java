@@ -115,26 +115,24 @@ public class SVMClassifier implements FeatureVectorClassifier {
 
 		trainingData = normalizer.reset(trainingData, -1, 1);
 		
-		int i=0;
+		int classIndex=0;
 		for(Entry<String, List<List<Double>>> classEntry : trainingData.entrySet()){
 			List<List<Double>> classData = classEntry.getValue();
 			for(int r=0; r<classData.size(); ++r){
 				for(int c=0; c<trainingDataCols; ++c)
 					trainingDataMat.put(curRow, c, classData.get(r).get(c));
-				labels.put(curRow++, 0, i);
+				labels.put(curRow++, 0, classIndex);
 			}
 			
-			i++;
+			classIndex++;
 		}
 		svmArray = new HashMap<>();
 		
-		i=0;
+		classIndex=0;
 		for(Entry<String, List<List<Double>>> classEntry : trainingData.entrySet()){
-			svmArray.put(classEntry.getKey(), constructSVM(trainingDataMat, labels, i));
-			i++;
+			svmArray.put(classEntry.getKey(), constructSVM(trainingDataMat, labels, classIndex));
+			classIndex++;
 		}
-//		for(int i=0; i<trainingData.size(); ++i)
-//			svmArray[i] = 
 	}
 	
 	private static SVM constructSVM(Mat trainingData, Mat Labels, int classLabel){
@@ -150,16 +148,14 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		svm.setTermCriteria(new TermCriteria(TermCriteria.COUNT, 
 				2000, TermCriteria.EPS));
 		
-		svm.train(trainingData, ROW_SAMPLE, binaryLabels);
-		
-//		svm.trainAutoFlat(trainingData, ROW_SAMPLE, binaryLabels, 10, 
-//				cMinVal, cMaxVal, cLogStep,
-//				gammaMinVal, gammaMaxVal, gammaLogStep,
-//				pMinVal, pMaxVal, pMogStep,
-//				nuMinVal, nuMaxVal, nuLogStep,
-//				coeffMinVal, coeffMaxVal, coeffLogStep,
-//				degreeMinVal, degreeMaxVal, degreeLogStep,
-//				true);
+		svm.trainAutoFlat(trainingData, ROW_SAMPLE, binaryLabels, 10, 
+				cMinVal, cMaxVal, cLogStep,
+				gammaMinVal, gammaMaxVal, gammaLogStep,
+				pMinVal, pMaxVal, pMogStep,
+				nuMinVal, nuMaxVal, nuLogStep,
+				coeffMinVal, coeffMaxVal, coeffLogStep,
+				degreeMinVal, degreeMaxVal, degreeLogStep,
+				true);
 		
 		return svm;
 	}
