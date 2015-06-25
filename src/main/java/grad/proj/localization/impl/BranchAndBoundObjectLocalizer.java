@@ -39,6 +39,8 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 		}
 		
 		SearchState target = searchQueue.peek();
+		if(target.quality > DISCARDING_ERROR_THRESHOLD)
+			return null;
 		return target.getRectangle();
 	}
 }
