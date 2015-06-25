@@ -35,13 +35,22 @@ public class TestsHelper {
 
 	public static void drawRectangle(Rectangle objectBounds, Image drawableImage) {
 		for(int i=0;i<objectBounds.getWidth();++i){
-			drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
-			drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
+			try{ // in a try to ignore outofbounds bounds
+				drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
+				drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
+			}
+			catch(Exception ex){
+				
+			}
 		}
 		
 		for(int i=0;i<objectBounds.getHeight();++i){
-			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, Color.GREEN.getRGB());
-			drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, Color.GREEN.getRGB());
+			try{ // in a try to ignore outofbounds bounds
+				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, Color.GREEN.getRGB());
+				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, Color.GREEN.getRGB());			}
+			catch(Exception ex){
+				
+			}
 		}
 	}
 
