@@ -100,7 +100,7 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 		
 		Mat KeypointsClusterIdx = null;
 		if(getKeypoints)
-			createKeypointsClusterIdxMat(keypoints, pointIdxsOfClusters);
+			KeypointsClusterIdx = createKeypointsClusterIdxMat(keypoints, pointIdxsOfClusters);
 
 		return new SimpleEntry<>(featureVector, KeypointsClusterIdx);
 	}
