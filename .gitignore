@@ -1,3 +1,7 @@
+# Ignore test results folder
+testResults/
+
+
 ######################
 # Ignore datasets folder
 ######################

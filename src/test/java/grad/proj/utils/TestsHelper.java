@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class TestsHelper {
 	private static File DATASET_FOLDER = new File("datasets");
+	private static File TEST_RESULTS = new File("testResults");
 	
 	public enum DataSet{
 		calteckUniversity,
@@ -67,6 +68,15 @@ public class TestsHelper {
 			}
 		}
 		return originalImage;
+	}
+	
+	public static File getTestResultsFolder(Class<?> testClass, String subFolder){
+		File classResultsFolder = new File(TEST_RESULTS, testClass.getSimpleName());
+		File classSubFolder = new File(classResultsFolder, subFolder);
+		if(!classSubFolder.exists()){
+			classSubFolder.mkdirs();
+		}
+		return classSubFolder;
 	}
 
 	

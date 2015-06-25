@@ -45,7 +45,10 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			System.out.println("starting search " + searchIndex);
 			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
-			ImageLoader.saveImage(sampleTestImage, "jpg", new File(getClass().getSimpleName() + searchIndex + ".jpg"));
+			
+			File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), testClass);
+			File resultImageFile = new File(testResultsFolder, + searchIndex + ".jpg");
+			ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
 			++searchIndex;
 		}
 	}
