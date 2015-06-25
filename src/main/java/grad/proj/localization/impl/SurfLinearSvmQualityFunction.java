@@ -76,4 +76,9 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 		
 		return stateQuality;
 	}
+
+	@Override
+	public int getMaxIterations() {
+		return 10000;
+	}
 }

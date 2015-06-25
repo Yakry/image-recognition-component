@@ -11,8 +11,7 @@ public class MaxRectangleQualityFunction implements QualityFunction {
 	@Override
 	public Object preprocess(Image image, ImageClassifier classifier,
 			String classLabel) {
-		throw new UnsupportedOperationException("this method is not supported");
-//		return null;
+		return null;
 	}
 
 	@Override
@@ -23,5 +22,10 @@ public class MaxRectangleQualityFunction implements QualityFunction {
 		SubImage suimage = new SubImage(image, maxRectangle.x,
 				maxRectangle.y, maxRectangle.width, maxRectangle.height);
 		return classifier.classify(suimage, classLabel);
+	}
+
+	@Override
+	public int getMaxIterations() {
+		return 10;
 	}
 }

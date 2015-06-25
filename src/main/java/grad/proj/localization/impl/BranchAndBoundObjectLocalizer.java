@@ -17,7 +17,7 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 
 	@Override
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
-		int counter = 10000;
+		int counter = qualityFunction.getMaxIterations();
 		
 		Object preprocessedInfo = qualityFunction.preprocess(image, classifier, classLabel);
 		
