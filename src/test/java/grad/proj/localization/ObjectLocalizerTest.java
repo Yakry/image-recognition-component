@@ -14,6 +14,8 @@ import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,35 +23,75 @@ import org.junit.Test;
 public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	public abstract ObjectLocalizer createLocalizer();
-	
-	@Ignore
+
+	@Test
 	public void testOnCaltech(){
-		testOnOneClass(DataSet.calteckUniversity, "apple");
+		testOnClasses(DataSet.calteckUniversity);
 	}
-	
+
+	@Ignore
+	@Test
+	public void testOnCaltechCombined(){
+		testCombined(DataSet.calteckUniversity);
+	}
+
 	@Test
 	public void testOnMohsen(){
-		testOnOneClass(DataSet.mohsen, "mouse");
+		testOnClasses(DataSet.mohsen);
+	}
+
+	@Ignore
+	@Test
+	public void testOnMohsenCombined(){
+		testCombined(DataSet.mohsen);
 	}
 	
-	public void testOnOneClass(DataSet dataSet, String testClass) {
+	public void testCombined(DataSet dataSet) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
 		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
 		
-		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, testClass);
+		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, DataSetLoader.COMBINED_CLASS);
 		
 		ObjectLocalizer localizer = createLocalizer();
 		
-		int searchIndex = 1;
-		for(Image sampleTestImage : testingData){
-			System.out.println("starting search " + searchIndex);
-			Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
-			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
-			
-			File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), testClass);
-			File resultImageFile = new File(testResultsFolder, + searchIndex + ".jpg");
-			ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
-			++searchIndex;
+		for(String clazz : classifier.getClasses()){
+			int searchIndex = 0;
+			for(Image sampleTestImage : testingData){
+				testImage(localizer, classifier, clazz, sampleTestImage, DataSetLoader.COMBINED_CLASS + " " + searchIndex);
+				searchIndex++;
+			}
 		}
+	}
+	
+	public void testOnClasses(DataSet dataSet, String ...testClasses) {
+		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
+		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
+		
+		Map<String, List<Image>> testingData = dataSetLoader.loadImages(Type.Localization, testClasses);
+		
+		ObjectLocalizer localizer = createLocalizer();
+		
+		for(Entry<String, List<Image>> clazz : testingData.entrySet()){
+			String testClass = clazz.getKey();
+			
+			int searchIndex = 1;
+			for(Image sampleTestImage : clazz.getValue()){
+				testImage(localizer, classifier, testClass, sampleTestImage, String.valueOf(searchIndex));
+				searchIndex++;
+			}
+		}
+	}
+
+	private void testImage(ObjectLocalizer localizer, ImageClassifier classifier,
+						   String testClass, Image sampleTestImage,
+						   String savedImageName) {
+
+		System.out.println("starting search " + savedImageName + " test class: " + testClass);
+		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
+		TestsHelper.drawRectangle(objectBounds, sampleTestImage);
+		
+		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), testClass);
+		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
+		ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
 	}
 }
