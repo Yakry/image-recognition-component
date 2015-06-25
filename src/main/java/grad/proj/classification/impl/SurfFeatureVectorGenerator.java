@@ -37,7 +37,9 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	
 	private static FeatureDetector featureDetector = FeatureDetector.create(FeatureDetector.SURF);
 	private static DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
-	private static DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+	
+	// must be per instance because the vocabulary is passed to it 
+	private transient DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 	
 	// manually serializing it
 	private transient BagOfWordsImageDescriptorExtractor imgDescriptor = new BagOfWordsImageDescriptorExtractor(extractor, matcher);
