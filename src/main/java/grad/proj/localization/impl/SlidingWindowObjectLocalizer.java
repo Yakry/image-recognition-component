@@ -81,7 +81,7 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 //			}
 //		}
 		
-		if(globalBestError < DISCARDING_ERROR_THRESHOLD)
+		if(globalBestError > DISCARDING_ERROR_THRESHOLD)
 			return null;
 		return globalBestBounds;
 	}
