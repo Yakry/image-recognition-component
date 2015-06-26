@@ -23,7 +23,7 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 	@Override
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
 		Rectangle globalBestBounds = new Rectangle();
-		double globalBestScore = Double.MAX_VALUE;
+		double globalBestError = Double.MAX_VALUE;
 		SlidingWindowThread slidingWindowThreads[] =
 				new SlidingWindowThread[((MAX_IMAGE_DIM - MIN_IMAGE_DIM) / IMAGE_DIM_STEP) + 1];
 		
@@ -41,7 +41,7 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 				throw new RuntimeException(e.getMessage());
 			}
 			
-			if(slidingWindowThreads[i].getBestError() <= globalBestScore){
+			if(slidingWindowThreads[i].getBestError() <= globalBestError){
 				int x = (int) slidingWindowThreads[i].getBestBounds().getX();
 				int y = (int) slidingWindowThreads[i].getBestBounds().getY();
 				int width = (int) slidingWindowThreads[i].getBestBounds().getWidth();
@@ -52,14 +52,14 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 						(y*image.getHeight()) / imageDim,
 						(width*image.getWidth()) / imageDim,
 						(height*image.getHeight()) / imageDim);
-				globalBestScore = slidingWindowThreads[i].getBestError();
+				globalBestError = slidingWindowThreads[i].getBestError();
 			}
 		}
 		
 //		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){
 //			Image scaledImage = this.scaleImage(image, imageDim, imageDim);
 //			int localBestBoundsX = 0, localBestBoundsY = 0;
-//			double localBestScore = Double.MAX_VALUE;
+//			double localBestError = Double.MAX_VALUE;
 //			for(int x = 0; x+WINDOW_DIM < imageDim; x += WINDOW_STEP){
 //				for(int y=0; y+WINDOW_DIM < imageDim; y += WINDOW_STEP){
 //					SubImage subimage = new SubImage(scaledImage, x, y, WINDOW_DIM, WINDOW_DIM);
@@ -72,17 +72,17 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 //				}
 //			}
 //			
-//			if(localBestScore <= globalBestScore){
+//			if(localBestError <= globalBestError){
 //				globalBestBounds.setBounds((localBestBoundsX*image.getWidth()) / imageDim,
 //						(localBestBoundsY*image.getHeight()) / imageDim,
 //						(WINDOW_DIM*image.getWidth()) / imageDim,
 //						(WINDOW_DIM*image.getHeight()) / imageDim);
-//				globalBestScore = localBestScore;
+//				globalBestError = localBestError;
 //			}
 //		}
 		
-//		if(globalBestScore < DISCARDING_ERROR_THRESHOLD)
-//			return null;
+		if(globalBestError < DISCARDING_ERROR_THRESHOLD)
+			return null;
 		return globalBestBounds;
 	}
 
