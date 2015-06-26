@@ -17,9 +17,9 @@ public class MeanSquareErrorMatcherTest {
 		vecs.add(Arrays.asList(0.2, 0.2));
 		
 		Matcher<List<Double>> matcher = new MeanSquareErrorMatcher();
-		List<Integer> resultIndicies = matcher.match(Arrays.asList(0.1, 0.1), vecs, 2);
-		assertEquals(0, (int) resultIndicies.get(0));
-		assertEquals(2, (int) resultIndicies.get(1));	
+		List<List<Double>> resultIndicies = matcher.match(Arrays.asList(0.1, 0.1), vecs, 2);
+		assertEquals(Arrays.asList(0.1, 0.2), resultIndicies.get(0));
+		assertEquals(Arrays.asList(0.2, 0.2), resultIndicies.get(1));	
 	}
 	
 	@Test
@@ -30,8 +30,8 @@ public class MeanSquareErrorMatcherTest {
 		vecs.add(Arrays.asList(0.2, 0.2));
 		
 		Matcher<List<Double>> matcher = new MeanSquareErrorMatcher();
-		List<Integer> resultIndicies = matcher.match(Arrays.asList(0.5, 0.6), vecs, 2);
-		assertEquals(1, (int) resultIndicies.get(0));
-		assertEquals(2, (int) resultIndicies.get(1));	
+		List<List<Double>> resultIndicies = matcher.match(Arrays.asList(0.5, 0.6), vecs, 2);
+		assertEquals(Arrays.asList(0.3, 0.6), resultIndicies.get(0));
+		assertEquals(Arrays.asList(0.2, 0.2), resultIndicies.get(1));	
 	}
 }

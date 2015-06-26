@@ -1,6 +1,9 @@
 package grad.proj.matching;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -8,15 +11,12 @@ import java.util.PriorityQueue;
 public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 
 	@Override
-	public List<Integer> match(List<Double> instance, List<List<Double>> instances, int topN) {
+	public List<List<Double>> match(List<Double> instance, Collection<List<Double>> instances, int topN) {
 		final List<Double> _instance = instance;
-		final List<List<Double>> _instances = instances;
 		
-		Comparator<Integer> acendingComparator = new Comparator<Integer>() {
+		Comparator<List<Double>> acendingComparator = new Comparator<List<Double>>() {
 			@Override
-			public int compare(Integer index1, Integer index2) {
-				List<Double> vector1 = _instances.get(index1);
-				List<Double> vector2 = _instances.get(index2);
+			public int compare(List<Double> vector1, List<Double> vector2) {
 				double error1 = calculareMeanSquareError(_instance, vector1);
 				double error2 = calculareMeanSquareError(_instance, vector2);
 				double res = error1 - error2;
@@ -26,30 +26,36 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 			}
 		};
 		
-		Comparator<Integer> decendingComparator = acendingComparator.reversed();
+		Comparator<List<Double>> decendingComparator = acendingComparator.reversed();
 		
-		PriorityQueue<Integer> topNSoFar = new PriorityQueue<>(topN, decendingComparator);
+		PriorityQueue<List<Double>> topNSoFar = new PriorityQueue<>(topN, decendingComparator);
 		
-		for(int i=0; i<instances.size(); i++){
+		for(List<Double> vector : instances){
 			if(topNSoFar.size() < topN){
-				topNSoFar.add(i);
+				topNSoFar.add(vector);
 			}
 			else{
-				Integer maxErrorSoFar = topNSoFar.peek();
-				if(acendingComparator.compare(i, maxErrorSoFar) < 0){
+				List<Double> maxErrorSoFar = topNSoFar.peek();
+				if(acendingComparator.compare(vector, maxErrorSoFar) < 0){
 					topNSoFar.poll();
-					topNSoFar.add(i);
+					topNSoFar.add(vector);
 				}
 			}
 		}
 		
-		Integer[] result = new Integer[topN];
-		int i = topN - 1;
-		while(!topNSoFar.isEmpty()){
-			result[i--] = topNSoFar.poll();
+		topN = Math.min(topN, topNSoFar.size());
+
+		List<List<Double>> result = new ArrayList<List<Double>>(topN+1);
+		for(int i=0; i<topN; i++){
+			result.add(null);
 		}
 		
-		return Arrays.asList(result);
+		int i = topN - 1;
+		while(!topNSoFar.isEmpty()){
+			result.set(i--, topNSoFar.poll());
+		}
+		
+		return result;
 	}
 	
 	private double calculareMeanSquareError(List<Double> A, List<Double> B){
