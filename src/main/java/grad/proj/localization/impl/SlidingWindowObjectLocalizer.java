@@ -24,33 +24,65 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
 		Rectangle globalBestBounds = new Rectangle();
 		double globalBestScore = Double.MAX_VALUE;
-		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){
+		SlidingWindowThread slidingWindowThreads[] =
+				new SlidingWindowThread[((MAX_IMAGE_DIM - MIN_IMAGE_DIM) / IMAGE_DIM_STEP) + 1];
+		
+		for(int imageDim = MAX_IMAGE_DIM, i = 0; imageDim >= MIN_IMAGE_DIM; imageDim -= IMAGE_DIM_STEP, ++i){
 			Image scaledImage = this.scaleImage(image, imageDim, imageDim);
-			int localBestBoundsX = 0, localBestBoundsY = 0;
-			double localBestScore = Double.MAX_VALUE;
-			for(int x = 0; x+WINDOW_DIM < imageDim; x += WINDOW_STEP){
-				for(int y=0; y+WINDOW_DIM < imageDim; y += WINDOW_STEP){
-					SubImage subimage = new SubImage(scaledImage, x, y, WINDOW_DIM, WINDOW_DIM);
-					double score = classifier.classify(subimage, classLabel);
-					if(score < localBestScore){
-						localBestBoundsX = x;
-						localBestBoundsY = y;
-						localBestScore = score;
-					}
-				}
+			slidingWindowThreads[i] = new SlidingWindowThread(scaledImage, classifier,
+					classLabel, WINDOW_DIM, WINDOW_STEP);
+			slidingWindowThreads[i].start();
+		}
+		
+		for(int imageDim = MAX_IMAGE_DIM, i = 0; imageDim >= MIN_IMAGE_DIM; imageDim -= IMAGE_DIM_STEP, ++i){
+			try{
+				slidingWindowThreads[i].join();
+			} catch(InterruptedException e){
+				throw new RuntimeException(e.getMessage());
 			}
 			
-			if(localBestScore <= globalBestScore){
-				globalBestBounds.setBounds((localBestBoundsX*image.getWidth()) / imageDim,
-						(localBestBoundsY*image.getHeight()) / imageDim,
-						(WINDOW_DIM*image.getWidth()) / imageDim,
-						(WINDOW_DIM*image.getHeight()) / imageDim);
-				globalBestScore = localBestScore;
+			if(slidingWindowThreads[i].getBestError() <= globalBestScore){
+				int x = (int) slidingWindowThreads[i].getBestBounds().getX();
+				int y = (int) slidingWindowThreads[i].getBestBounds().getY();
+				int width = (int) slidingWindowThreads[i].getBestBounds().getWidth();
+				int height = (int) slidingWindowThreads[i].getBestBounds().getHeight();
+				
+				globalBestBounds.setBounds(
+						(x*image.getWidth()) / imageDim,
+						(y*image.getHeight()) / imageDim,
+						(width*image.getWidth()) / imageDim,
+						(height*image.getHeight()) / imageDim);
+				globalBestScore = slidingWindowThreads[i].getBestError();
 			}
 		}
 		
-		if(globalBestScore < DISCARDING_ERROR_THRESHOLD)
-			return null;
+//		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){
+//			Image scaledImage = this.scaleImage(image, imageDim, imageDim);
+//			int localBestBoundsX = 0, localBestBoundsY = 0;
+//			double localBestScore = Double.MAX_VALUE;
+//			for(int x = 0; x+WINDOW_DIM < imageDim; x += WINDOW_STEP){
+//				for(int y=0; y+WINDOW_DIM < imageDim; y += WINDOW_STEP){
+//					SubImage subimage = new SubImage(scaledImage, x, y, WINDOW_DIM, WINDOW_DIM);
+//					double score = classifier.classify(subimage, classLabel);
+//					if(score < localBestScore){
+//						localBestBoundsX = x;
+//						localBestBoundsY = y;
+//						localBestScore = score;
+//					}
+//				}
+//			}
+//			
+//			if(localBestScore <= globalBestScore){
+//				globalBestBounds.setBounds((localBestBoundsX*image.getWidth()) / imageDim,
+//						(localBestBoundsY*image.getHeight()) / imageDim,
+//						(WINDOW_DIM*image.getWidth()) / imageDim,
+//						(WINDOW_DIM*image.getHeight()) / imageDim);
+//				globalBestScore = localBestScore;
+//			}
+//		}
+		
+//		if(globalBestScore < DISCARDING_ERROR_THRESHOLD)
+//			return null;
 		return globalBestBounds;
 	}
 
