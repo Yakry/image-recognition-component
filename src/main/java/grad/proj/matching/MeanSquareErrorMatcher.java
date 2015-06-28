@@ -11,12 +11,13 @@ import java.util.PriorityQueue;
 public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 
 	@Override
-	public List<List<Double>> match(List<Double> instance, Collection<List<Double>> instances, int topN) {
+	public <K extends List<Double>> List<K> match(List<Double> instance, Collection<K> instances, int topN)
+	{
 		final List<Double> _instance = instance;
 		
-		Comparator<List<Double>> acendingComparator = new Comparator<List<Double>>() {
+		Comparator<K> acendingComparator = new Comparator<K>() {
 			@Override
-			public int compare(List<Double> vector1, List<Double> vector2) {
+			public int compare(K vector1, K vector2) {
 				double error1 = calculareMeanSquareError(_instance, vector1);
 				double error2 = calculareMeanSquareError(_instance, vector2);
 				double res = error1 - error2;
@@ -26,16 +27,16 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 			}
 		};
 		
-		Comparator<List<Double>> decendingComparator = acendingComparator.reversed();
+		Comparator<K> decendingComparator = acendingComparator.reversed();
 		
-		PriorityQueue<List<Double>> topNSoFar = new PriorityQueue<>(topN, decendingComparator);
+		PriorityQueue<K> topNSoFar = new PriorityQueue<>(topN, decendingComparator);
 		
-		for(List<Double> vector : instances){
+		for(K vector : instances){
 			if(topNSoFar.size() < topN){
 				topNSoFar.add(vector);
 			}
 			else{
-				List<Double> maxErrorSoFar = topNSoFar.peek();
+				K maxErrorSoFar = topNSoFar.peek();
 				if(acendingComparator.compare(vector, maxErrorSoFar) < 0){
 					topNSoFar.poll();
 					topNSoFar.add(vector);
@@ -45,7 +46,7 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 		
 		topN = Math.min(topN, topNSoFar.size());
 
-		List<List<Double>> result = new ArrayList<List<Double>>(topN+1);
+		List<K> result = new ArrayList<K>(topN+1);
 		for(int i=0; i<topN; i++){
 			result.add(null);
 		}

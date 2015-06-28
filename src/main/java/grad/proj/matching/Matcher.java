@@ -4,5 +4,5 @@ import java.util.Collection;
 import java.util.List;
 
 public interface Matcher<T> {
-	public List<T> match(T instance, Collection<T> instances, int topN);
+	public<K extends T> List<K> match(T instance, Collection<K> instances, int topN);
 }
