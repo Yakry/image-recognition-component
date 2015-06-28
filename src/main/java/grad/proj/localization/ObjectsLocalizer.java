@@ -21,7 +21,9 @@ public class ObjectsLocalizer {
 		Map<String, Rectangle> bounds = new HashMap<>();
 		
 		for(String classLabel : classifier.getClasses()){
-			bounds.put(classLabel, localizer.getObjectBounds(image, classifier, classLabel));
+			Rectangle objectBounds = localizer.getObjectBounds(image, classifier, classLabel);
+			if(objectBounds != null)
+				bounds.put(classLabel, objectBounds);
 		}
 		
 		return bounds;
