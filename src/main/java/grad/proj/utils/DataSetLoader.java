@@ -43,7 +43,14 @@ public class DataSetLoader {
 		if(!classImagesFolder.exists())
 			return new ArrayList<>();
 		
-		File imageFiles[] = classImagesFolder.listFiles();
+		File imageFiles[] = classImagesFolder.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				String lowerCase = name.toLowerCase();
+				return lowerCase.endsWith(".png") || lowerCase.endsWith(".jpg");
+			}
+		});
 		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
 			images.add(imageFile);
