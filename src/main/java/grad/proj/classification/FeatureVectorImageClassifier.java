@@ -14,22 +14,22 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 	private static final long serialVersionUID = 8364985649869770754L;
 	
 	private FeatureVectorGenerator featureVectorGenerator;
-	private FeatureVectorClassifier classifier;
+	private Classifier<FeatureVector> classifier;
 	
-	public FeatureVectorImageClassifier(FeatureVectorGenerator featureVectorGenerator, FeatureVectorClassifier classifier) {
+	public FeatureVectorImageClassifier(FeatureVectorGenerator featureVectorGenerator, Classifier<FeatureVector> classifier) {
 		this.featureVectorGenerator = featureVectorGenerator;
 		this.classifier = classifier;
 	}
 
 	@Override
 	public String classify(Image instance) {
-		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
+		FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(instance);
 		return classifier.classify(featureVector);
 	}
 
 	@Override
 	public double classify(Image instance, String classLabel) {
-		List<Double> featureVector = featureVectorGenerator.generateFeatureVector(instance);
+		FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(instance);
 		if(featureVector.size() != featureVectorGenerator.getFeatureVectorSize())
 			return Double.MAX_VALUE;
 		return classifier.classify(featureVector, classLabel);
@@ -37,7 +37,7 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 
 	@Override
 	public <CollectionImage extends Collection<? extends Image>> void train(Map<String, CollectionImage> trainingData)  {
-		Map<String, List<List<Double>>> trainingDataAsDouble = new HashMap<>();
+		Map<String, List<FeatureVector>> trainingDataAsDouble = new HashMap<>();
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 		
@@ -45,9 +45,9 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 			String className = clazzEntry.getKey();
 			CollectionImage clazz = clazzEntry.getValue();
 			
-			List<List<Double>> classTrainingData = new ArrayList<>();
+			List<FeatureVector> classTrainingData = new ArrayList<>();
 			for (Image image : clazz) {
-				List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
+				FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(image);
 				classTrainingData.add(featureVector);
 			}
 			
@@ -66,7 +66,7 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 		return featureVectorGenerator;
 	}
 
-	public FeatureVectorClassifier getClassifier() {
+	public Classifier<FeatureVector> getClassifier() {
 		return classifier;
 	}
 }

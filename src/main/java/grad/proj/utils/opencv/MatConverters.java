@@ -1,5 +1,7 @@
 package grad.proj.utils.opencv;
 
+import grad.proj.classification.ArrayFeatureVector;
+import grad.proj.classification.FeatureVector;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageImpl;
 
@@ -12,7 +14,7 @@ import org.opencv.core.Mat;
 
 public class MatConverters {
 
-	public static Mat ListDoubleToMat(List<Double> list) {
+	public static Mat FeatureVectorToMat(FeatureVector list) {
 		Mat res = new Mat(1, list.size(), CvType.CV_32F);
 		for(int i=0; i<list.size(); i++){
 			res.put(0, i, list.get(i));
@@ -20,10 +22,10 @@ public class MatConverters {
 		return res;
 	}
 	
-	public static List<Double> MatToListDouble(Mat mat) {
-		List<Double> res = new ArrayList<Double>();
+	public static FeatureVector MatToFeatureVector(Mat mat) {
+		FeatureVector res = new ArrayFeatureVector(mat.cols());
 		for(int i=0; i<mat.cols(); i++){
-			res.add(mat.get(0, i)[0]);
+			res.set(i, mat.get(0, i)[0]);
 		}
 		return res;
 	}

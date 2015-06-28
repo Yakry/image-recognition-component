@@ -1,5 +1,8 @@
 package grad.proj.utils;
 
+import grad.proj.classification.ArrayFeatureVector;
+import grad.proj.classification.FeatureVector;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,7 +17,7 @@ import java.util.Scanner;
 
 public class FeaturesFileLoader {
 	
-	public static void saveFeatures(Map<String, List<List<Double> > > data, File path){
+	public static void saveFeatures(Map<String, List<FeatureVector > > data, File path){
 		try {
 			FileWriter featuresFile = new FileWriter(path);
 			
@@ -22,10 +25,10 @@ public class FeaturesFileLoader {
 			
 			featuresFile.write(featureVectorSize + "\n");
 			
-			for (Entry<String, List<List<Double>>> clazz : data.entrySet()) {
+			for (Entry<String, List<FeatureVector>> clazz : data.entrySet()) {
 				String classLabel = clazz.getKey();
 				
-				for (List<Double> featureVector : clazz.getValue()) {
+				for (FeatureVector featureVector : clazz.getValue()) {
 	
 					featuresFile.write(classLabel + " ");
 					
@@ -44,21 +47,21 @@ public class FeaturesFileLoader {
 		}
 	}
 	
-	public static Map<String, List<List<Double>>> loadFeatures(String path){
+	public static Map<String, List<FeatureVector>> loadFeatures(String path){
 		try {
 			Scanner scanner = new Scanner(new FileInputStream(path));
 			int featureVectorSize = scanner.nextInt();
-			Map<String, List<List<Double>>> featureVectors = new HashMap<>();
-			List<Double> featureVector;
+			Map<String, List<FeatureVector>> featureVectors = new HashMap<>();
+			FeatureVector featureVector;
 			
 			while(scanner.hasNext()){
 				String classLabel = scanner.next();
-				featureVector = new ArrayList<Double>(featureVectorSize);
+				featureVector = new ArrayFeatureVector(featureVectorSize);
 				for(int j=0; j<featureVectorSize; ++j)
-					featureVector.add(scanner.nextDouble());
+					featureVector.set(j, scanner.nextDouble());
 				
 				
-				List<List<Double>> clazz = featureVectors.get(classLabel);
+				List<FeatureVector> clazz = featureVectors.get(classLabel);
 				if(clazz == null){
 					clazz = new ArrayList<>();
 					featureVectors.put(classLabel, clazz);

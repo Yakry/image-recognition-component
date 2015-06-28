@@ -30,14 +30,13 @@ public abstract class FeatureVectorGeneratorTest extends RequiresLoadingTestBase
 		
 		generator.prepareGenerator(trainingData);
 
-		List<Double> generatedTry1 = generator.generateFeatureVector(image);
-		List<Double> generatedTry2 = generator.generateFeatureVector(image);
+		FeatureVector generatedTry1 = generator.generateFeatureVector(image);
+		FeatureVector generatedTry2 = generator.generateFeatureVector(image);
 
 		assertEquals(generatedTry1.size(), generator.getFeatureVectorSize());
 		assertEquals(generatedTry2.size(), generator.getFeatureVectorSize());
 		
-		for(int i=0; i<generatedTry1.size(); i++)
-			assertEquals(generatedTry1.get(i), generatedTry2.get(i), 0.01);
+		assertEquals(generatedTry1, generatedTry2);
 	}
 	
 
@@ -53,15 +52,14 @@ public abstract class FeatureVectorGeneratorTest extends RequiresLoadingTestBase
 		
 		generator.prepareGenerator(trainingData);
 
-		List<Double> generated = generator.generateFeatureVector(image1);
+		FeatureVector generated = generator.generateFeatureVector(image1);
 		
-		List<Double> generatedFromDifferentImage = generator.generateFeatureVector(image2);
+		FeatureVector generatedFromDifferentImage = generator.generateFeatureVector(image2);
 		
 		assertEquals(generated.size(), generator.getFeatureVectorSize());
 		assertEquals(generatedFromDifferentImage.size(), generator.getFeatureVectorSize());
-		
-		for(int i=0; i<generated.size(); i++)
-			assertNotEquals(generated.get(i), generatedFromDifferentImage.get(i), 0.0);
+
+		assertNotEquals(generated, generatedFromDifferentImage);
 	}
 
 }

@@ -1,6 +1,7 @@
 package grad.proj.classification.impl;
 
-import grad.proj.classification.FeatureVectorClassifier;
+import grad.proj.classification.Classifier;
+import grad.proj.classification.FeatureVector;
 import grad.proj.classification.Normalizer;
 import grad.proj.utils.opencv.MatConverters;
 
@@ -28,7 +29,7 @@ import org.opencv.ml.SVM;
  * NotSerializableException when called
  */
 @SuppressWarnings("unused")
-public class SVMClassifier implements FeatureVectorClassifier {
+public class SVMClassifier implements Classifier<FeatureVector> {
 	private static final long serialVersionUID = 1L;
 	public Map<String, SVM> svmArray = null;
 	private Normalizer normalizer = null;
@@ -65,13 +66,13 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		this.normalizer = normalizer;
 	}
 
-	public String classify(List<Double> featureVector) {
+	public String classify(FeatureVector featureVector) {
 		String classLabel = null;
 		double bestDistance = Double.MIN_VALUE;
 		
 		featureVector = normalizer.normalize(featureVector);
 		
-		Mat featureVectorMat = MatConverters.ListDoubleToMat(featureVector);
+		Mat featureVectorMat = MatConverters.FeatureVectorToMat(featureVector);
 		
 		for(Entry<String, SVM> svmEntry : svmArray.entrySet()){
 			Mat predictRes = new Mat();
@@ -93,7 +94,7 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		return classLabel;
 	}
 	
-	public double classify(List<Double> featureVector, String classLabel){
+	public double classify(FeatureVector featureVector, String classLabel){
 		SVM svm = svmArray.getOrDefault(classLabel, null);
 
 		if(svm == null)
@@ -101,14 +102,14 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		
 		featureVector = normalizer.normalize(featureVector);
 		
-		Mat featureVectorMat = MatConverters.ListDoubleToMat(featureVector);
+		Mat featureVectorMat = MatConverters.FeatureVectorToMat(featureVector);
 		
 		Mat predictRes = new Mat();
 		svm.predict(featureVectorMat, predictRes, RAW_OUTPUT);
 		return predictRes.get(0, 0)[0];
 	}
 	
-	public <CollectionT extends Collection<? extends List<Double>>> void train(Map<String, CollectionT> trainingData) {
+	public <CollectionT extends Collection<? extends FeatureVector>> void train(Map<String, CollectionT> trainingData) {
 		if(trainingData.size() < 2)
 			throw new RuntimeException("number of classes below minimum " +
 					trainingData.size());
@@ -124,12 +125,12 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		Mat labels = new Mat(trainingDataRows, 1, CvType.CV_32FC1);
 		int curRow = 0;
 
-		Map<String, Collection<List<Double>>> normalizedTrainingData = normalizer.reset(trainingData, -1, 1);
+		Map<String, Collection<FeatureVector>> normalizedTrainingData = normalizer.reset(trainingData, -1, 1);
 		
 		int classIndex=0;
-		for(Entry<String, Collection<List<Double>>> classEntry : normalizedTrainingData.entrySet()){
-			Collection<List<Double>> classData = classEntry.getValue();
-			for(List<Double> featureVector : classData){
+		for(Entry<String, Collection<FeatureVector>> classEntry : normalizedTrainingData.entrySet()){
+			Collection<FeatureVector> classData = classEntry.getValue();
+			for(FeatureVector featureVector : classData){
 				for(int c=0; c<trainingDataCols; ++c)
 					trainingDataMat.put(curRow, c, featureVector.get(c));
 				labels.put(curRow++, 0, classIndex);
@@ -140,7 +141,7 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		svmArray = new HashMap<>();
 		
 		classIndex=0;
-		for(Entry<String, Collection<List<Double>>> classEntry : normalizedTrainingData.entrySet()){
+		for(Entry<String, Collection<FeatureVector>> classEntry : normalizedTrainingData.entrySet()){
 			svmArray.put(classEntry.getKey(), constructSVM(trainingDataMat, labels, classIndex));
 			classIndex++;
 		}

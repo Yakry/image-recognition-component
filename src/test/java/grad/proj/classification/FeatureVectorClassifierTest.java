@@ -21,32 +21,32 @@ import org.junit.Test;
 
 public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBaseClass {
 
-	public abstract FeatureVectorClassifier createClassifier();
+	public abstract Classifier<FeatureVector> createClassifier();
 	
 	@Test
 	public void testSimpleData() {
-		Map<String, List<List<Double>>> trainingData = new HashMap<>();
+		Map<String, List<FeatureVector>> trainingData = new HashMap<>();
 
-		List<List<Double>> class0 = new ArrayList<>();
-		class0.add(Arrays.asList(0.0, 0.0));
-		class0.add(Arrays.asList(0.5, 0.5));
-		class0.add(Arrays.asList(-0.5, -0.5));
+		List<FeatureVector> class0 = new ArrayList<>();
+		class0.add(new ArrayFeatureVector(0.0, 0.0));
+		class0.add(new ArrayFeatureVector(0.5, 0.5));
+		class0.add(new ArrayFeatureVector(-0.5, -0.5));
 
-		List<List<Double>> class1 = new ArrayList<>();
-		class1.add(Arrays.asList(-1.0, 0.5));
-		class1.add(Arrays.asList(-0.5, 1.0));
+		List<FeatureVector> class1 = new ArrayList<>();
+		class1.add(new ArrayFeatureVector(-1.0, 0.5));
+		class1.add(new ArrayFeatureVector(-0.5, 1.0));
 
 		trainingData.put("class0", class0);
 		trainingData.put("class1", class1);
 		
-		FeatureVectorClassifier classifier = createClassifier();
+		Classifier<FeatureVector> classifier = createClassifier();
 		classifier.train(trainingData);
 		
-		String class0Value1 = classifier.classify(Arrays.asList(0.0, 0.0));
+		String class0Value1 = classifier.classify(new ArrayFeatureVector(0.0, 0.0));
 		
-		String class0Value2 = classifier.classify(Arrays.asList(-0.25, -0.25));
+		String class0Value2 = classifier.classify(new ArrayFeatureVector(-0.25, -0.25));
 		
-		String class1Value1 = classifier.classify(Arrays.asList(-0.75, 0.75));
+		String class1Value1 = classifier.classify(new ArrayFeatureVector(-0.75, 0.75));
 		
 		assertEquals("class 0 vector 1 not recognized", "class0", class0Value1);
 		assertEquals("class 0 vector 2 not recognized", "class0", class0Value2);
@@ -71,20 +71,20 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 	
 	public void testOnDataSet(DataSet dataSet) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		Map<String, List<List<Double>>> trainingData = dataSetLoader.loadFeatures(Type.Train);
-		Map<String, List<List<Double>>> testingData = dataSetLoader.loadFeatures(Type.Test);
+		Map<String, List<FeatureVector>> trainingData = dataSetLoader.loadFeatures(Type.Train);
+		Map<String, List<FeatureVector>> testingData = dataSetLoader.loadFeatures(Type.Test);
 
 		SVMClassifier classifier = new SVMClassifier(new LinearNormalizer());
 		classifier.train(trainingData);
 		
 		double correctLabels = 0;
 		int totalVectors = 0;
-		for(Entry<String, List<List<Double>>> classEntry : testingData.entrySet()){
+		for(Entry<String, List<FeatureVector>> classEntry : testingData.entrySet()){
 			String classLabel = classEntry.getKey();
-			List<List<Double>> classVectors = classEntry.getValue();
+			List<FeatureVector> classVectors = classEntry.getValue();
 			
 			totalVectors += classVectors.size();
-			for(List<Double> testVector : classVectors){
+			for(FeatureVector testVector : classVectors){
 				String predictedLabel = classifier.classify(testVector);
 				
 				correctLabels += (classLabel.equals(predictedLabel)) ? 1 : 0;

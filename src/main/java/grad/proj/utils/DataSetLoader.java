@@ -1,6 +1,7 @@
 package grad.proj.utils;
 
 import grad.proj.classification.Classifier;
+import grad.proj.classification.FeatureVector;
 import grad.proj.classification.FeatureVectorGenerator;
 import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.classification.impl.LinearNormalizer;
@@ -72,7 +73,7 @@ public class DataSetLoader {
 		return data;
 	}
 	
-	public Map<String, List<List<Double>>> loadFeatures(Type type){
+	public Map<String, List<FeatureVector>> loadFeatures(Type type){
 		File featuresFolder = new File(datasetFolder, FEATURES_FOLDER_NAME);
 		return (!featuresFolder.exists()) ? null : FeaturesFileLoader.loadFeatures(new File(featuresFolder, type.toString() + ".txt").getAbsolutePath());
 	}
@@ -85,7 +86,7 @@ public class DataSetLoader {
 	public Classifier<Image> loadTrainedClassifier() {
 		
 		FeatureVectorGenerator featureVectorGenerator = loadSurfFeatureVectorGenerator();
-		Map<String, List<List<Double>>> features = loadFeatures(Type.Train);
+		Map<String, List<FeatureVector>> features = loadFeatures(Type.Train);
 		
 		if(featureVectorGenerator == null || features == null)
 			return null;
@@ -116,23 +117,23 @@ public class DataSetLoader {
 		if(generatorOnly)
 			return;
 		
-		Map<String, List<List<Double>>> trainingFeatures = generateFeatures(trainingData, featureVectorGenerator);
+		Map<String, List<FeatureVector>> trainingFeatures = generateFeatures(trainingData, featureVectorGenerator);
 		FeaturesFileLoader.saveFeatures(trainingFeatures, getFeaturesFile(Type.Train));
 		
 		Map<String, List<Image>> testingData = loadImages(Type.Test);;
-		Map<String, List<List<Double>>> testFeatures = generateFeatures(testingData, featureVectorGenerator);
+		Map<String, List<FeatureVector>> testFeatures = generateFeatures(testingData, featureVectorGenerator);
 		FeaturesFileLoader.saveFeatures(testFeatures, getFeaturesFile(Type.Test));
 	}
 	
-	private Map<String, List<List<Double>>> generateFeatures(Map<String, List<Image>> data, FeatureVectorGenerator featureVectorGenerator){
-		Map<String, List<List<Double>>> features = new HashMap<>();
+	private Map<String, List<FeatureVector>> generateFeatures(Map<String, List<Image>> data, FeatureVectorGenerator featureVectorGenerator){
+		Map<String, List<FeatureVector>> features = new HashMap<>();
 		
 		for (Entry<String, List<Image>> clazz : data.entrySet()) {
-			ArrayList<List<Double>> clazzFeatures = new ArrayList<List<Double>>();
+			ArrayList<FeatureVector> clazzFeatures = new ArrayList<FeatureVector>();
 			features.put(clazz.getKey(), clazzFeatures);
 			
 			for (Image image : clazz.getValue()) {
-				List<Double> featureVector = featureVectorGenerator.generateFeatureVector(image);
+				FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(image);
 				clazzFeatures.add(featureVector);
 			}
 		}

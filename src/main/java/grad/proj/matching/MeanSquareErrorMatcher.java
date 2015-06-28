@@ -1,5 +1,7 @@
 package grad.proj.matching;
 
+import grad.proj.classification.FeatureVector;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,12 +10,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
+public class MeanSquareErrorMatcher implements Matcher<FeatureVector> {
 
 	@Override
-	public <K extends List<Double>> List<K> match(List<Double> instance, Collection<K> instances, int topN)
+	public <K extends FeatureVector> List<K> match(FeatureVector instance, Collection<K> instances, int topN)
 	{
-		final List<Double> _instance = instance;
+		final FeatureVector _instance = instance;
 		
 		Comparator<K> acendingComparator = new Comparator<K>() {
 			@Override
@@ -59,7 +61,7 @@ public class MeanSquareErrorMatcher implements Matcher<List<Double>> {
 		return result;
 	}
 	
-	private double calculareMeanSquareError(List<Double> A, List<Double> B){
+	private double calculareMeanSquareError(FeatureVector A, FeatureVector B){
 		if(A.size() != B.size()){
 			throw new RuntimeException("The feature vectors size does not match");
 		}

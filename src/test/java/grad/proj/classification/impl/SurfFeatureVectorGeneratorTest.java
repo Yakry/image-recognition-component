@@ -2,6 +2,7 @@ package grad.proj.classification.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import grad.proj.classification.FeatureVector;
 import grad.proj.classification.FeatureVectorGenerator;
 import grad.proj.classification.FeatureVectorGeneratorTest;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
@@ -36,7 +37,7 @@ public class SurfFeatureVectorGeneratorTest extends FeatureVectorGeneratorTest {
 
 		generator.prepareGenerator(trainingData);
 		
-		List<Double> featureVector = generator.generateFeatureVector(image);
+		FeatureVector featureVector = generator.generateFeatureVector(image);
 		
 		assertEquals("feature vector for clear images by surf should be 0", 0, featureVector.size());
 	}
