@@ -3,7 +3,7 @@ package grad.proj.utils.opencv;
 import grad.proj.classification.ArrayFeatureVector;
 import grad.proj.classification.FeatureVector;
 import grad.proj.utils.imaging.Image;
-import grad.proj.utils.imaging.ImageImpl;
+import grad.proj.utils.imaging.ArrayImage;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class MatConverters {
 	}
 
 	public static Image MatToImage(Mat mat){
-		Image image = new ImageImpl(mat.rows(), mat.cols());
+		Image image = new ArrayImage(mat.rows(), mat.cols());
 		for(int r = 0; r < mat.rows() ; ++r){
 			for(int c = 0; c < mat.cols() ; ++c){
 				Color color = new Color((int)mat.get(r, c)[0],

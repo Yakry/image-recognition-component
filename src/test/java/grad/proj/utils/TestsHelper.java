@@ -1,7 +1,7 @@
 package grad.proj.utils;
 
 import grad.proj.utils.imaging.Image;
-import grad.proj.utils.imaging.ImageImpl;
+import grad.proj.utils.imaging.ArrayImage;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -61,7 +61,7 @@ public class TestsHelper {
 
 	public static Image createTestImage(int width, int height, long color) {
 		Random random = new Random();
-		Image originalImage = new ImageImpl(width, height);
+		Image originalImage = new ArrayImage(width, height);
 		for(int row=0; row<originalImage.getHeight(); row++){
 			for(int col=0; col<originalImage.getWidth(); col++){
 				originalImage.setPixelAt(row, col, (color == Long.MAX_VALUE) ? random.nextInt() : (int)color);

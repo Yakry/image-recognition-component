@@ -1,14 +1,14 @@
 package grad.proj.utils.imaging;
 
 
-public class ImageImpl implements Image {
+public class ArrayImage implements Image {
 	int[][] imageArr;
 
-	public ImageImpl(int rows, int cols){
+	public ArrayImage(int rows, int cols){
 		imageArr = new int[rows][cols];
 	}
 
-	public ImageImpl(int[][] imageArr) {
+	public ArrayImage(int[][] imageArr) {
 		this.imageArr = imageArr;
 	}
 

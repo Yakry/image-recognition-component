@@ -38,7 +38,7 @@ public class ImageLoader {
 				}
 			}
 	
-			return new ImageImpl(pixels);
+			return new ArrayImage(pixels);
 			
 		} catch (IOException e) {
 			throw new RuntimeException(e);
