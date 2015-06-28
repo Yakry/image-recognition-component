@@ -36,13 +36,11 @@ the datasets should be stored in the project root folder in the following hierar
   				train/
   					apple
   					bikes
-  					.
-  					.
   				test/
   					apple
   					bikes
-  					.
-  					.
+          localization/
+            apple
   					combined
   			features/
   				train.txt
@@ -56,7 +54,8 @@ the datasets should be stored in the project root folder in the following hierar
   any images folder is ignored from the source control
   to avoid bloating the repo with binary files
   
-  the "combined" folder belong to test images that belong to more than one category 
+  the "combined" folder is a special class that is not loaded by default unless explicitly requested
+  it is used in localization tests where more than one object exists in the image
  
 
 [OpenCV 3.0]:http://opencv.org/downloads.html
