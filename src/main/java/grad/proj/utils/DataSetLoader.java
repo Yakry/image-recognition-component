@@ -8,13 +8,20 @@ import grad.proj.classification.impl.LinearNormalizer;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
+import grad.proj.utils.imaging.ImageLoader;
 
+import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
 public class DataSetLoader {
@@ -23,6 +30,11 @@ public class DataSetLoader {
 		Test,
 		Localization
 	}
+	
+	private static final FilenameFilter IMAGE_FILTER = (FilenameFilter) (dir, name) -> {
+		String lowerCase = name.toLowerCase();
+		return lowerCase.endsWith(".png") || lowerCase.endsWith(".jpg");
+	};
 	
 	private static final String IMAGES_FOLDER_NAME = "images";
 	private static final String FEATURES_FOLDER_NAME = "features";
@@ -37,20 +49,88 @@ public class DataSetLoader {
 		this.datasetFolder = datasetFolder;
 	}
 	
+	class LocalizationImageList extends AbstractList<SimpleEntry<Image, Map<String, Rectangle>>>{
+		private List<File> files;
+		
+		public LocalizationImageList(List<File> files) {
+			this.files = files;
+		}
+
+		@Override
+		public SimpleEntry<Image, Map<String, Rectangle>> get(int index) {
+			String imagePath = files.get(index).getAbsolutePath();
+			String pPath = imagePath.substring(0, imagePath.lastIndexOf('.')) + ".txt"; 
+			Image image = ImageLoader.loadImage(imagePath);
+			Properties p = new Properties();
+			InputStream in;
+			Map<String, Rectangle> bounds = new HashMap<>();
+			try {
+				in = new FileInputStream(pPath);
+				p.load(in);
+				for(String key : p.stringPropertyNames()){
+					String[] splitBounds = p.getProperty(key).split(",");
+					bounds.put(key, new Rectangle(Integer.valueOf(splitBounds[0]),
+												  Integer.valueOf(splitBounds[1]),
+												  Integer.valueOf(splitBounds[2]),
+												  Integer.valueOf(splitBounds[3])));
+				}
+				in.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new SimpleEntry<Image, Map<String,Rectangle>>(image, bounds);
+		}
+
+		@Override
+		public int size() {
+			return files.size();
+		}
+	}
+
+	public List<SimpleEntry<Image, Map<String, Rectangle>>> loadClassImagesLocalization(String className){
+		File classImagesFolder = getImagesClassFolder(Type.Localization, className);
+		
+		if(!classImagesFolder.exists())
+			return new ArrayList<>();
+		
+		File imageFiles[] = classImagesFolder.listFiles(IMAGE_FILTER);
+		List<File> images = new ArrayList<File>();
+		for(File imageFile : imageFiles){
+			images.add(imageFile);
+		}
+		
+		return new LocalizationImageList(images);
+	}
+	
+	public Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> loadImages(String ...classes){
+		Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> data = new HashMap<>();
+	
+		File imagesMainFolder = getImagesFolder(Type.Localization);
+		
+		if(classes.length == 0){
+			classes = imagesMainFolder.list(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					return (!name.equals(COMBINED_CLASS)) && (new File(dir, name).isDirectory());
+				}
+			});
+		}
+		
+		for(String className : classes){
+			data.put(className, loadClassImagesLocalization(className));
+		}
+		
+		return data;
+	}
+	
 	public List<Image> loadClassImages(Type type, String className){
 		File classImagesFolder = getImagesClassFolder(type, className);
 		
 		if(!classImagesFolder.exists())
 			return new ArrayList<>();
 		
-		File imageFiles[] = classImagesFolder.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String name) {
-				String lowerCase = name.toLowerCase();
-				return lowerCase.endsWith(".png") || lowerCase.endsWith(".jpg");
-			}
-		});
+		
+		File imageFiles[] = classImagesFolder.listFiles(IMAGE_FILTER);
 		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
 			images.add(imageFile);
