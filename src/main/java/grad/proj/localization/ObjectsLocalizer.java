@@ -4,15 +4,15 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.Classifier;
 import grad.proj.utils.imaging.Image;
 
 public class ObjectsLocalizer {
 	private ObjectLocalizer localizer;
-	private ImageClassifier classifier;
+	private Classifier<Image> classifier;
 	
 	public ObjectsLocalizer(ObjectLocalizer localizer,
-			ImageClassifier classifier) {
+			Classifier<Image> classifier) {
 		this.localizer = localizer;
 		this.classifier = classifier;
 	}

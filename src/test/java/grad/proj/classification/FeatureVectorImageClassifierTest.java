@@ -1,6 +1,5 @@
 package grad.proj.classification;
 
-import grad.proj.classification.ImageClassifier;
 import grad.proj.classification.impl.LinearNormalizer;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
@@ -20,7 +19,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
+public class FeatureVectorImageClassifierTest extends RequiresLoadingTestBaseClass {
 
 	@Ignore
 	@Test
@@ -43,7 +42,7 @@ public class ImageClassifierTest extends RequiresLoadingTestBaseClass {
 	
 	public void testClassifyingAccuracyDataset(DataSet dataSet, Type testImagesType, String... classes){
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
+		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
 		Map<String, List<Image>> testingData = dataSetLoader.loadImages(testImagesType, classes);
 		

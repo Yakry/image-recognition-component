@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class ImageClassifier implements Classifier<Image> {
+public class FeatureVectorImageClassifier implements Classifier<Image> {
 	private static final long serialVersionUID = 8364985649869770754L;
 	
 	private FeatureVectorGenerator featureVectorGenerator;
 	private FeatureVectorClassifier classifier;
 	
-	public ImageClassifier(FeatureVectorGenerator featureVectorGenerator, FeatureVectorClassifier classifier) {
+	public FeatureVectorImageClassifier(FeatureVectorGenerator featureVectorGenerator, FeatureVectorClassifier classifier) {
 		this.featureVectorGenerator = featureVectorGenerator;
 		this.classifier = classifier;
 	}

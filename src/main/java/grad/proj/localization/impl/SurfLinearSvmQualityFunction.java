@@ -3,7 +3,8 @@ package grad.proj.localization.impl;
 import java.awt.Rectangle;
 import java.util.AbstractMap.SimpleEntry;
 
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.Classifier;
+import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
@@ -13,15 +14,21 @@ import org.opencv.core.Mat;
 public class SurfLinearSvmQualityFunction implements QualityFunction {
 	
 	@Override
-	public Object preprocess(Image image, ImageClassifier classifier, String classLabel) {
-	
-		if(!(classifier.getFeatureVectorGenerator() instanceof SurfFeatureVectorGenerator) || 
-			!(classifier.getClassifier() instanceof SVMClassifier) ){
+	public Object preprocess(Image image, Classifier<Image> classifier, String classLabel) {
+		
+		if(!(classifier instanceof FeatureVectorImageClassifier)){
+			throw new RuntimeException("SurfLinearSvmQualityFunction works only with FeatureVectorBasedImageClassifier");
+		}
+		
+		FeatureVectorImageClassifier imageClassifier = (FeatureVectorImageClassifier) classifier;
+		
+		if(!(imageClassifier.getFeatureVectorGenerator() instanceof SurfFeatureVectorGenerator) || 
+			!(imageClassifier.getClassifier() instanceof SVMClassifier) ){
 			throw new RuntimeException("SurfLinearSvmQualityFunction works only with Surf generator and Svm Classifier");
 		}
 
-		SurfFeatureVectorGenerator generator = (SurfFeatureVectorGenerator) classifier.getFeatureVectorGenerator();
-		SVMClassifier svmClassifier = (SVMClassifier) classifier.getClassifier();
+		SurfFeatureVectorGenerator generator = (SurfFeatureVectorGenerator) imageClassifier.getFeatureVectorGenerator();
+		SVMClassifier svmClassifier = (SVMClassifier) imageClassifier.getClassifier();
 		
 		Mat supportVector = svmClassifier.getSupportVector(classLabel);
 		Mat imageKeypoints = generator.generateFeatureVector(image, true).getValue();
@@ -31,7 +38,7 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 	
 	@Override
 	public double evaluate(SearchState state, Image image,
-						   ImageClassifier classifier, String classLabel,
+						   Classifier<Image> classifier, String classLabel,
 						   Object preprocessedInfo) {
 		
 		SimpleEntry<Mat, Mat> preprocessedInfoEntry = (SimpleEntry<Mat, Mat>) preprocessedInfo;

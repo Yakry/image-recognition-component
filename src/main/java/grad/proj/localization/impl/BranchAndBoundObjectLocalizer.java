@@ -1,6 +1,7 @@
 package grad.proj.localization.impl;
 
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.Classifier;
+import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.localization.ObjectLocalizer;
 import grad.proj.utils.imaging.Image;
 
@@ -16,7 +17,7 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 	}
 
 	@Override
-	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
+	public Rectangle getObjectBounds(Image image, Classifier<Image> classifier, String classLabel) {
 		int counter = qualityFunction.getMaxIterations();
 		
 		Object preprocessedInfo = qualityFunction.preprocess(image, classifier, classLabel);

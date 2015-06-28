@@ -1,7 +1,8 @@
 package grad.proj.utils;
 
+import grad.proj.classification.Classifier;
 import grad.proj.classification.FeatureVectorGenerator;
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.classification.impl.LinearNormalizer;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
@@ -81,7 +82,7 @@ public class DataSetLoader {
 		return (!generatorFolder.exists()) ? null : SurfLoader.loadSurf(generatorFolder);
 	}
 	
-	public ImageClassifier loadTrainedClassifier() {
+	public Classifier<Image> loadTrainedClassifier() {
 		
 		FeatureVectorGenerator featureVectorGenerator = loadSurfFeatureVectorGenerator();
 		Map<String, List<List<Double>>> features = loadFeatures(Type.Train);
@@ -92,7 +93,7 @@ public class DataSetLoader {
 		SVMClassifier svmClassifier = new SVMClassifier(new LinearNormalizer());
 		svmClassifier.train(features);
 		
-		return new ImageClassifier(featureVectorGenerator, svmClassifier);
+		return new FeatureVectorImageClassifier(featureVectorGenerator, svmClassifier);
 	}
 	
 	public void generateAndSave(){

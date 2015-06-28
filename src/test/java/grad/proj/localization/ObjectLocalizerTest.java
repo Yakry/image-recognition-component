@@ -1,6 +1,6 @@
 package grad.proj.localization;
 
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.Classifier;
 import grad.proj.localization.impl.BranchAndBoundObjectLocalizer;
 import grad.proj.localization.impl.SurfLinearSvmQualityFunction;
 import grad.proj.utils.DataSetLoader;
@@ -48,7 +48,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	public void testCombined(DataSet dataSet) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
+		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
 		List<Image> testingData = dataSetLoader.loadClassImages(Type.Localization, DataSetLoader.COMBINED_CLASS);
 		
@@ -65,7 +65,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	public void testOnClasses(DataSet dataSet, String ...testClasses) {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
-		ImageClassifier classifier = dataSetLoader.loadTrainedClassifier();
+		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
 		Map<String, List<Image>> testingData = dataSetLoader.loadImages(Type.Localization, testClasses);
 		
@@ -82,7 +82,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		}
 	}
 
-	private void testImage(ObjectLocalizer localizer, ImageClassifier classifier,
+	private void testImage(ObjectLocalizer localizer, Classifier<Image> classifier,
 						   String testClass, Image sampleTestImage,
 						   String savedImageName) {
 

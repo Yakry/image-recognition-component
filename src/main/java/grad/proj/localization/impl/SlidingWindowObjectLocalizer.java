@@ -1,6 +1,7 @@
 package grad.proj.localization.impl;
 
-import grad.proj.classification.ImageClassifier;
+import grad.proj.classification.Classifier;
+import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.localization.ObjectLocalizer;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.SubImage;
@@ -21,7 +22,7 @@ public class SlidingWindowObjectLocalizer implements ObjectLocalizer {
 	private static final int WINDOW_STEP = 10;
 
 	@Override
-	public Rectangle getObjectBounds(Image image, ImageClassifier classifier, String classLabel) {
+	public Rectangle getObjectBounds(Image image, Classifier<Image> classifier, String classLabel) {
 		Rectangle globalBestBounds = new Rectangle();
 		double globalBestScore = Double.MAX_VALUE;
 		for(int imageDim = MIN_IMAGE_DIM; imageDim <= MAX_IMAGE_DIM; imageDim += IMAGE_DIM_STEP){
