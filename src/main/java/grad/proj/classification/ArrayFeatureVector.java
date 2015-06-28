@@ -6,7 +6,9 @@ import java.util.List;
 
 public class ArrayFeatureVector implements FeatureVector{
 
-	 private List<Double> elements;
+	private static final long serialVersionUID = 4085576664769318781L;
+	
+	private List<Double> elements;
 	 
 	 public ArrayFeatureVector(int size) {
 		 elements = Arrays.asList(new Double[size]);
