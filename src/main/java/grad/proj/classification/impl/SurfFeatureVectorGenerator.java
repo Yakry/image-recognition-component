@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -57,9 +58,9 @@ public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	}
 	
 	@Override
-	public void prepareGenerator(Map<String, List<Image>> trainingSet){
+	public <CollectionImage extends Collection<? extends Image>> void prepareGenerator(Map<String, CollectionImage> trainingSet){
 		
-		for(Entry<String, List<Image>> clazz : trainingSet.entrySet()){
+		for(Entry<String, CollectionImage> clazz : trainingSet.entrySet()){
 			for(Image image : clazz.getValue()){
 				Mat imageMat = generateMatFromImage(image);
 				Mat surfDescriptors = generateSurfDescriptors(imageMat);

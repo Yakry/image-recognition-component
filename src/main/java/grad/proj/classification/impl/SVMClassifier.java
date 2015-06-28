@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,15 +108,15 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		return predictRes.get(0, 0)[0];
 	}
 	
-	public void train(Map<String, List<List<Double>>> trainingData) {
+	public <CollectionT extends Collection<? extends List<Double>>> void train(Map<String, CollectionT> trainingData) {
 		if(trainingData.size() < 2)
 			throw new RuntimeException("number of classes below minimum " +
 					trainingData.size());
 		
 		int trainingDataRows = 0;
-		int trainingDataCols = trainingData.entrySet().iterator().next().getValue().get(0).size();
+		int trainingDataCols = trainingData.entrySet().iterator().next().getValue().iterator().next().size();
 		
-		for(Entry<String, List<List<Double>>> classData : trainingData.entrySet())
+		for(Entry<String, CollectionT> classData : trainingData.entrySet())
 			trainingDataRows += classData.getValue().size();
 		
 		Mat trainingDataMat = new Mat(trainingDataRows,
@@ -123,14 +124,14 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		Mat labels = new Mat(trainingDataRows, 1, CvType.CV_32FC1);
 		int curRow = 0;
 
-		trainingData = normalizer.reset(trainingData, -1, 1);
+		Map<String, Collection<List<Double>>> normalizedTrainingData = normalizer.reset(trainingData, -1, 1);
 		
 		int classIndex=0;
-		for(Entry<String, List<List<Double>>> classEntry : trainingData.entrySet()){
-			List<List<Double>> classData = classEntry.getValue();
-			for(int r=0; r<classData.size(); ++r){
+		for(Entry<String, Collection<List<Double>>> classEntry : normalizedTrainingData.entrySet()){
+			Collection<List<Double>> classData = classEntry.getValue();
+			for(List<Double> featureVector : classData){
 				for(int c=0; c<trainingDataCols; ++c)
-					trainingDataMat.put(curRow, c, classData.get(r).get(c));
+					trainingDataMat.put(curRow, c, featureVector.get(c));
 				labels.put(curRow++, 0, classIndex);
 			}
 			
@@ -139,7 +140,7 @@ public class SVMClassifier implements FeatureVectorClassifier {
 		svmArray = new HashMap<>();
 		
 		classIndex=0;
-		for(Entry<String, List<List<Double>>> classEntry : trainingData.entrySet()){
+		for(Entry<String, Collection<List<Double>>> classEntry : normalizedTrainingData.entrySet()){
 			svmArray.put(classEntry.getKey(), constructSVM(trainingDataMat, labels, classIndex));
 			classIndex++;
 		}
@@ -192,4 +193,5 @@ public class SVMClassifier implements FeatureVectorClassifier {
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
 		throw new NotSerializableException("This class can't be deserialized because it uses opencv SVM implementation which is just a pointer to the native obj");
 	}
+
 }

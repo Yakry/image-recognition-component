@@ -3,6 +3,7 @@ package grad.proj.classification;
 import grad.proj.utils.imaging.Image;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +36,14 @@ public class ImageClassifier implements Classifier<Image> {
 	}
 
 	@Override
-	public void train(Map<String, List<Image>> trainingData) {
+	public <CollectionImage extends Collection<? extends Image>> void train(Map<String, CollectionImage> trainingData)  {
 		Map<String, List<List<Double>>> trainingDataAsDouble = new HashMap<>();
 		
 		featureVectorGenerator.prepareGenerator(trainingData);
 		
-		for (Entry<String, List<Image>> clazzEntry : trainingData.entrySet()) {
+		for (Entry<String, CollectionImage> clazzEntry : trainingData.entrySet()) {
 			String className = clazzEntry.getKey();
-			List<Image> clazz = clazzEntry.getValue();
+			CollectionImage clazz = clazzEntry.getValue();
 			
 			List<List<Double>> classTrainingData = new ArrayList<>();
 			for (Image image : clazz) {
