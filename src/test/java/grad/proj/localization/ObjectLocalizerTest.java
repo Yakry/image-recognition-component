@@ -24,6 +24,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	public abstract ObjectLocalizer createLocalizer();
 
+	@Ignore
 	@Test
 	public void testOnCaltech(){
 		testOnClasses(DataSet.calteckUniversity);
@@ -88,7 +89,8 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 
 		System.out.println("starting search " + savedImageName + " test class: " + testClass);
 		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
-		TestsHelper.drawRectangle(objectBounds, sampleTestImage);
+		if(objectBounds != null)
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage);
 		
 		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), testClass);
 		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
