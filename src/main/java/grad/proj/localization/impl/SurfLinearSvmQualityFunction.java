@@ -41,6 +41,7 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 						   Classifier<Image> classifier, String classLabel,
 						   Object preprocessedInfo) {
 		
+		@SuppressWarnings("unchecked")
 		SimpleEntry<Mat, Mat> preprocessedInfoEntry = (SimpleEntry<Mat, Mat>) preprocessedInfo;
 
 		Mat supportVector = preprocessedInfoEntry.getKey();

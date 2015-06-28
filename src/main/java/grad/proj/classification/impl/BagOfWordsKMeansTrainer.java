@@ -1,6 +1,5 @@
 package grad.proj.classification.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.opencv.core.Core;

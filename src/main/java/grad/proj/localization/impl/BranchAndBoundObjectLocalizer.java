@@ -1,7 +1,6 @@
 package grad.proj.localization.impl;
 
 import grad.proj.classification.Classifier;
-import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.localization.ObjectLocalizer;
 import grad.proj.utils.imaging.Image;
 

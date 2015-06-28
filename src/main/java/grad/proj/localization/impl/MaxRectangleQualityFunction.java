@@ -3,7 +3,6 @@ package grad.proj.localization.impl;
 import java.awt.Rectangle;
 
 import grad.proj.classification.Classifier;
-import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.SubImage;
 

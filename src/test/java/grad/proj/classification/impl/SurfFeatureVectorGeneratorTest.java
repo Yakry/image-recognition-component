@@ -1,18 +1,14 @@
 package grad.proj.classification.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import grad.proj.classification.FeatureVector;
 import grad.proj.classification.FeatureVectorGenerator;
 import grad.proj.classification.FeatureVectorGeneratorTest;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.imaging.Image;
-import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
-
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

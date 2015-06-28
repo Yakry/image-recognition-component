@@ -1,9 +1,6 @@
 package grad.proj.classification.impl;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
@@ -26,7 +22,6 @@ import grad.proj.classification.FeatureVector;
 import grad.proj.classification.FeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.opencv.MatConverters;
-import grad.proj.utils.opencv.MatListOfListAdapter;
 
 public class SurfFeatureVectorGenerator implements FeatureVectorGenerator {
 	

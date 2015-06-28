@@ -6,9 +6,6 @@ import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ArrayImage;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 

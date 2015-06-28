@@ -1,8 +1,5 @@
 package grad.proj.classification;
 
-import grad.proj.classification.impl.LinearNormalizer;
-import grad.proj.classification.impl.SVMClassifier;
-import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.TestsHelper.DataSet;

@@ -1,8 +1,6 @@
 package grad.proj.localization;
 
 import grad.proj.classification.Classifier;
-import grad.proj.localization.impl.BranchAndBoundObjectLocalizer;
-import grad.proj.localization.impl.SurfLinearSvmQualityFunction;
 import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.TestsHelper;
 import grad.proj.utils.DataSetLoader.Type;

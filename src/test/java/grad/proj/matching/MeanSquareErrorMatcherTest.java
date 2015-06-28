@@ -8,7 +8,6 @@ import grad.proj.classification.ArrayFeatureVector;
 import grad.proj.classification.FeatureVector;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MeanSquareErrorMatcherTest {

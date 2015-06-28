@@ -11,7 +11,6 @@ import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
