@@ -33,7 +33,7 @@ public class FeatureVectorImageClassifierTest extends RequiresLoadingTestBaseCla
 	
 	@Test
 	public void testClassifiyOnMohsenDataSet(){
-		testClassifyingAccuracyDataset(DataSet.mohsen, Type.Test);
+		testClassifyingAccuracyDataset(DataSet.mohsen2, Type.Test);
 	}
 	
 	

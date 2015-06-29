@@ -46,15 +46,15 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
 	public void testOnMohsen(){
-		newResults(DataSet.mohsen);
-		testOnClasses(DataSet.mohsen);
+		newResults(DataSet.mohsen2);
+		testOnClasses(DataSet.mohsen2);
 	}
 
 	@Ignore
 	@Test
 	public void testOnMohsenCombined(){
-		newResults(DataSet.mohsen);
-		testCombined(DataSet.mohsen);
+		newResults(DataSet.mohsen2);
+		testCombined(DataSet.mohsen2);
 	}
 	
 	public void testCombined(DataSet dataSet) {
@@ -99,7 +99,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	private void newResults(DataSet dataset){
 		try {
-			File f = new File(TestsHelper.getTestResultsFolder(getClass(), ""), DataSet.mohsen.toString() + ".csv");
+			File f = new File(TestsHelper.getTestResultsFolder(getClass(), ""), DataSet.mohsen2.toString() + ".csv");
 			
 			if(currentResultsPrinter != null)
 				currentResultsPrinter.close();

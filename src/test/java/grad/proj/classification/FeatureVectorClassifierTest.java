@@ -65,7 +65,7 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 	
 	@Test
 	public void testOnMohsenDataSet(){
-		testOnDataSet(DataSet.mohsen);
+		testOnDataSet(DataSet.mohsen2);
 	}
 	
 	public void testOnDataSet(DataSet dataSet) {

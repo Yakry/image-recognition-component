@@ -14,7 +14,7 @@ public class TestsHelper {
 	
 	public enum DataSet{
 		calteckUniversity,
-		mohsen,
+		mohsen2,
 		satimage,
 		svmguide4,
 		vowel
