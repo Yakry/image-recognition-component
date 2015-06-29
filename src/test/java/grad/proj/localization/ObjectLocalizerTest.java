@@ -45,14 +45,27 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	}
 
 	@Test
-	public void testOnMohsen(){
+	public void testOnMohsen1(){
+		newResults(DataSet.mohsen1);
+		testOnClasses(DataSet.mohsen1);
+	}
+
+	@Ignore
+	@Test
+	public void testOnMohsen1Combined(){
+		newResults(DataSet.mohsen1);
+		testCombined(DataSet.mohsen1);
+	}
+
+	@Test
+	public void testOnMohsen2(){
 		newResults(DataSet.mohsen2);
 		testOnClasses(DataSet.mohsen2);
 	}
 
 	@Ignore
 	@Test
-	public void testOnMohsenCombined(){
+	public void testOnMohsen2Combined(){
 		newResults(DataSet.mohsen2);
 		testCombined(DataSet.mohsen2);
 	}
