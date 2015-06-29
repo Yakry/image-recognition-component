@@ -93,7 +93,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
 		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
-		Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> testingData = dataSetLoader.loadImages(testClasses);
+		Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> testingData = dataSetLoader.loadImagesLocalization(testClasses);
 		
 		ObjectLocalizer localizer = createLocalizer();
 		

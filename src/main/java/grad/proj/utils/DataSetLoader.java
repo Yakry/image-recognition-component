@@ -8,19 +8,14 @@ import grad.proj.classification.impl.LinearNormalizer;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
-import grad.proj.utils.imaging.ImageLoader;
 
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.io.InputStream;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 
@@ -31,11 +26,6 @@ public class DataSetLoader {
 		Localization
 	}
 	
-	private static final FilenameFilter IMAGE_FILTER = (FilenameFilter) (dir, name) -> {
-		String lowerCase = name.toLowerCase();
-		return lowerCase.endsWith(".png") || lowerCase.endsWith(".jpg");
-	};
-	
 	private static final String IMAGES_FOLDER_NAME = "images";
 	private static final String FEATURES_FOLDER_NAME = "features";
 	private static final String FEATURE_VECTOR_GENERATOR_FOLDER = "featureVectorGenerators";
@@ -43,118 +33,66 @@ public class DataSetLoader {
 	// special class that holds test images that has more than one image, used with object localizer tests
 	public static final String COMBINED_CLASS = "combined";
 	
+	private static final FilenameFilter IMAGE_FILTER = (dir, name) -> name.toLowerCase().endsWith(".png") || name.toLowerCase().endsWith(".jpg");
+	
+	private static final FilenameFilter CLASSES_FOLDER_NAME_FILTER = (dir, name) -> (!name.equals(COMBINED_CLASS)) && (new File(dir, name).isDirectory());
+	
+	private interface CreateListFunction<T>{
+		List<T> createList(List<File> files);
+	}
+
+	private static final CreateListFunction<SimpleEntry<Image, Map<String, Rectangle>>> LOCALIZED_IMAGE_LIST_CREATOR = files -> new LocalizationFilesImageList(files);
+	private static final CreateListFunction<Image> IMAGE_LIST_CREATOR = files -> new FilesImageList(files);
+	
+	
 	private File datasetFolder;
 	
 	public DataSetLoader(File datasetFolder) {
 		this.datasetFolder = datasetFolder;
 	}
 	
-	class LocalizationImageList extends AbstractList<SimpleEntry<Image, Map<String, Rectangle>>>{
-		private List<File> files;
-		
-		public LocalizationImageList(List<File> files) {
-			this.files = files;
-		}
-
-		@Override
-		public SimpleEntry<Image, Map<String, Rectangle>> get(int index) {
-			String imagePath = files.get(index).getAbsolutePath();
-			String pPath = imagePath.substring(0, imagePath.lastIndexOf('.')) + ".txt"; 
-			Image image = ImageLoader.loadImage(imagePath);
-			Properties p = new Properties();
-			InputStream in;
-			Map<String, Rectangle> bounds = new HashMap<>();
-			try {
-				in = new FileInputStream(pPath);
-				p.load(in);
-				for(String key : p.stringPropertyNames()){
-					String[] splitBounds = p.getProperty(key).split(",");
-					bounds.put(key, new Rectangle(Integer.valueOf(splitBounds[0]),
-												  Integer.valueOf(splitBounds[1]),
-												  Integer.valueOf(splitBounds[2]),
-												  Integer.valueOf(splitBounds[3])));
-				}
-				in.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return new SimpleEntry<Image, Map<String,Rectangle>>(image, bounds);
-		}
-
-		@Override
-		public int size() {
-			return files.size();
-		}
-	}
-
-	public List<SimpleEntry<Image, Map<String, Rectangle>>> loadClassImagesLocalization(String className){
-		File classImagesFolder = getImagesClassFolder(Type.Localization, className);
-		
-		if(!classImagesFolder.exists())
-			return new ArrayList<>();
-		
-		File imageFiles[] = classImagesFolder.listFiles(IMAGE_FILTER);
-		List<File> images = new ArrayList<File>();
-		for(File imageFile : imageFiles){
-			images.add(imageFile);
-		}
-		
-		return new LocalizationImageList(images);
-	}
-	
-	public Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> loadImages(String ...classes){
-		Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> data = new HashMap<>();
-	
-		File imagesMainFolder = getImagesFolder(Type.Localization);
-		
-		if(classes.length == 0){
-			classes = imagesMainFolder.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return (!name.equals(COMBINED_CLASS)) && (new File(dir, name).isDirectory());
-				}
-			});
-		}
-		
-		for(String className : classes){
-			data.put(className, loadClassImagesLocalization(className));
-		}
-		
-		return data;
-	}
-	
 	public List<Image> loadClassImages(Type type, String className){
+		return loadClassImagesInListT(IMAGE_LIST_CREATOR, type, className);
+	}
+
+	public Map<String, List<Image>> loadImages(Type type, String ...classes){
+		return loadImagesInListT(IMAGE_LIST_CREATOR, type, classes);
+	}
+	
+	public List<SimpleEntry<Image, Map<String, Rectangle>>> loadClassImagesLocalization(String className){
+		return loadClassImagesInListT(LOCALIZED_IMAGE_LIST_CREATOR, Type.Localization, className);
+	}
+	
+	public Map<String, List<SimpleEntry<Image, Map<String, Rectangle>>>> loadImagesLocalization(String[] classes){
+		return  loadImagesInListT(LOCALIZED_IMAGE_LIST_CREATOR, Type.Localization, classes);
+	}
+
+	private <T> List<T> loadClassImagesInListT(CreateListFunction<T> function, Type type, String className){
 		File classImagesFolder = getImagesClassFolder(type, className);
 		
 		if(!classImagesFolder.exists())
 			return new ArrayList<>();
 		
-		
 		File imageFiles[] = classImagesFolder.listFiles(IMAGE_FILTER);
 		List<File> images = new ArrayList<File>();
 		for(File imageFile : imageFiles){
 			images.add(imageFile);
 		}
 		
-		return new FilesImageList(images);
+		return function.createList(images);
 	}
 	
-	public Map<String, List<Image>> loadImages(Type type, String ...classes){
-		Map<String, List<Image>> data = new HashMap<>();
+	private <T> Map<String, List<T>> loadImagesInListT(CreateListFunction<T> function, Type type, String ...classes){
+		Map<String, List<T>> data = new HashMap<>();
 	
 		File imagesMainFolder = getImagesFolder(type);
 		
 		if(classes.length == 0){
-			classes = imagesMainFolder.list(new FilenameFilter() {
-				@Override
-				public boolean accept(File dir, String name) {
-					return (!name.equals(COMBINED_CLASS)) && (new File(dir, name).isDirectory());
-				}
-			});
+			classes = imagesMainFolder.list(CLASSES_FOLDER_NAME_FILTER);
 		}
 		
 		for(String className : classes){
-			data.put(className, loadClassImages(type, className));
+			data.put(className, loadClassImagesInListT(function, type, className));
 		}
 		
 		return data;
