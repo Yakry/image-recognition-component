@@ -33,44 +33,40 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	@Ignore
 	@Test
 	public void testOnCaltech(){
-		newResults(DataSet.calteckUniversity);
 		testOnClasses(DataSet.calteckUniversity);
 	}
 
 	@Ignore
 	@Test
 	public void testOnCaltechCombined(){
-		newResults(DataSet.calteckUniversity);
 		testCombined(DataSet.calteckUniversity);
 	}
 
 	@Test
 	public void testOnMohsen1(){
-		newResults(DataSet.mohsen1);
 		testOnClasses(DataSet.mohsen1);
 	}
 
 	@Ignore
 	@Test
 	public void testOnMohsen1Combined(){
-		newResults(DataSet.mohsen1);
 		testCombined(DataSet.mohsen1);
 	}
 
 	@Test
 	public void testOnMohsen2(){
-		newResults(DataSet.mohsen2);
 		testOnClasses(DataSet.mohsen2);
 	}
 
 	@Ignore
 	@Test
 	public void testOnMohsen2Combined(){
-		newResults(DataSet.mohsen2);
 		testCombined(DataSet.mohsen2);
 	}
 	
 	public void testCombined(DataSet dataSet) {
+		newResults(dataSet);
+		
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
 		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
@@ -83,13 +79,17 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			for(SimpleEntry<Image, Map<String, Rectangle>> sampleTestImageEntry : testingData){
 				Image sampleTestImage = sampleTestImageEntry.getKey();
 				Rectangle objectRealBounds = sampleTestImageEntry.getValue().get(testClass);
-				testImage(localizer, classifier, testClass, sampleTestImage, testClass + " in " + DataSetLoader.COMBINED_CLASS + " image " + searchIndex, objectRealBounds);
+				testImage(localizer, classifier, testClass, dataSet, sampleTestImage, testClass + " in " + DataSetLoader.COMBINED_CLASS + " image " + searchIndex, objectRealBounds);
 				searchIndex++;
 			}
 		}
+		
+		saveResults();
 	}
 	
 	public void testOnClasses(DataSet dataSet, String ...testClasses) {
+		newResults(dataSet);
+		
 		DataSetLoader dataSetLoader = TestsHelper.getDataSetLoader(dataSet);
 		Classifier<Image> classifier = dataSetLoader.loadTrainedClassifier();
 		
@@ -104,38 +104,16 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			for(SimpleEntry<Image, Map<String, Rectangle>> sampleTestImageEntry : clazz.getValue()){
 				Image sampleTestImage = sampleTestImageEntry.getKey();
 				Map<String, Rectangle> realBounds = sampleTestImageEntry.getValue();
-				testImage(localizer, classifier, testClass, sampleTestImage, testClass + " alone " + String.valueOf(searchIndex), realBounds.get(testClass));
+				testImage(localizer, classifier, testClass, dataSet, sampleTestImage, testClass + " alone " + String.valueOf(searchIndex), realBounds.get(testClass));
 				searchIndex++;
 			}
 		}
+		
+		saveResults();
 	}
 	
-	private void newResults(DataSet dataset){
-		try {
-			File f = new File(TestsHelper.getTestResultsFolder(getClass(), ""), DataSet.mohsen2.toString() + ".csv");
-			
-			if(currentResultsPrinter != null)
-				currentResultsPrinter.close();
-			
-			if(!f.exists())
-				f.createNewFile();
-			
-			currentResultsPrinter = new PrintStream(f);
-
-			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\t%s\n", "item class",
-																	 "detect type",
-																	 "left diff",
-																	 "top diff",
-																	 "right diff",
-																	 "bottom");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void testImage(ObjectLocalizer localizer, Classifier<Image> classifier,
-						   String testClass, Image sampleTestImage,
+						   String testClass, DataSet dataSet, Image sampleTestImage,
 						   String savedImageName, Rectangle realBounnds) {
 
 		System.out.println("starting search " + savedImageName + " test class: " + testClass);
@@ -155,18 +133,44 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 				appendResult(savedImageName, realBounnds, objectBounds, "correct");
 		}
 		
-		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), testClass);
+		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), dataSet.toString() + File.separatorChar + testClass);
 		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
 		ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
 		
 	}
 
+	private void newResults(DataSet dataset){
+		try {
+			File f = new File(TestsHelper.getTestResultsFolder(getClass(), ""), dataset.toString() + ".txt");
+			
+			if(!f.exists())
+				f.createNewFile();
+			
+			currentResultsPrinter = new PrintStream(f);
+
+			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\t%s\n", "item class",
+																	 "detect type",
+																	 "left abs diff",
+																	 "top abs diff",
+																	 "right abs diff",
+																	 "bottom abs diff");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void saveResults() {
+		if(currentResultsPrinter != null)
+			currentResultsPrinter.close();
+	}
+	
 	private void appendResult(String savedImageName, Rectangle realBounnds, Rectangle objectBounds, String type) {
 			currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\t%d\n", savedImageName,
 													type,
-													realBounnds.x - objectBounds.x,
-													realBounnds.x - objectBounds.y,
-													(realBounnds.x + realBounnds.width) - (objectBounds.x + objectBounds.width),
-													(realBounnds.y + realBounnds.width) - (objectBounds.y + objectBounds.height));
+													Math.abs(realBounnds.x - objectBounds.x),
+													Math.abs(realBounnds.x - objectBounds.y),
+													Math.abs((realBounnds.x + realBounnds.width) - (objectBounds.x + objectBounds.width)),
+													Math.abs((realBounnds.y + realBounnds.width) - (objectBounds.y + objectBounds.height)));
 	}
 }
