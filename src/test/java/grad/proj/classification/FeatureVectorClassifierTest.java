@@ -73,7 +73,7 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 	}
 	
 	@Test
-	public void testOnMohsenDataSet(){
+	public void testOnMohsen2DataSet(){
 		testOnDataSet(DataSet.mohsen2);
 	}
 	
@@ -85,27 +85,48 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 		SVMClassifier classifier = new SVMClassifier(new LinearNormalizer());
 		classifier.train(trainingData);
 		
-		double correctLabels = 0;
-		int totalVectors = 0;
+		Map<String, Integer> classesResults = new HashMap<String, Integer>();
+		
 		for(Entry<String, List<FeatureVector>> classEntry : testingData.entrySet()){
 			String classLabel = classEntry.getKey();
+			
 			List<FeatureVector> classVectors = classEntry.getValue();
 			
-			totalVectors += classVectors.size();
+			int correctClassLabels = 0;
+			
 			for(FeatureVector testVector : classVectors){
 				String predictedLabel = classifier.classify(testVector);
 				
-				correctLabels += (classLabel.equals(predictedLabel)) ? 1 : 0;
+				boolean predictedSuccess = (classLabel.equals(predictedLabel));
+				correctClassLabels += predictedSuccess ? 1.0 : 0.0;
 			}
+			
+			classesResults.put(classLabel, correctClassLabels);
 		}
 		
 		System.out.println(getClass().getSimpleName() + ": ");
+
 		System.out.println("dataset name: " + dataSet.toString());
-		System.out.println("number of vectors: " + totalVectors);
-		System.out.println("number of correctly classified vectors: " + correctLabels);
-		System.out.println("percentage: " + (correctLabels*100)/totalVectors + "%");
 		
-		assertTrue("correct predicted labels percentage below 75%",
-				((correctLabels*100)/totalVectors) >= 65.0);
+		System.out.format("%s\t%s\t%s\t%s\n", "class", "number of vectors", "classified correctly", "classified correctly percentage");
+		
+		int totalVectors = 0;
+		int totalCorrect = 0;
+		for(Entry<String, Integer> s : classesResults.entrySet()){
+			String className = s.getKey();
+			int totalClassVectors = testingData.get(className).size();
+			int correctlyClassified = s.getValue();
+			double percent = correctlyClassified * 100.0 / totalClassVectors;
+			
+			System.out.format("%s\t%d\t%d\t%f\n", className, totalClassVectors, correctlyClassified, percent);
+			
+			totalCorrect += correctlyClassified;
+			totalVectors += totalClassVectors;
+		}
+
+		double classifiedCorrectlyPercent = totalCorrect * 100.0 / totalVectors;
+		System.out.format("%s\t%d\t%d\t%f\n", "total:", totalVectors, totalCorrect, classifiedCorrectlyPercent);
+		
+		assertTrue("correct predicted labels percentage below 65%", classifiedCorrectlyPercent >= 65.0);
 	}
 }
