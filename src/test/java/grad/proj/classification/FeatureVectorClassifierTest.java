@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBaseClass {
 
 	public abstract Classifier<FeatureVector> createClassifier();
 	
+	@Ignore
 	@Test
 	public void testSimpleData() {
 		Map<String, List<FeatureVector>> trainingData = new HashMap<>();
@@ -52,15 +54,22 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 		assertEquals("class 1 vector 1 not recognized", "class1", class1Value1);
 	}
 
+	@Ignore
 	@Test
 	public void testOnSatImageDataSet(){
 		// training and testing data already scaled for satimage
 		testOnDataSet(DataSet.satimage);
 	}
 	
+	@Ignore
 	@Test
 	public void testOncaltechDataSet(){
 		testOnDataSet(DataSet.calteckUniversity);
+	}
+
+	@Test
+	public void testOnMohsen1DataSet(){
+		testOnDataSet(DataSet.mohsen1);
 	}
 	
 	@Test
@@ -91,6 +100,7 @@ public abstract class FeatureVectorClassifierTest extends RequiresLoadingTestBas
 		}
 		
 		System.out.println(getClass().getSimpleName() + ": ");
+		System.out.println("dataset name: " + dataSet.toString());
 		System.out.println("number of vectors: " + totalVectors);
 		System.out.println("number of correctly classified vectors: " + correctLabels);
 		System.out.println("percentage: " + (correctLabels*100)/totalVectors + "%");
