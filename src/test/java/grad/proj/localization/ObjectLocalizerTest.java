@@ -174,8 +174,8 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\t%d\n", savedImageName,
 													type,
 													Math.abs(realBounnds.x - objectBounds.x),
-													Math.abs(realBounnds.x - objectBounds.y),
+													Math.abs(realBounnds.y - objectBounds.y),
 													Math.abs((realBounnds.x + realBounnds.width) - (objectBounds.x + objectBounds.width)),
-													Math.abs((realBounnds.y + realBounnds.width) - (objectBounds.y + objectBounds.height)));
+													Math.abs((realBounnds.y + realBounnds.height) - (objectBounds.y + objectBounds.height)));
 	}
 }
