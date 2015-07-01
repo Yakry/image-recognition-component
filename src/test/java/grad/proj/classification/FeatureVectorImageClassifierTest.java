@@ -56,11 +56,13 @@ public class FeatureVectorImageClassifierTest extends RequiresLoadingTestBaseCla
 			}			
 			totalImages += classEntry.getValue().size();
 		}
+
+		double allClassifiedCorrectly = classifiedCorrectly * 100.0 / totalImages;
 		
 		System.out.println("total images: " + totalImages);
 		System.out.println("classifiedCorrectly: " + classifiedCorrectly);
 		System.out.println("accuracy: " + classifiedCorrectly / totalImages);
 		
-		assertTrue("classifiedCorrectly < 75", (classifiedCorrectly / totalImages) >= 0.75);
+		assertTrue("classifiedCorrectly < 75", allClassifiedCorrectly >= 0.75);
 	}
 }
