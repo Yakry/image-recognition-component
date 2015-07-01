@@ -128,12 +128,12 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		
 		if(objectBounds != null && realBounnds == null){
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
-			appendResult(savedImageName, new Rectangle(), objectBounds, "FalsePositive");
+			appendResult(savedImageName, objectBounds, objectBounds, "FalsePositive");
 		}
 		
 		if(objectBounds == null && realBounnds != null){
 			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
-			appendResult(savedImageName, realBounnds, new Rectangle(), "FalseNegative");
+			appendResult(savedImageName, realBounnds, realBounnds, "FalseNegative");
 		}
 		if(objectBounds == null && realBounnds == null){
 			appendResult(savedImageName, new Rectangle(), new Rectangle(), "TrueNegative");

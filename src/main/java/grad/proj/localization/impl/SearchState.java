@@ -28,10 +28,10 @@ public class SearchState implements Comparable<SearchState> {
 		for(int i=0;i<4;++i)
 			minCoordinate[i] = 0;
 		
-		maxCoordinate[TOP] = image.getHeight();
-		maxCoordinate[BOTTOM] = image.getHeight();
-		maxCoordinate[LEFT] = image.getWidth();
-		maxCoordinate[RIGHT] = image.getWidth();
+		maxCoordinate[TOP] = image.getHeight() - 1;
+		maxCoordinate[BOTTOM] = image.getHeight() - 1;
+		maxCoordinate[LEFT] = image.getWidth() - 1;
+		maxCoordinate[RIGHT] = image.getWidth() - 1;
 	}
 	
 	public boolean hasSubStates(){
