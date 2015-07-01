@@ -35,11 +35,11 @@ public class TestsHelper {
 		return new File(DATASET_FOLDER, dataset.toString());
 	}
 
-	public static void drawRectangle(Rectangle objectBounds, Image drawableImage) {
+	public static void drawRectangle(Rectangle objectBounds, Image drawableImage, Color color) {
 		for(int i=0;i<objectBounds.getWidth();++i){
-			try{ // in a try to ignore outofbounds bounds
-				drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, Color.GREEN.getRGB());
-				drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, Color.GREEN.getRGB());
+			try{
+				drawableImage.setPixelAt(objectBounds.y, objectBounds.x + i, color.getRGB());
+				drawableImage.setPixelAt(objectBounds.y + objectBounds.height, objectBounds.x + i, color.getRGB());
 			}
 			catch(Exception ex){
 				
@@ -47,9 +47,9 @@ public class TestsHelper {
 		}
 		
 		for(int i=0;i<objectBounds.getHeight();++i){
-			try{ // in a try to ignore outofbounds bounds
-				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, Color.GREEN.getRGB());
-				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, Color.GREEN.getRGB());			}
+			try{
+				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x, color.getRGB());
+				drawableImage.setPixelAt(objectBounds.y + i, objectBounds.x + objectBounds.width, color.getRGB());			}
 			catch(Exception ex){
 				
 			}

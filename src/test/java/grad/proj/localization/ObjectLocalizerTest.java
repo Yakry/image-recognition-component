@@ -9,6 +9,7 @@ import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +45,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
 	public void testOnMohsen1(){
-		testOnClasses(DataSet.mohsen1);
+		testOnClasses(DataSet.mohsen1, "mouse");
 	}
 
 	@Ignore
@@ -119,24 +120,28 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		System.out.println("starting search " + savedImageName + " test class: " + testClass);
 		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
 		
-		if(objectBounds == null && realBounnds != null){
-			appendResult(savedImageName, new Rectangle(), new Rectangle(), "missed");
-		}
-		
-		if(objectBounds == null && realBounnds != null){
-			appendResult(savedImageName, new Rectangle(), new Rectangle(), "false");
-		}
-		
 		if(objectBounds != null && realBounnds != null){
-				TestsHelper.drawRectangle(objectBounds, sampleTestImage);
-				
-				appendResult(savedImageName, realBounnds, objectBounds, "correct");
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
+			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
+			appendResult(savedImageName, realBounnds, objectBounds, "TruePositive");
+		}
+		
+		if(objectBounds != null && realBounnds == null){
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
+			appendResult(savedImageName, new Rectangle(), objectBounds, "FalsePositive");
+		}
+		
+		if(objectBounds == null && realBounnds != null){
+			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
+			appendResult(savedImageName, realBounnds, new Rectangle(), "FalseNegative");
+		}
+		if(objectBounds == null && realBounnds == null){
+			appendResult(savedImageName, new Rectangle(), new Rectangle(), "TrueNegative");
 		}
 		
 		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), dataSet.toString() + File.separatorChar + testClass);
 		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
 		ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
-		
 	}
 
 	private void newResults(DataSet dataset){
