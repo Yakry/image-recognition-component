@@ -45,7 +45,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 
 	@Test
 	public void testOnMohsen1(){
-		testOnClasses(DataSet.mohsen1, "mouse");
+		testOnClasses(DataSet.mohsen1);
 	}
 
 	@Ignore
