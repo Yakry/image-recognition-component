@@ -9,9 +9,11 @@ import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
 import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.AbstractMap.SimpleEntry;
@@ -104,7 +106,8 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			for(SimpleEntry<Image, Map<String, Rectangle>> sampleTestImageEntry : clazz.getValue()){
 				Image sampleTestImage = sampleTestImageEntry.getKey();
 				Map<String, Rectangle> realBounds = sampleTestImageEntry.getValue();
-				testImage(localizer, classifier, testClass, dataSet, sampleTestImage, testClass + " alone " + String.valueOf(searchIndex), realBounds.get(testClass));
+				Rectangle objBounds = realBounds.get(testClass);
+				testImage(localizer, classifier, testClass, dataSet, sampleTestImage, testClass + " alone " + String.valueOf(searchIndex), objBounds);
 				searchIndex++;
 			}
 		}
@@ -123,15 +126,19 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			appendResult(savedImageName, new Rectangle(), new Rectangle(), "missed");
 		}
 		
-		if(objectBounds == null && realBounnds != null){
+		if(objectBounds != null && realBounnds == null){
 			appendResult(savedImageName, new Rectangle(), new Rectangle(), "false");
 		}
 		
-		if(objectBounds != null && realBounnds != null){
-				TestsHelper.drawRectangle(objectBounds, sampleTestImage);
-				
-				appendResult(savedImageName, realBounnds, objectBounds, "correct");
+		if(objectBounds != null && realBounnds != null){	
+			appendResult(savedImageName, realBounnds, objectBounds, "correct");
 		}
+
+		if(realBounnds != null)
+			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE.getRGB());
+		
+		if(objectBounds != null)
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN.getRGB());
 		
 		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), dataSet.toString() + File.separatorChar + testClass);
 		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
@@ -146,8 +153,8 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			if(!f.exists())
 				f.createNewFile();
 			
-			currentResultsPrinter = new PrintStream(f);
-
+			currentResultsPrinter = new PrintStream(new FileOutputStream(f, true));
+			
 			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\t%s\n", "item class",
 																	 "detect type",
 																	 "left abs diff",
