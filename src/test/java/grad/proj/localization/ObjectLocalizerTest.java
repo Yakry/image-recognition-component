@@ -122,28 +122,28 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		System.out.println("starting search " + savedImageName + " test class: " + testClass);
 		Rectangle objectBounds = localizer.getObjectBounds(sampleTestImage, classifier, testClass);
 		
-		if(objectBounds == null && realBounnds != null){
-			appendResult(savedImageName, new Rectangle(), new Rectangle(), "missed");
+		if(objectBounds != null && realBounnds != null){
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
+			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
+			appendResult(savedImageName, realBounnds, objectBounds, "TruePositive");
 		}
 		
 		if(objectBounds != null && realBounnds == null){
-			appendResult(savedImageName, new Rectangle(), new Rectangle(), "false");
+			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
+			appendResult(savedImageName, objectBounds, objectBounds, "FalsePositive");
 		}
 		
-		if(objectBounds != null && realBounnds != null){	
-			appendResult(savedImageName, realBounnds, objectBounds, "correct");
+		if(objectBounds == null && realBounnds != null){
+			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
+			appendResult(savedImageName, realBounnds, realBounnds, "FalseNegative");
 		}
-
-		if(realBounnds != null)
-			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE.getRGB());
-		
-		if(objectBounds != null)
-			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN.getRGB());
+		if(objectBounds == null && realBounnds == null){
+			appendResult(savedImageName, new Rectangle(), new Rectangle(), "TrueNegative");
+		}
 		
 		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), dataSet.toString() + File.separatorChar + testClass);
 		File resultImageFile = new File(testResultsFolder, savedImageName + ".jpg");
 		ImageLoader.saveImage(sampleTestImage, "jpg", resultImageFile);
-		
 	}
 
 	private void newResults(DataSet dataset){
@@ -176,8 +176,8 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\t%d\n", savedImageName,
 													type,
 													Math.abs(realBounnds.x - objectBounds.x),
-													Math.abs(realBounnds.x - objectBounds.y),
+													Math.abs(realBounnds.y - objectBounds.y),
 													Math.abs((realBounnds.x + realBounnds.width) - (objectBounds.x + objectBounds.width)),
-													Math.abs((realBounnds.y + realBounnds.width) - (objectBounds.y + objectBounds.height)));
+													Math.abs((realBounnds.y + realBounnds.height) - (objectBounds.y + objectBounds.height)));
 	}
 }
