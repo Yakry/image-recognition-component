@@ -173,10 +173,15 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	
 	private void appendResult(String savedImageName, Rectangle realBounnds, Rectangle objectBounds, String type) {
 		Rectangle commonBounds = realBounnds.intersection(objectBounds);
-			currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\n", savedImageName,
-													type,
-													(int)realBounnds.getWidth()*(int)realBounnds.getHeight(),
-													(int)objectBounds.getWidth()*(int)objectBounds.getHeight(),
-													(int)commonBounds.getWidth()*(int)commonBounds.getHeight());
+		double commonArea = 0.0;
+		if(!commonBounds.isEmpty())
+			commonArea = (int)commonBounds.getWidth()*(int)commonBounds.getHeight();
+		
+		currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\n",
+										savedImageName,
+										type,
+										(int)realBounnds.getWidth()*(int)realBounnds.getHeight(),
+										(int)objectBounds.getWidth()*(int)objectBounds.getHeight(),
+										(int)commonArea);
 	}
 }
