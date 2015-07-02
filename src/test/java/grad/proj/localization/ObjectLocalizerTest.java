@@ -3,7 +3,6 @@ package grad.proj.localization;
 import grad.proj.classification.Classifier;
 import grad.proj.utils.DataSetLoader;
 import grad.proj.utils.TestsHelper;
-import grad.proj.utils.DataSetLoader.Type;
 import grad.proj.utils.TestsHelper.DataSet;
 import grad.proj.utils.imaging.Image;
 import grad.proj.utils.imaging.ImageLoader;
@@ -12,16 +11,12 @@ import grad.proj.utils.opencv.RequiresLoadingTestBaseClass;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import static org.junit.Assert.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
