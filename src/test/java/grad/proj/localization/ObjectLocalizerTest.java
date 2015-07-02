@@ -130,15 +130,15 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 		
 		if(objectBounds != null && realBounnds == null){
 			TestsHelper.drawRectangle(objectBounds, sampleTestImage, Color.GREEN);
-			appendResult(savedImageName, objectBounds, objectBounds, "FalsePositive");
+			appendResult(savedImageName, new Rectangle(0,0,0,0), new Rectangle(0,0,0,0), "FalsePositive");
 		}
 		
 		if(objectBounds == null && realBounnds != null){
 			TestsHelper.drawRectangle(realBounnds, sampleTestImage, Color.BLUE);
-			appendResult(savedImageName, realBounnds, realBounnds, "FalseNegative");
+			appendResult(savedImageName, new Rectangle(0,0,0,0), new Rectangle(0,0,0,0), "FalseNegative");
 		}
 		if(objectBounds == null && realBounnds == null){
-			appendResult(savedImageName, new Rectangle(), new Rectangle(), "TrueNegative");
+			appendResult(savedImageName, new Rectangle(0,0,0,0), new Rectangle(0,0,0,0), "TrueNegative");
 		}
 		
 		File testResultsFolder = TestsHelper.getTestResultsFolder(getClass(), dataSet.toString() + File.separatorChar + testClass);
@@ -155,12 +155,11 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			
 			currentResultsPrinter = new PrintStream(new FileOutputStream(f, true));
 			
-			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\t%s\n", "item class",
+			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\n", "item class",
 																	 "detect type",
-																	 "left abs diff",
-																	 "top abs diff",
-																	 "right abs diff",
-																	 "bottom abs diff");
+																	 "real area",
+																	 "detected area",
+																	 "common area");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -173,11 +172,11 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 	}
 	
 	private void appendResult(String savedImageName, Rectangle realBounnds, Rectangle objectBounds, String type) {
+		Rectangle commonArea = realBounnds.intersection(objectBounds);
 			currentResultsPrinter.format("%s\t%s\t%d\t%d\t%d\t%d\n", savedImageName,
 													type,
-													Math.abs(realBounnds.x - objectBounds.x),
-													Math.abs(realBounnds.y - objectBounds.y),
-													Math.abs((realBounnds.x + realBounnds.width) - (objectBounds.x + objectBounds.width)),
-													Math.abs((realBounnds.y + realBounnds.height) - (objectBounds.y + objectBounds.height)));
+													realBounnds.getWidth()*realBounnds.getHeight(),
+													objectBounds.getWidth()*objectBounds.getHeight(),
+													commonArea.getWidth()*commonArea.getHeight());
 	}
 }
