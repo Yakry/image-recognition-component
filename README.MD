@@ -1,4 +1,5 @@
-# Graduation Project
+#  CLM
+CLM stands for classification, localization and matching which are the main components of this library.
 
 ## Getting started
 First download and install [maven], ([how to install maven]) and [git]
