@@ -148,7 +148,7 @@ public abstract class ObjectLocalizerTest extends RequiresLoadingTestBaseClass {
 			if(!f.exists())
 				f.createNewFile();
 			
-			currentResultsPrinter = new PrintStream(new FileOutputStream(f, true));
+			currentResultsPrinter = new PrintStream(new FileOutputStream(f, false));
 			
 			currentResultsPrinter.format("%s\t%s\t%s\t%s\t%s\n", "item class",
 																	 "detect type",
