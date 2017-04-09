@@ -80,6 +80,10 @@ public class SVMClassifier implements Classifier<FeatureVector> {
 			svmEntry.getValue().predict(featureVectorMat, predictRes, RAW_OUTPUT);
 			
 			double distanceFromMargin = predictRes.get(0, 0)[0];
+
+			System.out.println("margin: " + distanceFromMargin);
+			System.out.println("key: " + svmEntry.getKey());
+
 			boolean belongToClass = distanceFromMargin < 0;
 			
 			if(belongToClass){

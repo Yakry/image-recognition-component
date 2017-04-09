@@ -40,7 +40,7 @@
       <artifactId>opencv</artifactId>
       <version>3.0.0</version>
       <scope>system</scope>
-      <systemPath>${env.OPENCV3_HOME}\build\java\opencv-300.jar</systemPath>
+      <systemPath>${env.OPENCV3_HOME}/build/bin/opencv-300.jar</systemPath>
     </dependency>
   </dependencies>
 </project>

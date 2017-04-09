@@ -10,7 +10,7 @@ public class ArrayFeatureVector implements FeatureVector{
 	
 	private List<Double> elements;
 	 
-	 public ArrayFeatureVector(int size) {
+	public ArrayFeatureVector(int size) {
 		 elements = Arrays.asList(new Double[size]);
 	}
 	 
@@ -58,5 +58,10 @@ public class ArrayFeatureVector implements FeatureVector{
 		}
 		
 		return super.equals(obj);
+	}
+
+	@Override
+	public String toString() {
+		return elements.toString();
 	}
 }

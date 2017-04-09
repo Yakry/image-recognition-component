@@ -18,10 +18,9 @@ import static org.junit.Assert.*;
 
 public class FeatureVectorImageClassifierTest extends RequiresLoadingTestBaseClass {
 
-	@Ignore
 	@Test
 	public void testClassifiyOnCaltechDataSet(){
-		testClassifyingAccuracyDataset(DataSet.calteckUniversity, Type.Train, "apple");
+		testClassifyingAccuracyDataset(DataSet.calteckUniversity, Type.Test, "apple");
 		//testClassifyingCompleteDataset(DataSet.calteckUniversity);
 	}
 	
@@ -30,12 +29,14 @@ public class FeatureVectorImageClassifierTest extends RequiresLoadingTestBaseCla
 	public void testClassifiyOnCaltechDataSetBikes(){
 		testClassifyingAccuracyDataset(DataSet.calteckUniversity, Type.Test, "bikes");
 	}
-	
+
+	@Ignore
 	@Test
 	public void testClassifiyOnMohsen1DataSet(){
 		testClassifyingAccuracyDataset(DataSet.mohsen1, Type.Test);
 	}
-	
+
+	@Ignore
 	@Test
 	public void testClassifiyOnMohsen2DataSet(){
 		testClassifyingAccuracyDataset(DataSet.mohsen2, Type.Test);

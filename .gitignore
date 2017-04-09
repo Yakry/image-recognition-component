@@ -1,6 +1,7 @@
 # Ignore test results folder
 testResults/
 
+.idea/
 
 ######################
 # Ignore datasets folder

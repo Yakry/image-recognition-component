@@ -24,6 +24,7 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 	@Override
 	public String classify(Image instance) {
 		FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(instance);
+		System.out.println("feature vector: " + featureVector);
 		return classifier.classify(featureVector);
 	}
 

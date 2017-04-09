@@ -14,15 +14,17 @@ public class MeanSquareErrorMatcherTest {
 
 	@Test
 	public void testSimpleMatchingTop2(){
+		// instances vector
 		List<FeatureVector> vecs = new ArrayList<FeatureVector>();
 		vecs.add(new ArrayFeatureVector(0.1, 0.2));
 		vecs.add(new ArrayFeatureVector(0.3, 0.6));
 		vecs.add(new ArrayFeatureVector(0.2, 0.2));
-		
+
+		// the matcher matches the topN instances
 		Matcher<FeatureVector> matcher = new MeanSquareErrorMatcher();
 		List<FeatureVector> resultIndicies = matcher.match(new ArrayFeatureVector(0.1, 0.1), vecs, 2);
 		assertEquals(new ArrayFeatureVector(0.1, 0.2), resultIndicies.get(0));
-		assertEquals(new ArrayFeatureVector(0.2, 0.2), resultIndicies.get(1));	
+		assertEquals(new ArrayFeatureVector(0.2, 0.2), resultIndicies.get(1));
 	}
 	
 	@Test

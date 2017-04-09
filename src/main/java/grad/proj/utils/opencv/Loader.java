@@ -17,8 +17,20 @@ public class Loader {
 		if(openCvFolder == null){
 			throw new RuntimeException("Couldn't get environment variable OPENCV3_HOME");
 		}
-		String archictureFolder = System.getProperty("os.arch").contains("64") ? "x64" : "x86";
-		File nativeDllFullPath = Paths.get(openCvFolder, "build", "java", archictureFolder, System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toFile();
+
+		String osName = System.getProperty("os.name");
+
+		String nativeDllRelativePath = "build/";
+
+		if (osName.contains("Linux")) {
+			nativeDllRelativePath += "lib";
+		} else {
+			nativeDllRelativePath += "java/";
+			String archictureFolder = System.getProperty("os.arch").contains("64") ? "x64" : "x86";
+			nativeDllRelativePath += archictureFolder;
+		}
+
+		File nativeDllFullPath = Paths.get(openCvFolder, nativeDllRelativePath, System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)).toFile();
 		
 		if(!nativeDllFullPath.exists()){
 			throw new RuntimeException("Couldn't find opencv native library with path " + nativeDllFullPath);
