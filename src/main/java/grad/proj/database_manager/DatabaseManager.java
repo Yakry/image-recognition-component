@@ -49,6 +49,12 @@ public class DatabaseManager {
         return executeUpdate(query);
     }
 
+    public static int deleteRows(String table_name, String where_clause)
+            throws SQLException {
+        String query = "DELETE FROM " + table_name + " WHERE " + where_clause;
+        return executeUpdate(query);
+    }
+
     public static int deleteAllRows(String table_name) throws SQLException {
         String query = "DELETE FROM " + table_name;
         return executeUpdate(query);

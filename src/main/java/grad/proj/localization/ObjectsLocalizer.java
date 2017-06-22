@@ -1,6 +1,7 @@
 package grad.proj.localization;
 
 import grad.proj.classification.Classifier;
+import grad.proj.database_manager.UserController;
 import grad.proj.localization.impl.BranchAndBoundObjectLocalizer;
 import grad.proj.localization.impl.SurfLinearSvmQualityFunction;
 import grad.proj.utils.DataSetLoader;
@@ -22,8 +23,10 @@ public class ObjectsLocalizer {
     }
 
     private ObjectsLocalizer() {
-        this.localizer = new BranchAndBoundObjectLocalizer(new SurfLinearSvmQualityFunction());
-        this.classifier = DataSetLoader.getDataSetLoader().loadTrainedClassifier();
+        this.localizer = new BranchAndBoundObjectLocalizer(new
+                SurfLinearSvmQualityFunction());
+        this.classifier = DataSetLoader.getDataSetLoader()
+                .loadTrainedClassifier();
     }
 
     public static ObjectsLocalizer getObjectsLocalizer() {
@@ -38,7 +41,10 @@ public class ObjectsLocalizer {
         Map<String, Rectangle> bounds = new HashMap<>();
 
         for (String classLabel : classifier.getClasses()) {
-            Rectangle objectBounds = localizer.getObjectBounds(image, classifier, classLabel);
+            if (!UserController.getConcernedItems().contains(classLabel))
+                continue;
+            Rectangle objectBounds = localizer.getObjectBounds(image,
+                    classifier, classLabel);
             if (objectBounds != null)
                 bounds.put(classLabel, objectBounds);
         }
