@@ -3,17 +3,9 @@ package grad.proj.utils;
 import grad.proj.classification.ArrayFeatureVector;
 import grad.proj.classification.FeatureVector;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 public class FeaturesFileLoader {
 	
@@ -56,9 +48,10 @@ public class FeaturesFileLoader {
 			
 			while(scanner.hasNext()){
 				String classLabel = scanner.next();
-				featureVector = new ArrayFeatureVector(featureVectorSize);
-				for(int j=0; j<featureVectorSize; ++j)
-					featureVector.set(j, scanner.nextDouble());
+                if (!scanner.hasNextDouble()) continue;
+                featureVector = new ArrayFeatureVector(featureVectorSize);
+                for (int j = 0; j < featureVectorSize; ++j)
+                    featureVector.set(j, scanner.nextDouble());
 				
 				
 				List<FeatureVector> clazz = featureVectors.get(classLabel);

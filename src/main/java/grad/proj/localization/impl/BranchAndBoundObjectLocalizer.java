@@ -4,7 +4,7 @@ import grad.proj.classification.Classifier;
 import grad.proj.localization.ObjectLocalizer;
 import grad.proj.utils.imaging.Image;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.PriorityQueue;
 
 public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
@@ -39,8 +39,10 @@ public class BranchAndBoundObjectLocalizer implements ObjectLocalizer {
 		}
 		
 		SearchState target = searchQueue.peek();
-		if(target.quality > DISCARDING_ERROR_THRESHOLD)
-			return null;
-		return target.getRectangle();
+        System.out.println(classLabel + " with quality: " + target.quality + "\nRect: " + target
+                .getRectangle());
+        if (target.quality > DISCARDING_ERROR_THRESHOLD)
+            return null;
+        return target.getRectangle();
 	}
 }

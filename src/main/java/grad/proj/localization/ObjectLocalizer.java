@@ -3,10 +3,10 @@ package grad.proj.localization;
 import grad.proj.classification.Classifier;
 import grad.proj.utils.imaging.Image;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 public interface ObjectLocalizer {
+    double DISCARDING_ERROR_THRESHOLD = -1;
 
-	public static final double DISCARDING_ERROR_THRESHOLD = 0.0;
-	public Rectangle getObjectBounds(Image image, Classifier<Image> classifier, String classLabel);
+    Rectangle getObjectBounds(Image image, Classifier<Image> classifier, String classLabel);
 }

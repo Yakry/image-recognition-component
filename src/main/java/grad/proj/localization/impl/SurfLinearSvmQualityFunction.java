@@ -1,15 +1,14 @@
 package grad.proj.localization.impl;
 
-import java.awt.Rectangle;
-import java.util.AbstractMap.SimpleEntry;
-
 import grad.proj.classification.Classifier;
 import grad.proj.classification.FeatureVectorImageClassifier;
 import grad.proj.classification.impl.SVMClassifier;
 import grad.proj.classification.impl.SurfFeatureVectorGenerator;
 import grad.proj.utils.imaging.Image;
-
 import org.opencv.core.Mat;
+
+import java.awt.*;
+import java.util.AbstractMap.SimpleEntry;
 
 public class SurfLinearSvmQualityFunction implements QualityFunction {
 	
@@ -77,16 +76,16 @@ public class SurfLinearSvmQualityFunction implements QualityFunction {
 			else if(maxRectangle.contains(imageKeypoints.get(i, 0)[0], imageKeypoints.get(i, 1)[0])){
 				int clusterIndex = (int)imageKeypoints.get(i, 2)[0];
 				double coefficient = supportVector.get(0, clusterIndex)[0];
-				if(coefficient < 0.0)
-					stateQuality += coefficient;
-			}
-		}
+//				if(coefficient < 0.0)
+                stateQuality += coefficient;
+            }
+        }
 		
 		return stateQuality;
 	}
 
 	@Override
 	public int getMaxIterations() {
-		return 10000;
-	}
+        return 700;
+    }
 }

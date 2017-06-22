@@ -2,13 +2,8 @@ package grad.proj.classification;
 
 import grad.proj.utils.imaging.Image;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 public class FeatureVectorImageClassifier implements Classifier<Image> {
 	private static final long serialVersionUID = 8364985649869770754L;
@@ -24,9 +19,9 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 	@Override
 	public String classify(Image instance) {
 		FeatureVector featureVector = featureVectorGenerator.generateFeatureVector(instance);
-		System.out.println("feature vector: " + featureVector);
-		return classifier.classify(featureVector);
-	}
+//		System.out.println("feature vector: " + featureVector);
+        return classifier.classify(featureVector);
+    }
 
 	@Override
 	public double classify(Image instance, String classLabel) {
@@ -58,9 +53,10 @@ public class FeatureVectorImageClassifier implements Classifier<Image> {
 		classifier.train(trainingDataAsDouble);
 	}
 
-	@Override
-	public Set<String> getClasses() {
-		return classifier.getClasses();
+
+    @Override
+    public Set<String> getClasses() {
+        return classifier.getClasses();
 	}
 
 	public FeatureVectorGenerator getFeatureVectorGenerator() {
