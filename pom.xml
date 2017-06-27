@@ -41,7 +41,7 @@
             <artifactId>opencv</artifactId>
             <version>3.0.0</version>
             <scope>system</scope>
-            <systemPath>${env.OPENCV3_HOME}/build/bin/opencv-300.jar</systemPath>
+            <systemPath>/home/mahmoud/Programs/opencv-3.0.0/build/bin/opencv-300.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -49,10 +49,9 @@
             <artifactId>jdbc</artifactId>
             <scope>system</scope>
             <systemPath>
-                /home/mohammad/Downloads/mysql-connector-java-5.1.42/mysql-connector-java-5.1.42-bin.jar
-            </systemPath>
+                /home/mahmoud/Programs/mysql-connector-java-5.1.42/mysql-connector-java-5.1.42-bin.jar
+            </systemPath>x
         </dependency>
-
 
     </dependencies>
 </project>

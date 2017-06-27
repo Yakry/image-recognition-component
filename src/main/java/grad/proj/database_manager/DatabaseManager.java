@@ -15,6 +15,9 @@ public class DatabaseManager {
     public static final String ENVIRONMENTS_TABLE = "Circles";
     public static final String ENVIRONMENTS_ITEMS_TABLE = "CirclesItems";
 
+    private static final String DATABASE_USER = "root";
+    private static final String DATABASE_PASSWORD = "root";
+
     private static Connection connection;
     private static Statement statement;
 
@@ -23,7 +26,7 @@ public class DatabaseManager {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DB_NAME,
-                    "root", "root");
+                    DATABASE_USER, DATABASE_PASSWORD);
             statement = connection.createStatement();
 
         } catch (Exception e) {

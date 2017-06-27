@@ -5,6 +5,7 @@ package grad.proj.server;
  */
 
 import grad.proj.database_manager.DatabaseManager;
+import grad.proj.database_manager.UserController;
 import grad.proj.localization.ObjectsLocalizer;
 import grad.proj.utils.imaging.ArrayImage;
 import grad.proj.utils.imaging.ImageLoader;
@@ -35,16 +36,16 @@ public class Server {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    public static void normalizeImage(ArrayImage image) {
+    public static ArrayImage normalizeImage(ArrayImage image) {
         ImageLoader.saveImage(image, "jpg", new File("test.jpg"), 700, 700);
-        image = (ArrayImage) ImageLoader.loadImage("test.jpg");
+        return (ArrayImage) ImageLoader.loadImage("test.jpg");
     }
 
     public static LinkedList<String> getObjects(BufferedImage bufferedImage) {
         LinkedList<String> list = new LinkedList<>();
 
         ArrayImage image = new ArrayImage(bufferedImage);
-        normalizeImage(image);
+        image = normalizeImage(image);
 
         Map<String, Rectangle> objectsBounds = localizer.getObjectsBounds(image);
 
@@ -57,43 +58,102 @@ public class Server {
 
     public static void initializeDatabase() throws SQLException {
         DatabaseManager.deleteAllRows("Items");
+
         Set<String> items = localizer.getClassifier().getClasses();
         for (String item : items) {
             DatabaseManager.executeInsert("Items", new String[]{item});
         }
     }
 
-
-    public static void main(String args[]) throws IOException, ClassNotFoundException {
-        //create the socket server object
-        server = new ServerSocket(port);
-        //keep listens indefinitely until receives 'exit' call or program terminates
-        while (true) {
-            System.out.println("Waiting for client request");
-            //creating socket and waiting for client connection
-            Socket socket = server.accept();
-            //read from socket to ObjectInputStream object
-            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            //convert ObjectInputStream object to String
-            BufferedImage image = (BufferedImage) inputStream.readObject();
-            System.out.println("Image Received");
-
-            LinkedList<String> list = getObjects(image);
-
-            System.out.println("Objects detected");
-
-            //create ObjectOutputStream object
-            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            //write object to Socket
-            outputStream.writeObject(list);
-            //close resources
-            inputStream.close();
-            outputStream.close();
-            socket.close();
-            //terminate the server if client sends exit request
+    public static BufferedImage pixelsToImage(int[][] data) throws IOException {
+        BufferedImage image = new BufferedImage(data.length, data[0].length, BufferedImage.TYPE_INT_ARGB);
+        for (int i = 0; i < data.length; ++i) {
+            for (int j = 0; j < data[i].length; j++) {
+                image.setRGB(i, j, data[i][j]);
+            }
         }
-        //close the ServerSocket object
-//        server.close();
+        return image;
     }
+
+    public static void main(String args[]) throws IOException, ClassNotFoundException, SQLException {
+        initializeDatabase();
+
+        server = new ServerSocket(port);
+
+        System.out.println("Waiting for client request");
+        Socket socket = server.accept();
+        System.out.println("Accepted client request");
+
+        ObjectInputStream inputStream = null;
+        ObjectOutputStream outputStream = null;
+        try {
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+
+        boolean running = true;
+        while(running){
+            System.out.println("Waiting request...");
+            String requestType = (String)inputStream.readObject();
+
+            switch (requestType) {
+                case "recognize":
+                    doRecognizeRequest(inputStream, outputStream);
+                    break;
+                case "signup":
+                    doSignupRequest(inputStream, outputStream);
+                    break;
+                case "login":
+                    doLoginRequest(inputStream, outputStream);
+                    break;
+                case "exit":
+                    running = false;
+                default:
+                    continue;
+            }
+
+        }
+
+        server.close();
+    }
+
+    private static void doLoginRequest(ObjectInputStream inputStream, ObjectOutputStream outputStream) throws IOException, ClassNotFoundException, SQLException {
+        System.out.println("Waiting Credentials");
+        String[] credentials = (String[])inputStream.readObject();
+        System.out.println("Credentials Received");
+
+        Boolean success = UserController.login(credentials[0], credentials[1]);
+
+        outputStream.writeBoolean(success);
+        outputStream.flush();
+    }
+
+    private static void doSignupRequest(ObjectInputStream inputStream, ObjectOutputStream outputStream) throws IOException, ClassNotFoundException, SQLException {
+        System.out.println("Waiting Credentials");
+        String[] credentials = (String[])inputStream.readObject();
+        System.out.println("Credentials Received");
+
+        Boolean success = UserController.signup(credentials[0], credentials[1]);
+
+        outputStream.writeBoolean(success);
+        outputStream.flush();
+    }
+
+    private static void doRecognizeRequest(ObjectInputStream inputStream, ObjectOutputStream outputStream) throws IOException, ClassNotFoundException {
+        System.out.println("Waiting Image");
+        int[][] pixels = (int[][]) inputStream.readObject();
+        System.out.println("Image Received");
+
+        BufferedImage image = pixelsToImage(pixels);
+        LinkedList<String> list = getObjects(image);
+
+        System.out.println("Objects detected: " + list);
+
+        outputStream.writeObject(list);
+        outputStream.flush();
+    }
+
 
 }
